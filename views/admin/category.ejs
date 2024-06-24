@@ -1,0 +1,192 @@
+
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>KenZ</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="/asset-temp/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/asset-temp/vendors/css/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- Plugin css for this page -->
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <!-- endinject -->
+    <!-- Layout styles -->
+    <link rel="stylesheet" href="/asset-temp/css/style.css">
+    <!-- End layout styles -->
+    <link rel="shortcut icon" href="/asset-temp/images/favicon.ico" />
+    <style>
+      .green-button {
+          color: white;
+          background-color: green;
+          padding: 5px 10px;
+          text-decoration: none;
+          border-radius: 5px; /* Optional: adds rounded corners */
+      }
+    
+    /* Style for the yellow button */
+       .yellow-button {
+        display: inline-block; /* Display as block to allow width and height adjustments */
+        padding: 2px 5px; /* Adjust padding for smaller size */
+        background-color: yellow; /* Set background color to yellow */
+        color: black; /* Set text color to black */
+        text-align: center; /* Center align the text */
+        border: none; /* Remove border */
+        border-radius: 5px; /* Add rounded corners */
+        text-decoration: none; /* Remove underline */
+    }
+
+  </style>
+
+    
+  </head>
+ 
+  <%- include('../layouts/adminHeadersmid.ejs') %>
+       
+        <div class="main-panel">
+          <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
+            <div class="page-header">
+             
+              
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h2 class="card-title" style="color: rgb(10, 109, 170);text-align: center;">Category List</h2>
+                    <p class="card-description"> <code></code>
+                    </p>
+                    <h5><a href="/admin/add-category" class="green-button">Add Category</a></h5>
+
+                    <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
+                        <thead>
+                            <tr style="background-color: #f6c2c2; color: rgb(27, 26, 26);">
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">
+                                    <label class="control control--checkbox"></label>
+                                </th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Category</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Amount</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer Type</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Offer End Date</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Status</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Action</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (var i = 0; i < categories.length; i++) { %>
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= i+1 %></td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= categories[i].categoryName %></td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <% if (categories[i].offer && categories[i].offer.amount !== '') { %>
+                                            <%= categories[i].offer.amount %> 
+                                        <% } %>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <% if (categories[i].offer) { %>
+                                            <%= categories[i].offer.type %> 
+                                        <% } %>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <% if (categories[i].offer && categories[i].offer.endDate) { %>
+                                            <%= categories[i].offer.endDate ? categories[i].offer.endDate.toLocaleDateString() : 'N/A' %>
+                                        <% } %>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <form action="/admin/category/<%= categories[i]._id %>/update-status" method="post" onclick="return confirm('Are you sure you want to block/unblock this user?')">
+                                            <button type="submit" style="border: 2px solid 1px rgb(92, 91, 91); background-color: rgb(255, 253, 253);text-decoration-color: black;">
+                                                <% if (categories[i].blocked) { %>
+                                                    <span style="color: red;">Blocked</span>
+                                                <% } else { %>
+                                                    <span style="color: green;">Active</span>
+                                                <% } %>
+                                            </button>
+                                        </form>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <button class="btn" style="background-color: yellow; color: black; border: none; padding: 10px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; cursor: pointer; border-radius: 4px;">
+                                            <a href="/admin/load-edit/<%= categories[i]._id %>" style="color: inherit; text-decoration: none;">Edit</a>
+                                        </button>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <!-- Delete button with onclick event -->
+                                        <button onclick="confirmDelete('<%= categories[i]._id %>', this.parentNode.parentNode)" class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                    
+            <br>
+            <br>
+            <a href="/admin/home">Back To Home</a>
+        </div>
+    </div>
+</div>
+<script>
+    function confirmDelete(categoryId) {
+        var confirmDelete = confirm("Are you sure you want to delete this category?");
+        if (confirmDelete) {
+            window.location.href = "/admin/category/" + categoryId;
+          
+        }
+    }
+</script>
+</div> 
+</div> 
+</div> 
+<!-- Footer End -->
+</div>
+<!-- Content End -->
+
+<script>
+
+    var path = window.location.pathname;
+
+    path = path.replace(/\/$/, "");
+
+    var navLinks = document.querySelectorAll('.navbar-nav a');
+
+    navLinks.forEach(function(link) {
+    link.classList.remove('active');
+
+    if (link.getAttribute('href') === path) {
+    // Add the "active" class to the matching link
+    link.classList.add('active');
+    }
+    });
+</script>
+
+    <script>
+      function confirmDelete(categoryId, row) {
+          var confirmDelete = confirm("Are you sure you want to delete this category?");
+          if (confirmDelete) {
+              fetch(`/admin/category/${categoryId}`, {
+                  method: 'DELETE',
+                  headers: {
+                      'Content-Type': 'application/json'
+                  }
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  else{
+                    location.reload();
+                  }
+                  // Remove the deleted row from the table
+                  row.remove();
+                 
+              })
+              .catch(error => {
+                  console.error('Error deleting category:', error);
+                  // Handle error, e.g., display error message to the user
+              });
+          }
+      }
+    </script>    
+  
+
+   
+    <%- include('../layouts/adminFooters') %>

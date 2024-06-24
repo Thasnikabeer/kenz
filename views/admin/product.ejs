@@ -1,0 +1,201 @@
+<%- include('../layouts/adminHeaders.ejs') %>
+  <body>
+    <style>
+    .green-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: green;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+  }
+  .yellow-button {
+        background-color: yellow; /* Set background color to yellow */
+        color: black; /* Set text color to black */
+        border: none; /* Remove border */
+        padding: 5px 10px; /* Adjust padding for smaller size */
+        border-radius: 5px; /* Add rounded corners */
+        text-decoration: none; /* Remove underline */
+        cursor: pointer; /* Show pointer cursor on hover */
+    }
+  </style>
+    <div class="container-scroller">
+      <!-- partial:../../partials/_navbar.html -->
+      <%- include('../layouts/adminHeadersmid.ejs') %>
+      
+        <!-- partial -->
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
+         <div class="page-header">
+             
+              
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h2 class="card-title" style="color: rgb(10, 109, 170);text-align: center;">Product Management</h2><br><br>
+                    <div class="container">
+                    
+                        <form action="/admin/product" method="GET">
+                            <input type="text" name="search" placeholder="Search..." value="<%= searchQuery %>">
+                            <select name="category">
+                                <option value="">All Categories</option>
+                                <% categories.forEach(category => { %>
+                                    <option value="<%= category._id %>" <%= category._id.toString() === filterCategory.toString() ? 'selected' : '' %>><%= category.categoryName %></option>
+                                <% }) %>
+                            </select>
+                            <button type="submit">Search</button>
+                        </form>
+                        <br>
+                        <div class="container">
+                          <h5><a href="/admin/add-product" class="green-button">Add Product</a></h5>
+                      
+                          <table class="table table-hover" style="border-collapse: collapse; width: 100%;">
+                            <thead>
+                                <tr style="background-color: #f6c2c2; text-align: center;">
+                                    <th scope="col"></th>
+                                    <th scope="col" style="font-weight: bold;">Image</th>
+                                    <th scope="col" style="font-weight: bold;">Product<br>Name</th>
+                                    <th scope="col" style="font-weight: bold;">Category</th>
+                                    <th scope="col" style="font-weight: bold;">Size</th>
+                                    <th scope="col" style="font-weight: bold;">Price</th>
+                                    <th scope="col" style="font-weight: bold;">Discount<br>price</th>
+                                    <th scope="col" style="font-weight: bold;">Stock</th>
+                                    <th scope="col" style="font-weight: bold;">Category<br>offer</th>
+                                    <th scope="col" style="font-weight: bold;">Product<br>Offer<br>Amount</th>
+                                    <th scope="col" style="font-weight: bold;">Offer <br>End Date</th>
+                                    <th scope="col" style="font-weight: bold;">Action</th>
+                                    <th scope="col" style="font-weight: bold;">Status</th>
+                                </tr>
+                            </thead>
+                            
+                              <tbody>
+                                  <% products.forEach(product => { %>
+                                  <% if (product.category) { %>
+                                  <tr style="border: 3px solid #ccc;">
+                                      <td></td>
+                                      <td style="border-right: 3px solid #ccc;">
+                                          <% if (product.images.length > 0) { %>
+                                          <% product.images.forEach(image => { %>
+                                          <div style="max-width: 50px; max-height: 50px; overflow: hidden; border: 1px solid #ccc;">
+                                              <img src="/images/<%= image %>" style="width: 100%; height: auto;">
+                                          </div>
+                                          <% }); %>
+                                          <% } else { %>
+                                          <div>No Image</div>
+                                          <% } %>
+                                      </td>
+                                      <td style="border-right: 3px solid #ccc;"><%= product.productName %></td>
+                                      <td style="border-right: 3px solid #ccc;"><% if (product.category) { %>
+                                          <%= product.category.categoryName %>
+                                          <% } else { %>
+                                          No Category
+                                          <% } %></td>
+                                      <td style="border-right: 3px solid #ccc;"><%= product.size %></td>
+                                      <td style="border-right: 3px solid #ccc;"><%= product.oldPrice %></td>
+                                      <td style="border-right: 3px solid #ccc;">  <% if (product.oldPrice !== product.price) { %>
+
+                                        <%= product.price %>
+                                          <% } else { %>
+                                              No Discount
+                                           <% } %>
+                                          </td>
+                                          <td style="border-right: 3px solid #ccc;"><%= product.stock %></td>
+                                          <td style="border-right: 3px solid #ccc;">
+                                            <% if (product.category && product.category.offer && product.offer && product.category.offer.amount) { %>
+                                                <p class="category-offer">
+                                                  <%= product.category.offer.amount %>% off on this product!
+                                                </p>
+                                            <% } %>
+                                           </td>
+                                           <td style="border-right: 3px solid #ccc;">
+                                                <% if (product.offer && product.offer.amount) { %>
+                                                    <%= product.offer.amount %>%
+                                                <% } else { %>
+                                                   No offer
+                                                <% } %>
+                                            </td>
+                                            <td style="border-right: 3px solid #ccc;">
+                                                <% if (product.offer && product.offer.endDate) { %>
+                                                    <%= product.offer.endDate.toLocaleDateString() %>
+                                                <% } else { %>
+                                                    No offer
+                                                <% } %>
+                                            </td>
+                                            
+                                      
+                                      <td style="border-right: 3px solid #ccc;">
+                                          <button class="btn yellow-button">
+                                              <a href="/admin/edit-product/<%= product._id %>" style="color: black; text-decoration: none;">Edit</a>
+                                          </button>
+                                          <!-- <button class="btn"> <a href="/admin/product/<%= product._id %>">Delete</a></button> -->
+                                      </td>
+                                      <td>
+                                          <form action="/admin/product/<%= product._id %>/update-status" method="post">
+                                              <button type="submit" style="border: 2px solid black; background-color: none;">
+                                                  <% if (product.blocked || (product.category && product.category.blocked)) { %>
+                                                  <span style="color: red;">Blocked</span>
+                                                  <% } else { %>
+                                                  <span style="color: green;">Active</span>
+                                                  <% } %>
+                                              </button>
+                                          </form>
+                                      </td>
+                                  </tr>
+                                  <% } %>
+                                  <% }); %>
+                              </tbody>
+                          </table>
+                      
+                          <br><br>
+                      </div>
+                      
+                        <div class="pagination">
+                          <% for (let i = 1; i <= totalPages; i++) { %>
+                              <a href="/admin/product?page=<%= i %>&limit=<%= limit %>&search=<%= searchQuery %>&category=<%= filterCategory %>"
+                                 class="<%= currentPage === i ? 'active' : '' %>" style="background-color: rgb(185, 203, 203); width: 25px;height: 25px;text-align: center;">
+                                  <%= i %> <hr>
+                              </a>
+                          <% } %>
+                      </div>
+                      <br>
+                      <a href="/admin/adminhome">Back To Home</a>
+                    </div>
+                <!-- </div> -->
+                <script>
+                    function confirmDelete(categoryId) {
+                        var confirmDelete = confirm("Are you sure you want to delete this category?");
+                        if (confirmDelete) {
+                            window.location.href = "/admin/category/" + categoryId;
+                        }
+                    }
+                </script>
+                
+                </script>
+</div> 
+</div> 
+</div> 
+<!-- Footer End -->
+</div>
+<!-- Content End -->
+
+<script>
+
+    var path = window.location.pathname;
+
+    path = path.replace(/\/$/, "");
+
+    var navLinks = document.querySelectorAll('.navbar-nav a');
+
+    navLinks.forEach(function(link) {
+    link.classList.remove('active');
+
+    if (link.getAttribute('href') === path) {
+    // Add the "active" class to the matching link
+    link.classList.add('active');
+    }
+    });
+</script>
+<!-- content-wrapper ends -->
+<!-- partial:../../partials/_footer.html -->
+<%- include('../layouts/adminFooters') %>

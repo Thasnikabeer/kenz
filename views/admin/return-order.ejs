@@ -1,0 +1,69 @@
+<%- include('../layouts/adminHeaders.ejs') %>
+
+   
+    
+<div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <%- include('../layouts/adminHeadersmid.ejs') %>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_sidebar.html -->
+     
+      <!-- partial -->
+       <!-- partial -->
+
+       <div class="main-panel">
+        <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
+          <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title" style="color: rgb(10, 109, 170);text-align: center;">Return Orders</h2><br><br>
+                <div class="container">
+  
+            
+            <div class="col-md-12 grid-margin stretch-card">
+             
+              <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
+                <tr style="background-color: #f6c2c2; color: white;">
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">User Name</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Product</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Price</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Quantity</th>
+                    <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Return Reason</th>
+                </tr>
+                <% returnedOrders.forEach(order => { %>
+                    <tr>
+                        <td style="border: 1px solid #ddd; padding: 8px;"><%= order.userId.name %></td>
+                        <% if (order.products[0] && order.products[0].product) { %>
+                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.products[0].product.productName %></td>
+                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.products[0].product.price %></td>
+                        <% } else { %>
+                            <td colspan="2" style="border: 1px solid #ddd; padding: 8px;">Product not found</td>
+                        <% } %>
+                        <td style="border: 1px solid #ddd; padding: 8px;"><%= order.products[0].quantity %></td>
+                        <td style="border: 1px solid #ddd; padding: 8px;"><%= order.returnReason %></td>
+                    </tr>
+                <% }); %>
+            </table>
+            
+
+           
+            
+          </div>
+          <a href="/admin/loadorder">Back to order details</a>
+           
+
+            
+        </div>
+        <!-- content-wrapper ends -->
+  
+              </div>
+            </div>
+          </div>
+        </div>
+       
+   
+         
+    
+ <!-- partial:../../partials/_footer.html -->
+ <%- include('../layouts/adminFooters.ejs') %>

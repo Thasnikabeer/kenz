@@ -1,0 +1,168 @@
+<%- include('../layouts/productheader') %>
+
+
+    <div class="header-middle sticky-header">
+        <div class="container">
+            <div class="header-left">
+                <button class="mobile-menu-toggler">
+                    <span class="sr-only">Toggle mobile menu</span>
+                    <i class="icon-bars"></i>
+                </button>
+
+                <a href="/home" class="logo">
+                    <h2 style="color: black;">KenZ</h2>
+                </a>
+                <nav class="main-nav">
+                    <ul class="menu sf-arrows">
+                        <!-- <a href="/home" class="sf-with-ul">Home</a>
+
+                    <li class="megamenu-container active">
+
+                        <div class="megamenu demo">
+                           
+                        
+                            
+                        </div>
+                        End .megamenu -->
+                        <!-- </li> -->
+                        <li>
+                            <a href="/home" class="sf-with-ul">Home</a>
+
+                            <div class="megamenu megamenu-md">
+
+                            </div><!-- End .megamenu megamenu-md -->
+                        </li>
+                        <li>
+                            <a href="/product-list" class="sf-with-ul">Shop</a>
+
+                            <div class="megamenu megamenu-md">
+
+                            </div><!-- End .megamenu megamenu-md -->
+                        </li>
+
+                    </ul><!-- End .menu -->
+                </nav><!-- End .main-nav -->
+            </div><!-- End .header-left -->
+
+            <div class="header-right">
+
+                <div class="dropdown compare-dropdown">
+                    <div class="wishlist">
+                        <a href="/wishlist" title="Wishlist">
+                            <i class="icon-heart-o"></i>
+
+                    </div><!-- End .compare-dropdown -->
+
+
+                </div><!-- End .compare-dropdown -->
+
+                <div class="dropdown cart-dropdown">
+                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false" data-display="static">
+                        <i class="icon-shopping-cart"></i>
+                    </a>
+
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-cart-products">
+
+                        </div><!-- End .cart-product -->
+
+                        <div class="dropdown-cart-total">
+
+                        </div><!-- End .dropdown-cart-total -->
+
+                        <div class="dropdown-cart-action">
+                            <a href="/cartlist" class="btn btn-primary">View Cart</a>
+                        </div><!-- End .dropdown-cart-total -->
+                    </div><!-- End .dropdown-menu -->
+                </div><!-- End .cart-dropdown -->
+            </div><!-- End .header-right -->
+        </div><!-- End .container -->
+    </div><!-- End .header-middle -->
+    </header><!-- End .header -->
+
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU')">
+            <div class="container">
+                <h1 class="page-title">ADDRESS</h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/profile">profile</a></li>
+
+                    <li class="breadcrumb-item active" aria-current="page">Address</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+        <div class="card">
+            <br>
+            <br>
+            <h4> <a href="/add-Address" style=" margin-left: 150px;">Add New Address</a></h4>
+            <div class="card-body" style=" margin: 50px; border: 2px solid black; padding: 3rem;">
+                <% console.log("Addresses:", addresses); %>
+                    <% if (addresses && addresses.length> 0) { %>
+                        <% addresses.forEach((userAddress)=> { %>
+                            <div class="address-details"
+                                style="border: 2px solid rgba(222, 203, 203, 0.367); padding: 3%;">
+                                <h6>Address</h6>
+                                <p>
+                                    <%= userAddress.address[0].name || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].mobile || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].address || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].city || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].pincode || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].district || 'No name found' %>
+                                </p>
+                                <p>
+                                    <%= userAddress.address[0].state || 'No name found' %>
+                                </p>
+                                <div class="form-group">
+                                    <a href="/update-address/<%= userAddress._id %>">
+                                        <button type="submit" class="btn btn-primary text-dark update Border border-primary" style="background-color: #0056b3;">Edit</button>
+                                    </a>
+                                    
+                                    <a href="#" onclick="confirmDelete('/delete-address/<%= userAddress._id %>')">
+                                        <button type="submit" class="btn text-dark updat Border border-danger" style="background-color: red;">Delete</button>
+                                    </a>
+                                    
+                                </div>
+
+                            </div>
+                            <br>
+                            <% }) %>
+                                <% } else { %>
+                                    <p>No addresses found.</p>
+                                    <% } %>
+
+            </div>
+        </div>
+    </main><!-- End .main -->
+
+
+    <script>
+        function confirmDelete(url) {
+            if (confirm("Are you sure you want to delete this address?")) {
+                window.location.href = url;
+            }
+        }
+    </script>
+  <%- include('../layouts/userFooter') %>
+    </body>
+
+
+    <!-- KenZ/index-5.html  22 Nov 2019 09:56:18 GMT -->
+
+    </html>

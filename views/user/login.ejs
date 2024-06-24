@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Form</title>
+  <link rel="stylesheet" href="/user/css/login.css">
+</head>
+<body>
+    <div class="login">
+        <h2 class="active">LOGIN</h2>
+        <form id="loginForm" method="post" action="/login" style="max-width: 400px; margin: 0 auto;">
+          <!-- Username and Password inputs -->
+          <div style="margin-bottom: 15px;">
+              <label for="email" style="display: block;">Email</label>
+              <input type="text" class="text" name="email" id="email" style="width: calc(100% - 10px); padding: 5px;">
+              <span id="emailError" class="error" style="color: red;"></span>
+          </div>
+          
+          <div style="margin-bottom: 15px;">
+              <label for="password" style="display: block;">Password</label>
+              <input type="password" class="text" name="password" id="password" style="width: calc(100% - 10px); padding: 5px;">
+              <span id="passwordError" class="error" style="color: red;"></span>
+          </div>
+          
+          <% if (locals.message) { %>
+          <div style="color: red; margin-bottom: 15px;"><%= message %></div>
+          <% } %>
+          
+          <!-- Login button -->
+          <div style="margin-bottom: 15px; text-align: right;">
+              <button type="submit" class="signin" style="padding: 10px; background-color: blue; color: white; border: none; border-radius: 5px;">LOGIN</button>
+          </div>
+          
+          <!-- Forgot Password -->
+          <div style="margin-bottom: 10px;">
+              <a href="/forgot" style="display: inline-block; padding: 8px 15px; background-color: blue; color: white; text-align: center; text-decoration: none; border-radius: 5px;">Forgot Password?</a>
+          </div>
+          
+          <!-- Create a new account -->
+          <div style="margin-bottom: 10px;">
+              <a href="/register" style="display: inline-block; padding: 8px 15px; background-color: blue; color: white; text-align: center; text-decoration: none; border-radius: 5px;">Create a new account</a>
+          </div>
+          
+          <!-- Login using Google -->
+          <div style="margin-bottom: 10px;">
+              <a href="/google/Verify" style="display: inline-block; padding: 8px 15px; background-color: red; color: white; text-align: center; text-decoration: none; border-radius: 5px;">Login using Google</a>
+          </div>
+      </form>
+      
+      
+      </div>
+      
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        var emailValue = document.getElementById("email").value.trim();
+        var passwordValue = document.getElementById("password").value.trim();
+        var emailError = document.getElementById("emailError");
+        var passwordError = document.getElementById("passwordError");
+        var hasError = false;
+
+        // Check if email is empty or contains only whitespace
+        if (emailValue === "") {
+            emailError.textContent = "Email should not be empty.";
+            hasError = true;
+        } else {
+            emailError.textContent = "";
+        }
+
+        // Check if password is empty or contains only whitespace
+        if (passwordValue === "") {
+            passwordError.textContent = "Password should not be empty.";
+            hasError = true;
+        } else {
+            passwordError.textContent = "";
+        }
+
+        // If there's any error, prevent form submission
+        if (hasError) {
+            event.preventDefault();
+        }
+    });
+</script>
+
+</div>
+</body>
+</html>

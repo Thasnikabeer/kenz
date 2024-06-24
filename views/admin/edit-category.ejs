@@ -1,0 +1,165 @@
+   
+
+<%- include('../layouts/adminHeaders.ejs') %>
+
+    <style>
+        /* Reset some default styles */
+        body, h1, h2, p, ul, form {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        #add_user {
+            max-width: 400px;
+            margin: 70px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .btn {
+            background-color: rgb(10, 109, 170);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: rgb(10, 109, 170);
+        }
+
+        .error {
+            color: red;
+        }
+    nav {
+        background-color: #333;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 10px;
+    }
+
+    nav a:hover {
+        text-decoration: underline;
+    }
+
+   </style> 
+    <div class="container-scroller">
+      <!-- partial:../../partials/_navbar.html -->
+      <%- include('../layouts/adminHeadersmid.ejs') %>
+      
+        <!-- partial -->
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
+            
+            <h2  style="color: rgb(10, 109, 170);text-align: center;">Edit Category</h2>
+              
+              <div class="col-md-12 grid-margin stretch-card">
+                <form action="/admin/edit-category/<%= category._id %>" method="POST" id="add_user" onsubmit="return editCategoryValidation()">
+                    <div class="new_user">
+                        <div class="form-group">
+                            <label for="name" class="text-light">Category Name</label>
+                            <input type="text" name="categoryName" id="categoryName" value="<%= category.categoryName %>" placeholder="KenZ Collections">
+                            <span id="categoryNameError" class="error"></span>
+                            <% if (typeof message !== 'undefined') { %>
+                                <div class="alert alert-danger" style="color: red;">
+                                    <%= message %>
+                                </div>
+                            <% } %>
+                        </div>
+                        <div class="form-group">
+                            <label for="offerType" class="text-light">Offer Type</label>
+                            <select name="offerType" id="offerType">
+                                <option value="" <%= !category.offer || !category.offer.type ? 'selected' : '' %>>None</option>
+                                <option value="Percentage" <%= category.offer && category.offer.type === 'Percentage' ? 'selected' : '' %>>Percentage</option>
+                                <!-- Add other offer types as needed -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="offerAmount" class="text-light">Offer Amount (%)</label>
+                            <input type="text" value="<%= category.offer ? category.offer.amount : '' %>" name="offerAmount" id="offerAmount" placeholder="Offer Amount">
+                            <span id="offerAmountError" class="error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="offerEndDate" class="text-light">Offer End Date</label>
+                            <input type="date" name="offerEndDate" id="offerEndDate" value="<%= category.offer && category.offer.endDate && category.offer.endDate instanceof Date ? category.offer.endDate.toISOString().split('T')[0] : '' %>">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn text-dark update">Save</button>
+                        </div>
+                    </div>
+                </form>
+                
+                
+                <script>
+                    function editCategoryValidation() {
+                        var categoryName = document.getElementById("categoryName").value;
+                        var offerType = document.getElementById("offerType").value;
+                        var offerAmount = document.getElementById("offerAmount").value;
+                    
+                        document.getElementById('categoryNameError').innerText = "";
+                        document.getElementById('offerAmountError').innerText = "";
+                    
+                        // Validate Category Name
+                        if (categoryName.trim() === "") {
+                            document.getElementById('categoryNameError').innerText = "Category Name is required";
+                            return false;
+                        }
+                        if (!/^[a-zA-Z\s]+$/.test(categoryName)) {  // Allow spaces in category names
+                            document.getElementById('categoryNameError').innerText = "Category Name must be alphabetic characters";
+                            return false;
+                        }
+                    
+                        // Validate Offer Amount if Offer Type is selected
+                        if (offerType !== "" && (offerAmount.trim() === "" || !/^\d+$/.test(offerAmount) || parseInt(offerAmount) <= 0)) {
+                            document.getElementById('offerAmountError').innerText = "Offer Amount must be a positive integer if Offer Type is selected";
+                            return false;
+                        }
+                    
+                        return true;
+                    }
+                    </script>
+                    
+                
+               
+              </div>
+              
+              
+                         
+              
+           
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include('../layouts/adminFooters.ejs') %>

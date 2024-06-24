@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <link rel="stylesheet" href="/user/css/register.css">
+
+</head>
+<body>
+  <style>
+    .error {
+      color: red;
+    }
+    .signup-container {
+  background: linear-gradient(to bottom right, #ffffff, #e6e6e6); /* Adjust gradient colors as needed */
+  border: 1px solid #ccc; /* Border style */
+  border-radius: 5px; /* Rounded corners */
+  padding: 20px; /* Padding inside the box */
+  width: 300px; /* Width of the box */
+  margin: 50px auto 20px; /* Center align the box and adjust top margin */
+  box-sizing: border-box; /* Include border and padding in the width */
+}
+
+
+
+
+
+
+    
+  </style>
+<div class="signup-container">
+  <h2 class="active">SIGNUP</h2>
+  <form action="/register" method="post" id="signupForm" onsubmit="return validateForm()" enctype="multipart/form-data" style="margin-bottom: 10px;">
+    Username<br>
+    <input type="text" class="text" name="name" id="username" style="width: 200px; margin-bottom: 5px; padding: 5px;" placeholder="username">
+    <span id="usernameError" class="error"></span><br>
+
+    Password<br>
+    <input type="password" class="text" name="password" id="password" style="width: 200px; margin-bottom: 5px; padding: 5px;" oninput="validatePassword()" placeholder="Sample@123">
+    <span id="passwordError" class="error"></span><br>
+
+    Confirm Password<br>
+    <input type="password" class="text" id="confirmPassword" style="width: 200px; margin-bottom: 5px; padding: 5px;">
+    <span id="confirmPasswordError" class="error"></span><br>
+
+    Email<br>
+    <input type="email" class="text" name="email" id="email"  style="width: 200px; margin-bottom: 5px; padding: 5px;" >
+    <span id="emailError" class="error"></span><br>
+
+    Mobile Number<br>
+    <input type="tel" class="text" name="phone" id="phone" style="width: 200px; margin-bottom: 5px; padding: 5px;">
+    <span id="phoneError" class="error"></span><br>
+
+    User Image<br>
+    <input type="file" class="text" name="image" id="image" style="width: 200px; margin-bottom: 5px; padding: 5px;">
+    <span id="imageError" class="error"></span><br>
+
+    <label for="enableInput">Referral code (optional):</label><br>
+    <input type="text" id="optionalField" name="referralCodeUsed" style="width: 200px; height: 35px; margin-bottom: 5px; padding: 5px;" placeholder="Enter optional text"><br>
+    <br>
+    <script>
+      function toggleInput() {
+          const optionalField = document.getElementById("optionalField");
+          const enableInput = document.getElementById("enableInput");
+
+          if (enableInput.checked) {
+              optionalField.removeAttribute("disabled");
+          } else {
+              optionalField.setAttribute("disabled", true);
+          }
+      }
+  </script>
+    <button type="submit" class="signin" style="padding: 10px; background-color: blue; color: white;">SIGNUP</button>
+
+    <hr> 
+  </form>
+  
+  <% if(typeof message !=='undefined'){ %>
+    <script>
+      alert('<%= message %>');
+    </script>
+  <% } %>
+</div>
+
+</body>
+</html> 
+ 
+
+<script>
+function validatePassword() {
+    var password = document.getElementById('password').value.trim();
+    var passwordError = document.getElementById('passwordError');
+
+    if (password === '') {
+        passwordError.innerText = 'Password is required.';
+        return;
+    }
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+        passwordError.innerText = 'Password should contain at least 8 characters, one uppercase letter, one lowercase letter, one symbol, and one digit.';
+    } else {
+        passwordError.innerText = '';
+    }
+}
+</script>
+
+
+
+
+    <script>
+      function validateForm() {
+        document.getElementById('usernameError').innerText = '';
+        document.getElementById('passwordError').innerText = '';
+        document.getElementById('emailError').innerText = '';
+        document.getElementById('phoneError').innerText = '';
+        document.getElementById('confirmPasswordError').innerText=''
+        document.getElementById('imageError').innerText = '';
+        // Get form inputs
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        var email = document.getElementById('email').value;
+        var phone = document.getElementById('phone').value;
+        var confirmPassword = document.getElementById("confirmPassword").value;
+        var image = document.getElementById("image");
+
+
+        // Validation for username
+        if (username.trim() === '') {
+          document.getElementById('usernameError').innerText ='Username is required.';
+          return false;
+        }
+        if (!/^[a-zA-Z]+$/.test(username)) {
+            document.getElementById('usernameError').innerText = "User Name Must Be Charecters";
+            return false;
+        }
+        if (username.length < 3 || username.length > 20) {
+          document.getElementById('usernameError').innerText = 'Username must be between 3 and 20 characters.';
+          return false;
+        }
+
+        //  // Validation for password
+        // if (password.trim() === '') {
+        //   document.getElementById('passwordError').innerText = 'Password is required.';
+        //   return false;
+        // }
+        // if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+        //   document.getElementById('passwordError').innerText = 'Password should contain at least 8 characters, one upper case, one lower case and one symbol';
+        //   return false;
+        // }
+
+
+        // if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password) ) {
+        //   document.getElementById('passwordError').innerText = 'Password should contain at least one uppercase letter.';
+        //   return false;
+        // }
+        // if (!/[a-z]/.test(password)) {
+        //   document.getElementById('passwordError').innerText = 'Password should contain at least one lowercase letter.';
+        //   return false;
+        // }
+        // if (!/[0-9]/.test(password)) {
+        //   document.getElementById('passwordError').innerText = 'Password should contain at least one digit.';
+        //   return false;
+        // }
+        // if (!/[!@#$%^&*]/.test(password)) {
+        //   document.getElementById('passwordError').innerText = 'Password should contain at least one special character (!@#$%^&*).';
+        //   return false;
+        // }
+        if (confirmPassword.trim() === '') {
+          document.getElementById('confirmPasswordError').innerText = 'Password is required.';
+          return false;
+        }
+
+      if (password != confirmPassword) {
+        document.getElementById("confirmPasswordError").innerHTML = "Passwords do not match";
+        return false;
+      }
+        // Validation for email
+        if (email.trim() === '') {
+          document.getElementById('emailError').innerText = 'Email is required.';
+          return false;
+        }
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          document.getElementById('emailError').innerText = 'Invalid email format.';
+          return false;
+        }
+        // Validation for phonenumber
+        if (phone.trim() === '') {
+      document.getElementById('phoneError').innerText = 'Phone number is required.';
+      return false;
+    }
+    var phoneRegex = /^\d{10}$/; 
+    if (!phoneRegex.test(phone)) {
+      document.getElementById('phoneError').innerText = 'Invalid phone number format.';
+      return false;
+    }
+    if (image.files.length === 0) {
+      document.getElementById('imageError').innerText = 'Image is required.';
+      return false;
+    }
+    var allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']; // Add more types if needed
+    if (!allowedTypes.includes(image.files[0].type)) {
+      document.getElementById('imageError').innerText = 'Please select a valid image file (JPEG, PNG, GIF).';
+      return false;
+    }
+        // If validation passes, the form is submitted
+        return true;
+      }
+    </script>
+  </div>
+</body>
+</html>

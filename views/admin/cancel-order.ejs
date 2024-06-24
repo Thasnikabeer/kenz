@@ -1,0 +1,109 @@
+<%- include('../layouts/adminHeaders') %>
+
+
+
+   
+    
+<div class="container-scroller">
+  <%- include('../layouts/adminHeadersmid') %>
+    <!-- partial:../../partials/_navbar.html -->
+      <!-- partial -->
+       <!-- partial -->
+
+       <div class="main-panel">
+        <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
+          <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+              <div class="card-body">
+                <h2 class="card-title" style="color: rgb(10, 109, 170);text-align: center;">Cancelled Orders</h2><br><br>
+                <div class="container">
+  
+            
+            <div class="col-md-12 grid-margin stretch-card">
+                
+           
+
+                <% if (canceledOrders.length === 0) { %>
+                    <p>No canceled orders found.</p>
+                <% } else { %>
+                    <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
+                        <thead>
+                            <tr style="background-color: #f6c2c2; color: white;">
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Order ID</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">User Name</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Product Details</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Total amount</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Cancellation Reason</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% canceledOrders.forEach(order => { %>
+                                <tr>
+                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= order._id %></td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= order.userName %></td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <% if (order.products && order.products.length > 0) { %>
+                                            <% order.products.forEach(product => { %>
+                                                <p>
+                                                    <% if (product.product && product.product.productName) { %>
+                                                        Product Name: <%= product.product.productName %>,<br>
+                                                    <% } else { %>
+                                                        Product Name: N/A,<br>
+                                                    <% } %>
+                                                    <% if (product.product && product.product.price) { %>
+                                                        Product Price: <%= product.product.price %><br>
+                                                    <% } else { %>
+                                                        Product Price: N/A<br>
+                                                    <% } %>
+                                                    Product Quantity: <%= product.quantity %><br>
+                                                </p>
+                                            <% }) %>
+                                        <% } else { %>
+                                            No products
+                                        <% } %>
+                                    </td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= order.totalAmount %></td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= order.cancellation.reason %></td>
+                                    <td style="border: 1px solid #ddd; padding: 8px;">
+                                        <div class="button-container">
+                                            <form action="/admin/confirm-order-cancellation/<%= order.id %>" method="POST">
+                                                <!-- Include any form input fields if needed -->
+                                                <button type="submit" class="confirm-button" onclick="return confirmCancellation()" style="background-color: yellow; color: black;">
+                                                    Confirm Cancellation
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                    
+                <% } %>
+
+           
+            
+          </div>
+          <a href="/admin/loadorder">Back to order details</a>
+            <script>
+              function confirmCancellation() {
+                  var isConfirmed = confirm("Are you sure you want to confirm the order cancellation?");
+                  return isConfirmed;
+              }
+            </script>
+
+            
+        </div>
+        <!-- content-wrapper ends -->
+  
+              </div>
+            </div>
+          </div>
+        </div>
+       
+   
+         
+    
+ <!-- partial:../../partials/_footer.html -->
+ <%- include('../layouts/adminFooters') %>

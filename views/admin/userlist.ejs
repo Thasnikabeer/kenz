@@ -1,0 +1,67 @@
+
+<%- include('../layouts/adminHeader.ejs') %>
+div class="container-scroller">
+<!-- partial:../../partials/_navbar.html -->
+<%- include('../layouts/adminHeadersmid.ejs') %>
+        <!-- partial -->
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper"style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
+            <div class="page-header">
+             
+              
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h2 class="card-title" style="color: rgb(10, 109, 170);text-align: center;">User List</h2>
+                    <p class="card-description"> <code></code>
+                    </p>
+                    <table class="table table-hover" style="border-collapse: collapse; width: 100%;">
+                      <thead>
+                          <tr>
+                              <th style="border: 2px solid #000; font-weight: bold; text-align: center;">Name</th>
+                              <th style="border: 2px solid #000; font-weight: bold; text-align: center;">Email</th>
+                              <th style="border: 2px solid #000; font-weight: bold; text-align: center;">Phone</th>
+                              <th style="border: 2px solid #000; font-weight: bold; text-align: center;">Verified</th>
+                              <th style="border: 2px solid #000; font-weight: bold; text-align: center;">Status</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <% if(users.length > 0){ %>
+                              <% for(let i=0; i< users.length; i++) { %>
+                                  <tr style="border: 2px solid #000;">
+                                      <td style="border: 2px solid #000; text-align: left;"><%= users[i].name %></td>
+                                      <td style="border: 2px solid #000; text-align: center;"><%= users[i].email %></td>
+                                      <td style="border: 2px solid #000; text-align: center;"><%= users[i].phone %></td>
+                                      <td style="border: 2px solid #000; text-align: center;">
+                                          <%= users[i].is_verified === false ? 'Not Verified' : 'Verified' %>
+                                      </td>
+                                      <td style="border: 2px solid #000; text-align: center;">
+                                          <a href="/admin/listUser/block_user/<%=users[i]._id%>" 
+                                              onclick="return confirm('Are you sure you want to block/unblock this user?')"
+                                              class="btn btn-sm <%= users[i].isBlocked ? 'btn-danger' : 'btn-primary' %> delete" title="Delete">
+                                              <%= users[i].isBlocked ? 'Unblock' : 'Block' %>
+                                          </a>
+                                      </td>
+                                  </tr>
+                              <% } %>
+                          <% } else { %>
+                              <tr style="border: 2px solid #000;">
+                                  <td colspan="5" style="border: 2px solid #000; text-align: center;">Users Not Found</td>
+                              </tr>
+                          <% } %>
+                      </tbody>
+                  </table>
+                  
+                  
+                    <br>
+                    <br>
+                    <a href="/admin/home">Back To Home</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <!-- partial:../../partials/_footer.html -->
+          <%- include('../layouts/adminFooters.ejs') %>

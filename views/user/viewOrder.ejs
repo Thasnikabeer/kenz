@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+
+    <!-- Add Bootstrap CSS link (optional) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <style>
+       body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); /* Replace with the correct path to your image */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center center; /* Centers the image */
+}
+
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+        }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .thead-dark th {
+            background-color: #343a40;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Order Details</h2>
+
+        <table class="table" style="border-collapse: collapse; width: 100%;">
+            <thead class="thead-dark" style="border: 1px solid black; font-weight: bold;">
+                <tr>
+                    <th scope="col" style="border: 1px solid black;">#</th>
+                    <th scope="col" style="border: 1px solid black;">Image</th>
+                    <th scope="col" style="border: 1px solid black;">Product name</th>
+                    <th scope="col" style="border: 1px solid black;">Product price</th>
+                    <th scope="col" style="border: 1px solid black;">Product Quantity</th>
+                    <th scope="col" style="border: 1px solid black;">Product Price</th>
+                    <th scope="col" style="border: 1px solid black;">Cancel</th>
+                    <!-- <th scope="col" style="border: 1px solid black;">Return</th> -->
+                </tr>
+            </thead>
+            <tbody style="font-weight: bold;">
+                <% order.products.forEach((productDetail, index) => { %>
+                    <tr style="border: 1px solid black;">
+                        <td style="border: 1px solid black;"><%= index + 1 %></td>
+                        <td class="product-col" style="border: 1px solid black;">
+                            <div class="product">
+                                <figure class="product-media">
+                                    <a href="/product/<%= productDetail.product._id %>">
+                                        <img src="/images/<%= productDetail.product.images[0] %>" style="width: 50px;" alt="Product image">
+                                    </a>
+                                </figure>
+                            </div>
+                        </td>
+                        <td style="border: 1px solid black;"><%= productDetail.product.productName %></td>
+                        <td style="border: 1px solid black;"><%= productDetail.product.price %></td>
+                        <td style="border: 1px solid black;"><%= productDetail.quantity %></td>
+                        <td style="border: 1px solid black;"><%= productDetail.quantity * productDetail.product.price %></td>
+                        <td class="text-center" style="border: 1px solid black; text-align: center;">
+                            <% if (order.status === 'delivered') { %>
+                                <p>Product Delivered</p>
+                            <% } else if (order.status === 'Returned') { %>
+                                <p>Order Returned</p>
+                            <% } else if (order.status === 'Cancelled') { %>
+                                <p>Order Cancelled</p>
+                            <% } else if (order.status === 'Cancellation') { %>
+                                <p>Cancellation in Progress</p>
+                            <% } else { %>
+                                <form action="/reasonpage/<%= order.id %>" method="GET">
+                                    <button class="btn btn-danger">Cancel Order</button>
+                                </form>
+                            <% } %>
+                        </td>
+                        <!-- <td class="text-center" style="border: 1px solid #101010; text-align: center;">
+                            <% if (order.status.trim() === 'delivered' && !order.returned) { %>
+                                <form action="/orders/<%= order._id %>/return" method="POST"  onsubmit="return confirm('Are you sure you want to request a return?');">
+                                    <input type="text" name="returnReason" class="form-control" placeholder="Enter return reason" required>
+                                    <button type="submit" class="btn btn-primary">Request Return</button>
+                                </form>                                                             
+                            <% } else if (order.returned) { %>
+                                <p>Product Returned</p>
+                            <% } %>
+                        </td> -->
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+        
+        
+        <div style="margin-left: 700px;">
+            <p>Total Product Amount:<%=totalOrderPrice%></p>
+            <p>Discount amount:<%=order.discountAmount%></p>
+            <p>Paid Amount: <%= order.totalAmount %></p>
+            <div>
+                <button id="btn-invoice" type="button" class="btn btn-dark" data-order-id="<%= order._id %>">Download Invoice</button><br><br>
+            </div>
+        </div>
+    </div>
+    <a href="/order-history" style="margin-left: 200px;">Back to Order History</a>
+    <script>
+        document.getElementById('btn-invoice').addEventListener('click', function() {
+            const orderId = this.getAttribute('data-order-id');
+            fetch(`/invoices/from-order/${orderId}`, {
+                method: 'POST',
+            })
+            .then(response => response.json())
+            .then(invoice => {
+                if (invoice._id) {
+                    window.location.href = `/invoices/${invoice._id}/pdf`;
+                } else {
+                    alert('Failed to generate invoice.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

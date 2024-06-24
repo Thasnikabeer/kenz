@@ -23,7 +23,6 @@
     "express-session": "^1.18.0",
     "fs": "^0.0.1-security",
     "generate-otp": "^1.0.6",
-    "html-pdf": "^3.0.1",
     "json2xls": "^0.1.2",
     "moment": "^2.30.1",
     "mongodb": "^6.5.0",

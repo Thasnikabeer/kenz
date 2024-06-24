@@ -7,7 +7,7 @@ const table = require('pdfkit-table');
 const ejs = require('ejs');
 const fs = require('fs');
 const util = require('util');
-const pdf = require('html-pdf');
+// const pdf = require('html-pdf');
 const ExcelJS = require('exceljs');
 
 const puppeteer = require('puppeteer');

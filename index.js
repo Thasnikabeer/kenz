@@ -90,10 +90,10 @@ app.use('/admin',adminRoute);
 
 
 //error handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something went wrong!');
-  });
+// app.use((err, req, res, next) => {
+//     console.error(err.stack);
+//     res.status(500).send('Something went wrong!');
+//   });
 
 app.get("*",(req,res)=>{
   res.render("404")

@@ -51,7 +51,7 @@ const order = async (req, res) => {
     const totalOrders = await Order.countDocuments(query);
 
     // Pass newStatus as null to prevent ReferenceError
-    res.render('ordermanagement', {
+    res.render('orderManagement', {
       order,
       currentPage: page,
       totalPages: Math.ceil(totalOrders / limit),

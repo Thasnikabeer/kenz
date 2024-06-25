@@ -43,9 +43,9 @@ const addcoupon = async (req, res) => {
         });
       }
   
-      if (maxDiscountAmount > 500) {
+      if (maxDiscountAmount > 1000) {
         return res.render('add-coupon', {
-          message: "Max discount amount cannot exceed 500.",
+          message: "Max discount amount cannot exceed 1000.",
         });
       }
   

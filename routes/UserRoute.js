@@ -74,17 +74,17 @@ router.get('/logout',auth.isLogged,userController.userLogout);
 router.post('/resend-otp/:userId',userController.resendOTP);
 
 // user profile managment
-router.get('/editProfileImage', userController.viewEditProfileImage);
-router.post('/updateProfileImage', upload.single('image'), userController.updateProfileImage);
+router.get('/editProfileImage',auth.isLogged, userController.viewEditProfileImage);
+router.post('/updateProfileImage', auth.isLogged,upload.single('image'), userController.updateProfileImage);
 router.get('/profile',auth.isLogged,userController.viewProfile);
-router.get('/editProfileForm', userController.viewEditProfileForm);
-router.post('/updateProfile',userController.updateProfile);
+router.get('/editProfileForm',auth.isLogged,userController.viewEditProfileForm);
+router.post('/updateProfile',auth.isLogged,userController.updateProfile);
 router.get ('/change-password',auth.isLogged,userController.loadchangepassword);
 router.post('/changepass',auth.isLogged,userController.changepassword);
-router.get('/forgot',userController.forgotLoad);
-router.post('/forgot',userController.forgotPass);
-router.get('/forgot-password',userController.forgotpassword);
-router.post('/forgot-password',userController.restPassword);
+router.get('/forgot',auth.isLogged,userController.forgotLoad);
+router.post('/forgot',auth.isLogged,userController.forgotPass);
+router.get('/forgot-password',auth.isLogged,userController.forgotpassword);
+router.post('/forgot-password',auth.isLogged,userController.restPassword);
 // user product 
 router.get('/product-list',userController.viewProductList);
 router.get('/product/:productId',userController.viewProduct);

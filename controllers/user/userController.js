@@ -589,6 +589,9 @@ const updateProfileImage = async (req, res) => {
 
           // Update the user's image path in the database
           await User.findByIdAndUpdate(userId, { image: imagePath });
+
+          // Log the file upload path
+          console.log(`File uploaded to: /home/ubuntu/kenz/public/userImage/${req.file.filename}`);
       }
 
       res.redirect('/profile');
@@ -597,6 +600,7 @@ const updateProfileImage = async (req, res) => {
       res.status(500).send('Internal Server Error');
   }
 };
+
 
 
 const viewEditProfileForm = (req, res) => {

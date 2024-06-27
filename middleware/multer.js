@@ -4,7 +4,7 @@ const path = require('path');
 // image upload multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, 'public/images'));
+        cb(null, '/home/ubuntu/kenz/public/userImage/');
     },
     filename: (req, file, cb) => {
         const uniqueFilename = Date.now() + '-' + file.originalname;

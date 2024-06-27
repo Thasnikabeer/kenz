@@ -863,7 +863,7 @@ const loadcheckout = async (req, res) => {
 
     // Get the discount amount from user's coupon
     let discountAmount = user.coupon ? user.coupon.discountAmount : 0;
-    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",discountAmount);
+    
 
     // Calculate final total after applying discount
     let finalTotal = totalCartPrice + shippingCharge - discountAmount;

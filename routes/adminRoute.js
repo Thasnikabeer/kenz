@@ -31,7 +31,7 @@ const categoryController=require('../controllers/admin/categoryController');
 const orderController=require('../controllers/admin/orderController')
 const dashboardController = require("../controllers/admin/dashboardController");
 const couponController=require('../controllers/admin/couponController');
-
+const reportController = require('../controllers/admin/reportController');
 admin_route.get('/',auth.isLogout,adminController.loadlogin);
 admin_route.post('/',adminController.verifyLogin);
 
@@ -52,12 +52,12 @@ admin_route.get('/top-categories',adminController.getTopCategoryies);
 
 
 
-// admin_route.get('/deliveredOrders', auth.isLogin,dashboardController.salesReport); 
-// admin_route.get('/downloadSalesReport',auth.isLogin, dashboardController.downloadSalesReport); 
-// admin_route.get('/dowloadsalesReports',auth.isLogin,dashboardController.downloadSalesReports);
-// admin_route.get('/dowloadsalesExcel',auth.isLogin,dashboardController.downloadSalesReportsExcel);
+admin_route.get('/deliveredOrders', auth.isLogin,dashboardController.salesReport); 
+admin_route.get('/downloadSalesReport',auth.isLogin, dashboardController.downloadSalesReport); 
+admin_route.get('/dowloadsalesReports',auth.isLogin,dashboardController.downloadSalesReports);
+admin_route.get('/dowloadsalesExcel',auth.isLogin,dashboardController.downloadSalesReportsExcel);
 admin_route.get('/getUserDetailsAndOrders', auth.isLogin,dashboardController.getUserDetailsAndOrders); 
-// admin_route.get('/getYearlyRevenue', auth.isLogin,dashboardController.getYearlyRevenue); 
+admin_route.get('/getYearlyRevenue', auth.isLogin,dashboardController.getYearlyRevenue); 
 admin_route.get('/report',auth.isLogin, auth.isLogin,dashboardController.getDashboardData);
 admin_route.get('/dashboard-data',auth.isLogin,dashboardController.dashboardData);
 
@@ -114,16 +114,15 @@ admin_route.get('/edit-coupon/:couponId',auth.isLogin,couponController.loadeditC
 admin_route.post('/edit-coupon/:couponId',auth.isLogin,couponController.editCoupon);
 admin_route.get('/loadcoupon/:couponId',auth.isLogin,couponController.deleteCoupon);
 
-// 
-// admin_route.get('/sales-report/', auth.isLogin, admSalesReportController.salesReportGet );
-// admin_route.get('/sales-report/:reportType', auth.isLogin, admSalesReportController.customSalesReportGet);
-// admin_route.get('/sales/pdf/:reportType', auth.isLogin, admSalesReportController.genPdfGet );
-// admin_route.get('/sales-report-total', auth.isLogin, admSalesReportController.salesReportTotalGet );
-// admin_route.get('/sales/excel/:reportType', auth.isLogin, admSalesReportController.salesReportExcelGet );
+// Render the dashboard
+admin_route.get('/dashboard', auth.isLogin, reportController.renderDashboard);
 
-// admin_route.get('/top-categories', auth.isLogin, admSalesReportController.getTopCategories);
+// Generate the report (PDF or Excel based on query parameters)
+admin_route.get('/report', auth.isLogin, reportController.generateReport);
 
-
+// If you want separate routes for generating PDF and Excel directly, you can keep these
+admin_route.get('/generateexcel', auth.isLogin, (req, res) => reportController.generateReport({ ...req, query: { ...req.query, type: 'excel' } }, res));
+admin_route.get('/generatepdf', auth.isLogin, (req, res) => reportController.generateReport({ ...req, query: { ...req.query, type: 'pdf' } }, res));
 
 admin_route.get('*',function(req,res){
 

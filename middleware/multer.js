@@ -4,10 +4,9 @@ const path = require('path');
 // image upload multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'public/images/');
+        cb(null, path.join(__dirname, 'public/images'));
     },
     filename: (req, file, cb) => {
-        // Generate unique filename (e.g., timestamp + original filename)
         const uniqueFilename = Date.now() + '-' + file.originalname;
         cb(null, uniqueFilename);
     }

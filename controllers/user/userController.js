@@ -568,7 +568,6 @@ const viewProfile = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-
 const viewEditProfileImage = async(req, res) => {
   try {
     const user = await User.findById(req.session.user_id);
@@ -580,6 +579,7 @@ const viewEditProfileImage = async(req, res) => {
  
 };
 
+
 const updateProfileImage = async (req, res) => {
   try {
       const userId = req.session.user_id;
@@ -589,9 +589,6 @@ const updateProfileImage = async (req, res) => {
 
           // Update the user's image path in the database
           await User.findByIdAndUpdate(userId, { image: imagePath });
-
-          // Log the file upload path
-          console.log(`File uploaded to: /home/ubuntu/kenz/public/userImage/${req.file.filename}`);
       }
 
       res.redirect('/profile');
@@ -602,11 +599,9 @@ const updateProfileImage = async (req, res) => {
 };
 
 
-
 const viewEditProfileForm = (req, res) => {
   res.render('editProfileForm');
 };
-
 
 
 const updateProfile = async (req, res) => {

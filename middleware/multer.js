@@ -4,14 +4,14 @@ const path = require('path');
 // image upload multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '/home/ubuntu/kenz/public/userImage/');
+        cb(null, 'public/images/');
     },
     filename: (req, file, cb) => {
+        // Generate unique filename (e.g., timestamp + original filename)
         const uniqueFilename = Date.now() + '-' + file.originalname;
         cb(null, uniqueFilename);
     }
 });
-
 const upload = multer({
     storage: storage,
     limits: {
@@ -28,5 +28,6 @@ const upload = multer({
         cb(new Error('Only images, PDFs, and documents are allowed'));
     }
 });
+
 
 module.exports = { upload };

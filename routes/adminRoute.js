@@ -5,7 +5,7 @@ const multerMiddleware =require('../middleware/multer').upload
 
 const session = require("express-session");
 const config = require("../config/config");
-//admin_route.use(session({secret:config.sessionSecret}));
+
 
 admin_route.use(session({
     secret: config.sessionSecret,
@@ -32,6 +32,8 @@ const orderController=require('../controllers/admin/orderController')
 const dashboardController = require("../controllers/admin/dashboardController");
 const couponController=require('../controllers/admin/couponController');
 const reportController = require('../controllers/admin/reportController');
+
+
 admin_route.get('/',auth.isLogout,adminController.loadlogin);
 admin_route.post('/',adminController.verifyLogin);
 
@@ -91,9 +93,7 @@ admin_route.get('/add-product',auth.isLogin,categoryController.loadProduct)
 admin_route.post('/new-product',auth.isLogin, multerMiddleware.array('images', 3),categoryController.addProduct)
 admin_route.get('/edit-product/:productId',auth.isLogin,categoryController.LoadEditProduct);
 admin_route.post('/edit-product/:productId',auth.isLogin, multerMiddleware.array('images', 3),categoryController.editProduct);
-//admin_route.get('/product/:productId',categoryController.deleteProduct);
 admin_route.post('/product/:id/update-status',auth.isLogin,categoryController.updateProductStatus);
-
 admin_route.get('/remove-image/:productId/:imageName', auth.isLogin, categoryController.removeImage);
 admin_route.post('/add-image/:productId', auth.isLogin,multerMiddleware.array('images',3),categoryController.addImage);
 
@@ -113,16 +113,11 @@ admin_route.post('/add-coupon',auth.isLogin,couponController.addcoupon);
 admin_route.get('/edit-coupon/:couponId',auth.isLogin,couponController.loadeditCoupon);
 admin_route.post('/edit-coupon/:couponId',auth.isLogin,couponController.editCoupon);
 admin_route.get('/loadcoupon/:couponId',auth.isLogin,couponController.deleteCoupon);
+const { generateReport, renderDashboard } = require('../controllers/admin/reportController');
 
-// Render the dashboard
-admin_route.get('/dashboard', auth.isLogin, reportController.renderDashboard);
+admin_route.get('/home', renderDashboard);
 
-// Generate the report (PDF or Excel based on query parameters)
-admin_route.get('/report', auth.isLogin, reportController.generateReport);
-
-// If you want separate routes for generating PDF and Excel directly, you can keep these
-admin_route.get('/generateexcel', auth.isLogin, (req, res) => reportController.generateReport({ ...req, query: { ...req.query, type: 'excel' } }, res));
-admin_route.get('/generatepdf', auth.isLogin, (req, res) => reportController.generateReport({ ...req, query: { ...req.query, type: 'pdf' } }, res));
+admin_route.get('/report', generateReport);
 
 admin_route.get('*',function(req,res){
 

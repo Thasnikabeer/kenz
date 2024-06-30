@@ -35,6 +35,8 @@
             });
         });
     </script>
+<!-- Add this in your <head> section or before your closing </body> tag -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <% function formatDate(date) { const options={ year: 'numeric' , month: 'long' , day: 'numeric' }; return date ? new
 Date(date).toLocaleDateString('en-US', options) : '' ; } %>
@@ -168,26 +170,30 @@ Date(date).toLocaleDateString('en-US', options) : '' ; } %>
                 <a href="/addwhitelist/<%= product._id %>" class="btn-product-icon btn-wishlist btn-expandable">
                 <span>add to wishlist</span>
                 </a>
-            </div><!-- End .product-action-vertical -->
+            </div>
             <div class="product-action">
                 <% if (product.stock > 0) { %>
-                    <a href="/add-to-cart/<%= product._id %>" class="btn-product btn-cart"><span>add to cart</span></a>
-                <% } else { %>
-                    <span class="btn-product btn-out-of-stock"><span>Out of Stock</span></span>
-                <% } %>
-            </div><!-- End .product-action -->
-        </figure><!-- End .product-media -->
+                <a href="/add-to-cart/<%= product._id %>" class="btn-product btn-cart" onclick="addToCart('<%= product.productName %>')">
+                    <span>Add to Cart</span>
+                </a>
+<% } else { %>
+    <span class="btn-product btn-out-of-stock"><span>Out of Stock</span></span>
+<% } %>
+
+            </div>
+            
+        </figure>
 
         <div class="product-body">
             <div class="product-cat">
-                <a href="#"><!-- Display product category --></a>
-            </div><!-- End .product-cat -->
+                <a href="#"></a>
+            </div>
             <h3 class="product-title" style="font-weight: bold;">
                 <a href="<%= '/products/' + product._id %>"><%= product.productName %></a>
-            </h3><!-- End .product-title -->
+            </h3>
             <div class="product-price">
                                                                 <% if (product.offer && product.offer.amount) { %>
-                                                                    <!-- Product Offer -->
+                                                                    
                                                                     <b>
                                                                         <p class="offer-details"
                                                                             style="font-weight: 500; color: rgb(175, 5, 5);">
@@ -196,10 +202,10 @@ Date(date).toLocaleDateString('en-US', options) : '' ; } %>
                                                                         </p>
                                                                     </b>
                                                                     <br>
-                                                                    <!-- Display old price with strike-through -->
+                                                                    
                                                                     <p class="old-price">Rs<%= product.oldPrice %>
                                                                     </p>
-                                                                    <!-- Display discounted price -->
+                                                                    
                                                                     <p class="new-price">Rs<%= product.price %>
                                                                     </p>
                                                                     <% } else if (product.category &&
@@ -216,22 +222,22 @@ Date(date).toLocaleDateString('en-US', options) : '' ; } %>
                                                                                         %>
                                                                         </p>
 
-                                                                        <!-- Display old price with strike-through -->
+                                                                        
                                                                         <p class="old-price" style="font-weight: 500;">
                                                                             Rs <%= product.oldPrice %>
                                                                         </p><br>
-                                                                        <!-- Display discounted price -->
+                                                                        
                                                                         <b>
                                                                             <p class="new-price">Rs <%= product.price %>
                                                                             </p>
                                                                         </b>
                                                                         <% } else { %>
-                                                                            <!-- Regular Price -->
+                                                                            
                                                                             <p class="regular-price">Rs <%=
                                                                                     product.price %>
                                                                             </p>
                                                                             <% } %>
-                                                            </div><!-- End .product-price -->
+                                                            </div>
 
                                                         </div><!-- End .product-body -->
                                                     </div><!-- End .product -->
@@ -287,17 +293,17 @@ Date(date).toLocaleDateString('en-US', options) : '' ; } %>
                 </div><!-- End .col-lg-9 -->
                 <aside class="col-lg-3 order-lg-first">
     <div class="sidebar sidebar-shop peach-bg">
-        <!-- Filter Widget -->
+       
         <div class="widget widget-clean">
             <label>Filters:</label>
             <a href="/product-list" class="sidebar-filter-clear">Clean All</a>
-        </div><!-- End .widget widget-clean -->
+        </div>
 
-        <!-- Filter Form -->
+        
         <form action="/product-list" method="GET" id="yourFormId">
             <input type="hidden" id="selectedCategory" name="selectedCategory" value="<%= selectedCategory %>">
 
-            <!-- Search Container -->
+            
             <div class="search-container">
                 <i class="fas fa-search search-icon"></i>
                 <input type="search" class="product-search" name="search" placeholder="Search by name" value="<%= searchQuery %>">
@@ -522,6 +528,23 @@ Date(date).toLocaleDateString('en-US', options) : '' ; } %>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/demos/demo-5.js"></script>
     </body>
+    <script>
+    function addToCart(productName) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: `${productName} added to cart successfully`,
+            showConfirmButton: false,
+            timer: 10000, // Close the alert after 1.5 seconds
+            iconColor: '#4BB543', // Green color
+            customClass: {
+                popup: 'swal-popup-class',
+                content: 'swal-content-class',
+                closeButton: 'swal-close-button-class',
+            },
+        });
+    }
+</script>
 
 
     <!-- KenZ/index-5.html  22 Nov 2019 09:56:18 GMT -->

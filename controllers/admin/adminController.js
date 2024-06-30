@@ -616,43 +616,6 @@ async function getProductStatus(fromDate, toDate) {
 }
 
 
-// async function topSaledBrands(fromDate, toDate) {
-//   try {
-//     const pipeline = [];
-
-//     // Filter by date range (if provided)
-//     if (fromDate && toDate) {
-//       pipeline.push({
-//         $match: {
-//           deliveredAt: {
-//             $gte: new Date(fromDate),
-//             $lte: new Date(toDate),
-//           },
-//         },
-//       });
-//     }
-
-//     // Group by brand and count documents
-//     pipeline.push({
-//       $group: {
-//         _id: "$brand",
-//         count: { $sum: 1 },
-//       },
-//     });
-
-//     // Sort by count in descending order
-//     pipeline.push({
-//       $sort: {
-//         count: -1,
-//       },
-//     });
-
-//     const brands = await Product.aggregate(pipeline);
-//     return brands
-//   } catch (err) {
-//     console.log(`Error at topSaledBrands: ${err}`);
-//   }
-// }
 
 
 

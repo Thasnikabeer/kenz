@@ -911,8 +911,10 @@ const orderSucess = async (req, res) => {
 }
 
 
+
 const placeorder = async (req, res) => {
   try {
+    console.log("Hello from place ORder")
     const userId = req.session.user_id;
     const user = await User.findById(userId).populate('cart.product chosenAddress');
 
@@ -949,19 +951,26 @@ const placeorder = async (req, res) => {
         return res.status(400).send('Invalid coupon code.');
       }
     }
+    if(discountAmount>=1000){
+      discountAmount=1000;
+    }
 
     // Calculate the total amount after applying discount
     const totalAmountAfterDiscount = cartTotal - discountAmount;
+    
 
     const paymentMethod = req.body.paymentMethod;
+    console.log("totalAmountAfterDiscount",totalAmountAfterDiscount)
     const userName = user.name;
-
+    console.log("payment",paymentMethod)
     // Check COD restriction
-    if (paymentMethod === 'cashOnDelivery' && totalAmountAfterDiscount > 1000) {
+    if (paymentMethod === 'cashOnDelivery' && totalAmountAfterDiscount < 1000) {
     //   return res.status(400).send("You can't choose COD for the amount that exceeds Rs. 1000.");
     // }
 
     // Continue with the order creation logic
+    if(totalAmountAfterDiscount<2000){
+      console.log("less")
     const order = new Order({
       userId,
       userName,
@@ -970,21 +979,41 @@ const placeorder = async (req, res) => {
         product: cartItem.product,
         quantity: cartItem.quantity,
       })),
-      totalAmount: totalAmountAfterDiscount,
+      
+      totalAmount: totalAmountAfterDiscount+40,
       discountAmount,
       payment: paymentMethod,
       razorpayOrderId: uuid.v4() // Generate a unique UUID as the placeholder value
     });
+  }
+  const order = new Order({
+    userId,
+    userName,
+    chosenAddress: user.chosenAddress,
+    products: user.cart.map(cartItem => ({
+      product: cartItem.product,
+      quantity: cartItem.quantity,
+    })),
+    
+    totalAmount: totalAmountAfterDiscount+40,
+    discountAmount,
+    payment: paymentMethod,
+    razorpayOrderId: uuid.v4() // Generate a unique UUID as the placeholder value
+  });
+  
+    
 
     await order.save();
 
     // Update stock for each product in the order
+    
     for (const orderProduct of order.products) {
       const productId = orderProduct.product._id;
       const orderedQuantity = orderProduct.quantity;
 
       const product = await Product.findById(productId);
-
+      
+      console.log("iii",orderedQuantity);
       if (product) {
         if (!isNaN(product.stock) && !isNaN(orderedQuantity)) {
           const remainingStock = Math.max(product.stock - orderedQuantity, 0);
@@ -993,15 +1022,19 @@ const placeorder = async (req, res) => {
         } else {
           console.error('Invalid stock or ordered quantity:', product.stock, orderedQuantity);
         }
-      } else {
+        // product.stock -= orderedQuantity;
+        // await product.save();
+      } 
+      else {
         console.error('Product not found:', productId);
       }
     }
 
     // Clear the user's cart
+    
     user.cart = [];
     await user.save();
-
+    
     // Render the success page
     res.render('ordersuccess', { discountAmount, order });
   } else if (paymentMethod === 'onlinePayment') {
@@ -1018,6 +1051,7 @@ const placeorder = async (req, res) => {
       razorpayOrder = await razorpayInstance.orders.create(razorpayOrderOptions);
 
       // Store necessary order details in the session to retrieve later
+      
       req.session.orderDetails = {
         userId,
         userName,
@@ -1030,8 +1064,39 @@ const placeorder = async (req, res) => {
         discountAmount,
         payment: paymentMethod,
         razorpayOrderId: razorpayOrder.id,
-      };
+      
 
+      };
+      if(req.session.orderDetails.totalAmount<2000){
+        req.session.orderDetails.totalAmount=req.session.orderDetails.totalAmount+40
+      }
+      console.log("orderDetails",req.session.orderDetails.totalAmount)
+      
+      for (const orderProduct of req.session.orderDetails.products) {
+      const productId = orderProduct.product._id;
+      const orderedQuantity = orderProduct.quantity;
+
+      const product = await Product.findById(productId);
+      
+      console.log("iii",orderedQuantity);
+      if (product) {
+        if (!isNaN(product.stock) && !isNaN(orderedQuantity)) {
+          const remainingStock = Math.max(product.stock - orderedQuantity, 0);
+          // Update the product stock
+          await Product.findByIdAndUpdate(productId, { stock: remainingStock });
+          const pro=await Product.findByIdAndUpdate(productId, { stock: remainingStock });
+          console.log("pro",pro)
+        } else {
+          console.error('Invalid stock or ordered quantity:', product.stock, orderedQuantity);
+        }
+        console.log("helllooo world")
+        // product.stock -= orderedQuantity;
+        // await product.save();
+      } 
+      else {
+        console.error('Product not found:', productId);
+      }
+    }
       // Redirect user to Razorpay page
       res.redirect('/razorpayPage');
     } catch (razorpayError) {
@@ -1108,6 +1173,49 @@ function calculateDiscount(totalAmount, coupon, userTotalUsage) {
 
 
 
+
+
+// Helper function to calculate the discount amount based on coupon type
+function calculateDiscount(totalAmount, coupon, userTotalUsage) {
+  // Check if the coupon is expired
+  const currentDate = new Date();
+  const currentDateWithoutTime = new Date(currentDate.toISOString().split('T')[0]);
+  const expirationDateWithoutTime = new Date(coupon.expirationDate.toISOString().split('T')[0]);
+
+  console.log('CURRENT DATE ',currentDateWithoutTime);
+  console.log('EXPIRED DATE ',expirationDateWithoutTime);
+  if (currentDateWithoutTime > expirationDateWithoutTime) {
+    throw new Error('Coupon has expired.');
+  }
+  if (totalAmount < coupon.conditions.minOrderAmount) {
+    throw new Error('Total amount does not meet the minimum order amount condition.');
+  }
+
+  // Check if the user has reached the maximum usage limit for the coupon
+  if (userTotalUsage >= coupon.usageLimits.perUser) {
+    throw new Error('Coupon usage limit per user exceeded.');
+  }
+
+  // Check if the overall usage limit for the coupon has been reached
+  if (coupon.usageLimits.totalUses <= 0) {
+    throw new Error('Coupon has reached the overall usage limit.');
+  }
+
+
+
+  // If all validations pass, calculate and return the discount
+  if (coupon.type === 'percentage') {
+    // If the discount type is percentage, apply the percentage discount
+    return (coupon.value / 100) * totalAmount;
+  } else if (coupon.type === 'fixed') {
+    // If the discount type is fixed, apply the fixed discount
+    return coupon.value;
+  } else {
+    return 0; // Default to no discount
+  }
+}
+
+
 const razorpayPage = async (req, res) => {
   try {
     // Retrieve necessary order details from the session
@@ -1136,37 +1244,37 @@ res.render('razorpayPage', { order: razorpayOrder, razorpayOrder: razorpayOrder,
 // capturePayment function to handle capturing the payment status
 const capturePayment = async (req, res) => {
   try {
-    // Retrieve order details from the session
     const orderDetails = req.session.orderDetails;
     if (!orderDetails) {
       return res.status(400).send('Order details not found');
     }
 
-    // Assuming you have a User model defined
     const userId = orderDetails.userId;
     const user = await User.findById(userId);
     if (!user) {
       return res.status(400).send('User not found');
     }
 
-    // Fetch payment details using the Razorpay order ID
     const paymentDetails = await razorpayInstance.payments.fetch(req.body.razorpay_payment_id);
 
-    // Check if the payment is captured
     if (paymentDetails && paymentDetails.status === 'captured') {
-      // Place the order
       const order = new Order(orderDetails);
+      order.status = 'Submitted';
+      order.paymentStatus = 'Paid';
       await order.save();
       
-      // Clear the user's cart
       user.cart = [];
       await user.save();
 
-      // Render the success page
       res.render('ordersuccess', { discountAmount: orderDetails.discountAmount, order });
     } else {
-      // Render an error page if payment is not captured
-      res.render('paymentError', { message: 'Payment capture failed.' });
+      const order = new Order(orderDetails);
+      order.status = 'Failed';
+      order.paymentStatus = 'Failed';
+      order.payment = 'online payment failed';
+      await order.save();
+
+      res.render('paymentError', { message: 'Payment capture failed.', order });
     }
   } catch (error) {
     console.error('Error in capturePayment:', error);
@@ -1184,27 +1292,26 @@ const handleRazorpayCallback = async (req, res) => {
       return res.status(400).send('Invalid Razorpay order ID.');
     }
 
-    console.log('Retrieved Order:', order);
-
-    
-    order.status = 'paid';                           // Update order status in your database
-    await order.save();
-
-    // Update payment status in Razorpay
     const razorpayPaymentId = req.body.payload.payment.entity.id;
-    const razorpayOrder = await razorpayInstance.orders.fetch(razorpayOrderId);
-
     const paymentDetails = await razorpayInstance.payments.fetch(razorpayPaymentId);
 
+    if (paymentDetails.status === 'captured') {
+      order.status = 'Submitted';
+      order.paymentStatus = 'Paid';
+    } else {
+      order.status = 'Failed';
+      order.paymentStatus = 'Failed';
+      order.payment = 'online payment failed';
+    }
+
+    await order.save();
+
     if (paymentDetails.status !== 'captured') {
-      // If payment is not captured, capture it
       const captureResponse = await razorpayInstance.payments.capture(
         razorpayPaymentId,
-        order.totalAmount * 100, 
+        order.totalAmount * 100,
         order.currency
       );
-
-      console.log('Capture Response:', captureResponse);
 
       if (captureResponse.status !== 'captured') {
         console.error('Payment capture failed in Razorpay.');
@@ -1212,14 +1319,15 @@ const handleRazorpayCallback = async (req, res) => {
       }
     }
 
-    console.log('Order status updated to "paid" in Razorpay and local database.');
-    res.render('ordersuccess');
+    res.render(paymentDetails.status === 'captured' ? 'ordersuccess' : 'paymentError', {
+      message: paymentDetails.status === 'captured' ? 'Payment successful.' : 'Payment capture failed.',
+      order
+    });
   } catch (error) {
     console.error('Error in handleRazorpayCallback:', error.message);
     res.status(500).send('Internal Server Error');
   }
 };
-
 
 
 

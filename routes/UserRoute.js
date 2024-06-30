@@ -149,4 +149,52 @@ router.post('/razorpay-callback', userController.handleRazorpayCallback);
 router.post('/invoices/from-order/:orderId', invoiceController.createInvoiceFromOrder);
 router.get('/invoices/:id/pdf', invoiceController.generateInvoicePdf);
 
+
+
+router.post('/payment-success', async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id } = req.body;
+    const order = await Order.findOne({ razorpayOrderId: razorpay_order_id });
+
+    if (!order) {
+      return res.status(400).send('Order not found');
+    }
+
+    const paymentDetails = await razorpayInstance.payments.fetch(razorpay_payment_id);
+
+    if (paymentDetails.status === 'captured') {
+      order.status = 'Submitted';
+      order.paymentStatus = 'Paid';
+      await order.save();
+
+      res.redirect('/order-history'); // Redirect to order history page
+    } else {
+      res.redirect('/payment-failure');
+    }
+  } catch (error) {
+    console.error('Error in payment success:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/payment-failure', async (req, res) => {
+  try {
+    const razorpayOrderId = req.query.razorpay_order_id; // Adjust based on how Razorpay sends failure data
+    const order = await Order.findOne({ razorpayOrderId });
+
+    if (!order) {
+      return res.status(400).send('Order not found');
+    }
+
+    order.status = 'Failed';
+    order.paymentStatus = 'Failed';
+    await order.save();
+
+    res.redirect('/order-history'); // Redirect to order history page
+  } catch (error) {
+    console.error('Error in payment failure:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 module.exports = router;

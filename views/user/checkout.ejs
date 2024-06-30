@@ -164,57 +164,69 @@
                                     <h3 class="summary-title text-center">Your Order</h3>
                             
                                     <div class="table-responsive">
-    <div class="table-container" style="display: flex; flex-direction: column; max-width: 100%; overflow: auto;">
-        <div class="table-summary-header" style="background-color: #f6c2c2; display: flex;">
-            <div style="flex: 1; font-weight: bold; color: black;">Product</div>
-            <div style="flex: 1; font-weight: bold; color: black;">Quantity</div>
-            <div style="flex: 1; font-weight: bold; color: black;">Total</div>
-        </div>
-        <div>
-            <% if (user.cart && user.cart.length > 0) { %>
-                <% let totalCartPrice = 0; %>
-                <% user.cart.forEach(cartItem => { %>
-                    <div class="table-row" style="display: flex;">
-                        <div style="flex: 1;"><%= cartItem.product && cartItem.product.productName ? cartItem.product.productName : 'Product Name Not Available' %></div>
-                        <div style="flex: 1;"><%= cartItem.quantity %></div>
-                        <% let itemTotal = cartItem.product && cartItem.product.price ? cartItem.quantity * cartItem.product.price : 0 %>
-                        <div style="flex: 1;">Rs<%= itemTotal.toFixed(2) %></div>
-                        <% totalCartPrice += itemTotal; %>
-                    </div>
-                <% }) %>
-                <div class="summary-total" style="background-color: #f6c2c2; font-weight: bold; display: flex;">
-                    <div style="flex: 2; text-align: right; padding-right: 10px;">Total:</div>
-                    <div style="flex: 1; text-align: center;">Rs<%= totalCartPrice.toFixed(2) %></div>
-                </div>
+                                        <div class="table-container">
+                                            <table class="table table-summary">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Product</th>
+                                                        <th>Quantity</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if (user.cart && user.cart.length > 0) { %>
+                                                        <% let totalCartPrice = 0; %>
+                                                        <% user.cart.forEach(cartItem => { %>
+                                                            <tr>
+                                                                <td><%= cartItem.product && cartItem.product.productName ? cartItem.product.productName : 'Product Name Not Available' %></td>
+                                                                <td><%= cartItem.quantity %></td>
+                                                                <% let itemTotal = cartItem.product && cartItem.product.price ? cartItem.quantity * cartItem.product.price : 0 %>
+                                                                <td>Rs <%= itemTotal.toFixed(2) %></td>
+                                                                <% totalCartPrice += itemTotal; %>
+                                                            </tr>
+                                                        <% }) %>
+                                                        <tr class="summary-subtotal">
+                                                            <td colspan="2" class="text-right">Subtotal:</td>
+                                                            <td>Rs <%= totalCartPrice.toFixed(2) %></td>
+                                                        </tr>
+                                                        <% if (totalCartPrice < 2000) { %>
+                                                            <tr>
+                                                                <td colspan="2" class="text-right">Shipping Charge:</td>
+                                                                <td>Rs 40</td>
+                                                            </tr>
+                                                            
+                                                        <% } else { %>
+                                                            <tr>
+                                                                <td colspan="2" class="text-right">Shipping Charge:</td>
+                                                                <td>Free shipping</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="3" class="text-center text-success">Shipping is free for orders above Rs. 2000!</td>
+                                                            </tr>
+                                                        <% } %>
+                                                        <tr class="summary-discount">
+                                                            <td colspan="2" class="text-right">Discount amount:</td>
+                                                            <td id="discountShow">Rs 0.00</td>
+                                                        </tr>
+                                                        <tr class="summary-total">
 
-                <% if (totalCartPrice < 2000) { %>
-                    <div class="summary-shipping" style="background-color: #f6c2c2; font-weight: bold; display: flex;">
-                        <div style="flex: 2; text-align: right; padding-right: 10px;">Shipping Charge:</div>
-                        <div style="flex: 1; text-align: center;">Rs 40</div>
-                    </div>
-                <% } else { %>
-                    <div class="summary-shipping" style="background-color: #b3e6b3; font-weight: bold; display: flex;">
-                        <div style="flex: 2; text-align: right; padding-right: 10px;">Shipping Charge:</div>
-                        <div style="flex: 1; text-align: center;">Rs 0</div>
-                    </div>
-                    <div id="shipping-free-message" class="shipping-free-message">Shipping is free for orders above Rs. 2000!</div>
-                <% } %>
-
-                <div class="summary-discount" style="background-color: #ffd700; font-weight: bold; display: flex;">
-                    <div style="flex: 2; text-align: right; padding-right: 10px;">Discount amount:</div>
-                    <div style="flex: 1; text-align: center;" id="discountShow">Rs0.00</div>
-                </div>
-                <div class="coupon-section" style="background-color: #f7e7e7; display: flex;">
-                    <div style="flex: 2; text-align: right; padding-right: 10px;">Final Total:</div>
-                    <div id="final-total" style="flex: 1; text-align: center;">Rs<%= totalCartPrice.toFixed(2) %></div>
-                </div>
-            <% } else { %>
-                <div>No items in the cart.</div>
-            <% } %>
-        </div>
-    </div>
-</div>
-
+                                                            <td colspan="2" class="text-right">Final Total:</td>
+                                                            <% if (totalCartPrice < 2000) { %>
+                                                            <td id="final-total">Rs <%= (totalCartPrice+40).toFixed(2) %></td>
+                                                            <% } else { %>
+                                                                <td id="final-total">Rs <%= totalCartPrice.toFixed(2) %></td>
+                                                                <% } %>
+                                                        </tr>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="3">No items in the cart.</td>
+                                                        </tr>
+                                                    <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                            
                                     <div class="accordion-summary" id="accordion-payment">
                                         <!-- Your accordion content goes here -->
                                     </div>
@@ -230,8 +242,10 @@
                                         </div>
                                     </div>
                             
-                                    <div id="toast" style="visibility: hidden; display: none; min-width: 250px; margin-left: -125px; background-color: #333; color: red; text-align: center; border-radius: 2px; padding: 16px; position: fixed; z-index: 1; left: 50%; bottom: 30px; font-size: 17px;">
-                                        You can't choose COD for the amount that exceeds Rs. 1000
+                                    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" style="display: none;">
+                                        <div class="toast-body bg-danger text-white">
+                                            You can't choose COD for the amount that exceeds Rs. 1000
+                                        </div>
                                     </div>
                             
                                     <div class="text-center">

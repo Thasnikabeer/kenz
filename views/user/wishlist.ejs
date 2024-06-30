@@ -47,7 +47,7 @@
 
             <div class="dropdown compare-dropdown">
                 <div class="wishlist">
-                    <<a href="/wishlist" title="Wishlist">
+                    <a href="/wishlist" title="Wishlist">
                         <i class="icon-heart-o" ></i>
                         <span class="wishlist-count"><%=wishlistCount%></span>
                     </a>
@@ -79,163 +79,132 @@
         </div><!-- End .header-right -->
     </div><!-- End .container -->
 </div><!-- End .header-middle -->
-<style>
-  .table-wishlist {
-      width: 100%;
-      border-collapse: collapse;
-  }
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .btn-cart {
+            background-color: white;
+            color: black;
+            padding: 10px 20px;
+            border: 1px solid black;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .btn-out-of-stock {
+            background-color: gray;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .btn-remove {
+            background-color: transparent;
+            border: none;
+            color: red;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .table-wishlist th, .table-wishlist td {
+            vertical-align: middle;
+        }
+    </style>
 
-  .table-wishlist th, .table-wishlist td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: center; /* Center align text in cells */
-      vertical-align: middle; /* Center align vertically */
-  }
-
-  .table-wishlist th {
-      padding-top: 10px;
-      padding-bottom: 10px;
-      background-color:#f6c2c2; /* Change this color as needed */
-      color: white;
-      font-weight: bold;
-  }
-
-  .table-wishlist .product-col img {
-      max-width: 100px; /* Adjust as needed */
-      height: auto;
-  }
-
-  .btn-remove {
-      background: none;
-      border: none;
-      cursor: pointer;
-  }
-
-  .btn-remove .icon-close {
-      font-size: 16px;
-      color: red; /* Change this color as needed */
-  }
-
-  .btn-product {
-      display: inline-block;
-      padding: 5px 10px;
-      background-color: #f6c2c2 ;/* Change this color as needed */
-      color: white;
-      text-decoration: none;
-      border-radius: 4px;
-  }
-
-  .btn-product.btn-out-of-stock {
-      background-color: #ccc;
-      color: #666;
-  }
-
-  .in-stock {
-      color: #eb6767 /* Change this color as needed */
-  }
-</style>
 </header><!-- End .header -->
 
-        <main class="main">
-            <div class="page-header text-center" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU')">
-        		<div class="container">
-        			<h1 class="page-title">Wishlist<span>Shop</span></h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/home">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/product-list">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+<main class="main">
+  <div class="page-header text-center" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU')">
+    <div class="container">
+      <h1 class="page-title">Wishlist<span>Shop</span></h1>
+    </div><!-- End .container -->
+  </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                <li class="breadcrumb-item"><a href="/product-list">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Wishlist</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
 
-            <div class="page-content">
-            <div class="container">
-              <table class="table table-wishlist table-mobile">
-                <thead>
-                    <tr>
-                        <th>PRODUCT</th>
-                        <th>PRICE</th>
-                        <th>STOCK STATUS</th>
-                        <th>ADD TO CART</th>
-                        <th>REMOVE</th>
-                    </tr>
-                </thead>
-            
-                <tbody>
-                    <% user.wishlist.forEach(wishlistitem => { %>
-                        <tr>
-                            <td class="product-col">
-                                <div class="product">
-                                    <figure class="product-media">
-                                        <% if (wishlistitem.product && wishlistitem.product.images && wishlistitem.product.images.length > 0) { %>
-                                            <a href="/product/<%= wishlistitem.product._id %>">
-                                                <img src="/images/<%= wishlistitem.product.images[0] %>" alt="Product image">
-                                            </a>
-                                        <% } else { %>
-                                            <p>Image not available</p>
-                                        <% } %>
-                                    </figure>
-                    
-                                    <h3 class="product-title">
-                                        <a href="#">
-                                            <% if (wishlistitem.product && wishlistitem.product.productName) { %>
-                                                <%= wishlistitem.product.productName %>
-                                            <% } else { %>
-                                                Product Name Not Available
-                                            <% } %>
-                                        </a>
-                                    </h3><!-- End .product-title -->
-                                </div><!-- End .product -->
-                            </td>
-                            <td class="price-col">
-                                <a href="#">
-                                    <% if (wishlistitem.product && wishlistitem.product.price) { %>
-                                        Rs <%= wishlistitem.product.price %>
-                                    <% } else { %>
-                                        Product Name Not Available
-                                    <% } %>
-                                </a>
-                            </td>
-                            <td class="stock-col">
-                                <span class="in-stock">
-                                    <% if (wishlistitem.product && wishlistitem.product.stock) { %>
-                                        <%= wishlistitem.product.stock %>
-                                    <% } else { %>
-                                        out of stock
-                                    <% } %>
-                                </span>
-                            </td>
-                            <td class="action-col">
-                              <div class="dropdown">
-                                  <% if (wishlistitem.product && wishlistitem.product.stock > 0) { %>
-                                      <a href="/add-to-cart/<%= wishlistitem.product._id %>" class="btn-product btn-cart"><span>add to cart</span></a>
-                                  <% } else { %>
-                                      <span class="btn-product btn-out-of-stock"><span>Out of Stock</span></span>
-                                  <% } %>
-                              </div>
-                          </td>
-                          
-                            </td>
-                            <td class="remove-col">  
-                                <% if (wishlistitem.product) { %>                                
-                                    <a href="/wishlist/<%=wishlistitem.product._id %>"> <button class="btn-remove"><i class="icon-close"></i></button></a>
+    <div class="page-content">
+      
+      <div class="container mt-5">
+        <table class="table table-wishlist table-mobile">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Stock Status</th>
+                    <th>Add to cart</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% user.wishlist.forEach(wishlistitem => { %>
+                <tr>
+                    <td class="product-col">
+                        <div class="product">
+                            <figure class="product-media">
+                                <% if (wishlistitem.product && wishlistitem.product.images && wishlistitem.product.images.length > 0) { %>
+                                    <a href="/product/<%= wishlistitem.product._id %>">
+                                        <img src="/images/<%= wishlistitem.product.images[0] %>" alt="Product image">
+                                    </a>
+                                <% } else { %>
+                                    <p>Image not available</p>
                                 <% } %>
-                            </td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table><!-- End .table table-wishlist -->
-	           
-            	</div><!-- End .container -->
-            </div><!-- End .page-content -->
+                            </figure>
+                            <h3 class="product-title">
+                                <% if (wishlistitem.product && wishlistitem.product.productName) { %>
+                                    <a href="/product/<%= wishlistitem.product._id %>">
+                                        <%= wishlistitem.product.productName %>
+                                    </a>
+                                <% } else { %>
+                                    Product Name Not Available
+                                <% } %>
+                            </h3>
+                        </div>
+                    </td>
+                    <td class="price-col">
+                        <% if (wishlistitem.product && wishlistitem.product.price) { %>
+                            Rs <%= wishlistitem.product.price %>
+                        <% } else { %>
+                            Price Not Available
+                        <% } %>
+                    </td>
+                    <td class="stock-col">
+                        <span class="in-stock">
+                            <% if (wishlistitem.product && wishlistitem.product.stock) { %>
+                                <%= wishlistitem.product.stock %>
+                            <% } else { %>
+                                out of stock
+                            <% } %>
+                        </span>
+                    </td>
+                    <td class="action-col">
+                        <div class="dropdown">
+                            <% if (wishlistitem.product && wishlistitem.product.stock > 0) { %>
+                                <a href="/add-to-cart/<%= wishlistitem.product._id %>" class="btn-product btn-cart"><span>add to cart</span></a>
+                            <% } else { %>
+                                <span class="btn-product btn-out-of-stock"><span>Out of Stock</span></span>
+                            <% } %>
+                        </div>
+                    </td>
+                    <td class="remove-col">
+                        <% if (wishlistitem.product) { %>
+                            <a href="/wishlist/<%= wishlistitem.product._id %>">
+                                <button class="btn-remove"><i class="icon-close"></i></button>
+                            </a>
+                        <% } %>
+                    </td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
         </main><!-- End .main -->
-        <footer class="footer footer-2">
-            <div class="footer-middle border-0">
-              <div class="container">
+        
+        <footer class="footer">
+        	<div class="footer-middle">
+	            <div class="container">
                 <div class="row">
                   <div class="col-sm-12 col-lg-6">
                     <div class="widget widget-about">
@@ -382,6 +351,9 @@
           <!-- Main JS File -->
           <script src="assets/js/main.js"></script>
           <script src="assets/js/demos/demo-5.js"></script>
+          <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+          <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>  
         </body>
         </html>
         

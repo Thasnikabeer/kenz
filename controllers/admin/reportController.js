@@ -6,8 +6,9 @@ const fs = require('fs');
 const path = require('path');
 
 const renderDashboard = (req, res) => {
-    res.render('admin/dashboard');
+    res.render('admin/home');
 };
+
 
 const generateReport = async (req, res) => {
     const { type, startDate, endDate } = req.query;

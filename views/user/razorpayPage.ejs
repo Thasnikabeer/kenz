@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Razorpay Test</title>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert library -->
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -67,38 +68,64 @@
 <body>
   <div class="payment-container">
     <h2>Razorpay Payment Page</h2>
-
-
-   
-    
-
     <div>
       <h3>Customer Information</h3>
       <p>Name: <%= orderDetails.userName %></p>
     </div>
-  
+    <div>
+      <h2>Razorpay Payment Page</h2>
+    <div>
+      <h3>Customer Information</h3>
+      <p>Name: <%= orderDetails.userName %></p>
+    </div>
     <div>
       <h3>Payment Details</h3>
       <p>Payment Method: <%= orderDetails.payment %></p>
       <p>Discount Amount: Rs<%= orderDetails.discountAmount %> </p>
-      <p><b>Total Amount: Rs<%= orderDetails.totalAmount %> </b></p>
-    </div>
+      <% if (orderDetails.totalAmount < 2000) { %>
+        <td id="final-total">Rs <%= (orderDetails.totalAmount).toFixed(2) %></td>
+        <% } else { %>
+            <!-- <td id="final-total">Rs <%= orderDetails.totalAmount.toFixed(2) %></td> -->
 
+            <p><b>Total Amount: Rs<%= orderDetails.totalAmount %> </b></p>
+            <% } %>
+    </div>
     <form action="/capture-payment" method="post">
       <script
         src="https://checkout.razorpay.com/v1/checkout.js"
         data-key="rzp_test_GHw0Dz9b5FhF3E"
-        data-amount="<%= orderDetails.totalAmount * 100 %>"
+        data-amount="<%= orderDetails.totalAmount*100 %>"
         data-currency="INR"
         data-order_id="<%= orderDetails.razorpayOrderId %>"
         data-buttontext="PAY NOW"
         data-name="KenZ"
         data-description="Order Payment"
         data-image=""
-        data-prefill.name="Customer Name"
-        data-prefill.email="customer@example.com"
+        data-prefill.name="<%= orderDetails.userName %>"
+        data-prefill.email="<%= orderDetails.userEmail %>"
         data-theme.color="#fd9bb4"
+        data-callback_url="/payment-success"
+        data-cancel_url="/payment-failure"
       ></script>
+      <script>
+        // Function to handle payment failure/cancellation
+        function handlePaymentFailure() {
+          Swal.fire({
+            icon: 'error',
+            title: 'Payment Failed',
+            text: 'Payment is failed. Please go to the order history page.',
+            showCancelButton: true,
+            confirmButtonText: 'Go to Order History',
+            cancelButtonText: 'Stay on this page',
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = '/order-history'; // Replace with your actual order history page URL
+            } else {
+              // Handle other actions or stay on the current page
+            }
+          });
+        }
+      </script>
     </form>
   </div>
 </body>

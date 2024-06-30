@@ -22,12 +22,6 @@
   box-sizing: border-box; /* Include border and padding in the width */
 }
 
-
-
-
-
-
-    
   </style>
 <div class="signup-container">
   <h2 class="active">SIGNUP</h2>
@@ -71,7 +65,7 @@
           }
       }
   </script>
-    <button type="submit" class="signin" style="padding: 10px; background-color: blue; color: white;">SIGNUP</button>
+    <button type="submit" class="signin" style="padding: 10px; background-color: rgb(60, 57, 57); color: white;">SIGNUP</button>
 
     <hr> 
   </form>
@@ -138,33 +132,6 @@ function validatePassword() {
           return false;
         }
 
-        //  // Validation for password
-        // if (password.trim() === '') {
-        //   document.getElementById('passwordError').innerText = 'Password is required.';
-        //   return false;
-        // }
-        // if (password.length < 8 || !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
-        //   document.getElementById('passwordError').innerText = 'Password should contain at least 8 characters, one upper case, one lower case and one symbol';
-        //   return false;
-        // }
-
-
-        // if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password) ) {
-        //   document.getElementById('passwordError').innerText = 'Password should contain at least one uppercase letter.';
-        //   return false;
-        // }
-        // if (!/[a-z]/.test(password)) {
-        //   document.getElementById('passwordError').innerText = 'Password should contain at least one lowercase letter.';
-        //   return false;
-        // }
-        // if (!/[0-9]/.test(password)) {
-        //   document.getElementById('passwordError').innerText = 'Password should contain at least one digit.';
-        //   return false;
-        // }
-        // if (!/[!@#$%^&*]/.test(password)) {
-        //   document.getElementById('passwordError').innerText = 'Password should contain at least one special character (!@#$%^&*).';
-        //   return false;
-        // }
         if (confirmPassword.trim() === '') {
           document.getElementById('confirmPasswordError').innerText = 'Password is required.';
           return false;

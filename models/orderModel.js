@@ -10,6 +10,11 @@ const orderSchema = new mongoose.Schema({
     type: String,
     default: 'COD',
   },
+  paymentStatus: {
+    type: String,
+    enum: ['Paid', 'Failed','COD'],
+    default: 'COD',
+  },
   address: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

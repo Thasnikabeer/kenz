@@ -14,7 +14,7 @@ const moment = require('moment');
 const puppeteer = require('puppeteer');
 const { order } = require('./orderController');
 const { getUserDetailsAndOrders } =require('./adminController')
-
+const flash = require('connect-flash');
 const { getTotalRevenue } =require('./adminController')
 
 
@@ -34,7 +34,8 @@ const getDashboardData = async (req, res) => {
       console.log("Total Revenue:",totalRevenue)
       const blockUser = await User.countDocuments({ isBlocked: true });
       console.log("Total blocked Users Count:",blockUser)
-      res.render('report', { totalUsers, totalOrders, cancelledOrders,blockUser,totalproduct,totalRevenue});
+
+      res.render('report', { totalUsers, totalOrders, cancelledOrders,blockUser,totalproduct,totalRevenue, messages: req.flash()});
   } catch (error) {
       console.error('Error fetching dashboard data:', error.message);
       res.status(500).send('Internal Server Error');

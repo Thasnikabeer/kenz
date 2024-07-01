@@ -44,7 +44,7 @@ app.use(session({
 }));
 
 app.use(blockCheckMiddleware);
-
+app.use(flash());
 
 const UserRoute = require("./routes/UserRoute");
 const adminRoute = require("./routes/adminRoute");

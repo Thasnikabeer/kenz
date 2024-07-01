@@ -45,7 +45,7 @@ admin_route.get('/home',adminController.loadDashboard);
 admin_route.get('/listuser',auth.isLogin,adminController.adminDashboard);
 admin_route.get('/logout',auth.isLogin, adminController.adminLogout);
 
-// ----------------------------
+// -------------   ---------------
 admin_route.get('/dashboard/data/custom', auth.isLogin, adminController.customDetails );
 admin_route.get('/dashboard/data', auth.isLogin, adminController.dashBoardDetails );
 
@@ -117,7 +117,7 @@ const { generateReport, renderDashboard } = require('../controllers/admin/report
 
 admin_route.get('/home', renderDashboard);
 
-admin_route.get('/report', generateReport);
+admin_route.post('/report', generateReport);
 
 admin_route.get('*',function(req,res){
 

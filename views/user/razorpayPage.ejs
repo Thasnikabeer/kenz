@@ -107,25 +107,7 @@
         data-callback_url="/payment-success"
         data-cancel_url="/payment-failure"
       ></script>
-      <script>
-        // Function to handle payment failure/cancellation
-        function handlePaymentFailure() {
-          Swal.fire({
-            icon: 'error',
-            title: 'Payment Failed',
-            text: 'Payment is failed. Please go to the order history page.',
-            showCancelButton: true,
-            confirmButtonText: 'Go to Order History',
-            cancelButtonText: 'Stay on this page',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = '/order-history'; // Replace with your actual order history page URL
-            } else {
-              // Handle other actions or stay on the current page
-            }
-          });
-        }
-      </script>
+      
     </form>
   </div>
 </body>

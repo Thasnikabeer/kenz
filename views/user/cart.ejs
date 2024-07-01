@@ -101,7 +101,8 @@
                   display: none;
               }
           </style>
-          
+          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
             
         </header><!-- End .header -->
 <div id="toast-message" class="toast-message"></div>
@@ -184,12 +185,21 @@
                                       <% } %>
                                   </td>
                                   <td style="vertical-align: middle;">
-                                      <% if (cartItem.product) { %>
-                                      <input type="number" class="form-control quantity-input" value="<%= cartItem.quantity %>" min="1"
-                                          max="<%= cartItem.product.stock %>" step="1" data-decimals="0" required data-product-id="<%= cartItem.product._id %>"
-                                          style="text-align: center;">
-                                      <% } %>
-                                  </td>
+                                    <% if (cartItem.product) { %>
+                                    <input type="number" id="quantityInput-<%= cartItem.product._id %>"
+                                           class="form-control quantity-input"
+                                           value="<%= cartItem.quantity %>"
+                                           min="1"
+                                           max="<%= cartItem.product.stock %>"
+                                           data-max-stock="<%= cartItem.product.stock %>"
+                                           step="1"
+                                           data-decimals="0"
+                                           required
+                                           data-product-id="<%= cartItem.product._id %>"
+                                           style="text-align: center;">
+                                    <% } %>
+                                </td>
+                                
                                   <td style="vertical-align: middle;">
                                       <% if (cartItem.product && cartItem.product.price) { %>
                                       Rs.<span class="total-price" data-product-id="<%= cartItem.product._id %>"
@@ -414,6 +424,34 @@
           <script src="assets/js/demos/demo-5.js"></script>
         
         
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const quantityInputs = document.querySelectorAll('.quantity-input');
+        
+                quantityInputs.forEach(input => {
+                    input.addEventListener('change', function () {
+                        const productId = this.getAttribute('data-product-id');
+                        const maxStock = parseInt(this.getAttribute('data-max-stock'));
+        
+                        const currentQuantity = parseInt(this.value, 10);
+        
+                        if (currentQuantity > maxStock) {
+                          alert('You cannot purchase more than the available stock.');
+                          this.value = maxStock; 
+                    //       swal({
+                    //     title: 'Stock Limit Exceeded',
+                    //     text: 'You cannot purchase more than the available stock.',
+                    //     icon: 'error',
+                    //     button: 'OK'
+                    // }).then(() => {
+                    //     this.value = maxStock; // Reset to maximum stock available
+                    //     // location.reload()
+                    // });
+                        }
+                    });
+                });
+            });
+        </script>
         
         
           <script>
@@ -436,53 +474,53 @@
               }
             });
           </script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const quantityInputs = document.querySelectorAll('.quantity-input');
         
-          <script>
-            document.addEventListener('DOMContentLoaded', function () {
-              const quantityInputs = document.querySelectorAll('.quantity-input');
+          quantityInputs.forEach(input => {
+            input.addEventListener('change', function () {
+              const productId = this.getAttribute('data-product-id');
+              const totalPriceSpan = document.querySelector(`.total-price[data-product-id="${productId}"]`);
         
-              quantityInputs.forEach(input => {
-                input.addEventListener('change', function () {
-                  const productId = this.getAttribute('data-product-id');
-                  const totalPriceSpan = document.querySelector(`.total-price[data-product-id="${productId}"]`);
+              const productPriceString = totalPriceSpan.getAttribute('data-product-price');
+              const productPrice = parseFloat(productPriceString) || 0;
         
-                  // Retrieve the product price from the totalPriceSpan data attribute
-                  const productPriceString = totalPriceSpan.getAttribute('data-product-price');
+              const currentQuantity = parseInt(this.value, 10);
+              const newTotalPrice = currentQuantity * productPrice;
         
-                  // Convert the product price to a float, or set it to 0 if not a valid number
-                  const productPrice = parseFloat(productPriceString) || 0;
+              if (!isNaN(newTotalPrice)) {
+                totalPriceSpan.textContent = `${newTotalPrice.toFixed(2)}`;
         
-                  const currentQuantity = parseInt(this.value, 10);
-                  const newTotalPrice = currentQuantity * productPrice;
-        
-                  // Check if the calculated total price is NaN and handle it
-                  if (!isNaN(newTotalPrice)) {
-                    totalPriceSpan.textContent = `${newTotalPrice.toFixed(2)}`;
-        
-                    // Make an asynchronous request to update the quantity in the database
-                    $.ajax({
-                      url: `/updateCartItemQuantity/${productId}`,
-                      method: 'POST',
-                      data: { quantity: currentQuantity },
-                      success: function (response) {
-                        // Handle success, if needed
-                        console.log(response);
-                      },
-                      error: function (error) {
-                        // Handle error, if needed
-                        console.error(error);
-                      }
-                    });
-                  } else {
-                    console.error('Error: Calculated total price is NaN');
+                $.ajax({
+                  url: `/updateCartItemQuantity/${productId}`,
+                  method: 'POST',
+                  data: { quantity: currentQuantity },
+                  success: function (response) {
+                    // Handle success, if needed
+                    console.log(response);
+                  },
+                  error: function (error) {
+                    // Display error message using SweetAlert
+                    if (error.responseJSON && error.responseJSON.error) {
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: error.responseJSON.error,
+                      });
+                    } else {
+                      console.error('Error:', error);
+                    }
                   }
                 });
-              });
+              } else {
+                console.error('Error: Calculated total price is NaN');
+              }
             });
+          });
+        });
         
-        
-          </script>
-        
+      </script>
           <script>
             document.addEventListener('DOMContentLoaded', function () {
               const quantityInputs = document.querySelectorAll('.quantity-input');

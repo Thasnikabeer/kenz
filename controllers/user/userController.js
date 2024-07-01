@@ -760,7 +760,6 @@ const addtoCart = async (req, res) => {
     const userId = req.session.user_id;
 
     if (!userId) {
-      //req.flash('error', 'Please log in to add products to your cart.');
       return res.redirect('/login');
     }
 
@@ -804,17 +803,32 @@ const addtoCart = async (req, res) => {
 const updateQuantity = async (req, res) => {
   const productId = req.params.productId;
   const newQuantity = req.body.quantity;
+  // console.log("updateeee", productId);
+  // console.log("updateeee", newQuantity);
+
   try {
-    const user = await User.findOneAndUpdate(
+    const product = await Product.findById(productId);
+    console.log("newwww", product)
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    if (newQuantity > product.stock) {
+      return res.status(400).json({ error: 'Requested quantity exceeds available stock' });
+    }
+
+    await User.findOneAndUpdate(
       { _id: req.session.user_id, 'cart.product': productId },
       { $set: { 'cart.$.quantity': newQuantity } },
       { new: true }
     );
-    res.redirect("/cartList")
+    res.status(200).json({ success: 'Quantity updated successfully' });
   } catch (error) {
     console.log(error.message);
+    res.status(500).json({ error: 'Internal server error' });
   }
-}
+};
+
 
 const deleteCart = async (req, res) => {
   try {

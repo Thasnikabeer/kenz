@@ -110,9 +110,14 @@
         
         
         <div style="margin-left: 700px;">
-            <p>Total Product Amount:<%=totalOrderPrice%></p>
-            <p>Discount amount:<%=order.discountAmount%></p>
+            <p>Total Product Amount: <%= totalOrderPrice %></p>
+            <p>Discount amount: <%= order.discountAmount %></p>
+            <% if (order.paymentStatus === 'Failed') { %>
+            <p>Paid Amount: 0</p>
+            <% } else { %>
             <p>Paid Amount: <%= order.totalAmount %></p>
+            <% } %>
+
             <div>
                 <button id="btn-invoice" type="button" class="btn btn-dark" data-order-id="<%= order._id %>">Download Invoice</button><br><br>
             </div>

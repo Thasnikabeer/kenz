@@ -105,14 +105,15 @@
             console.log("Payment handler function executed successfully.",response);
             successMessage('Payment Successful');
             try {
-              const res = await fetch('/capture-payment', {
+                console.log( "order_id:", "<%= orderDetails._id %>");
+              const res = await fetch('/capturePayment2', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                   razorpay_payment_id: response.razorpay_payment_id,
-                  order_id: orderId
+                  order_id: "<%= orderDetails._id %>"
                 })
               });
               if (res.ok) {

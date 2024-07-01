@@ -102,6 +102,27 @@
               }
           </style>
           <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Include SweetAlert2 CSS and JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+  .styled-toast {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .styled-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .styled-content {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+  }
+</style>
 
             
         </header><!-- End .header -->
@@ -423,35 +444,49 @@
           <script src="assets/js/main.js"></script>
           <script src="assets/js/demos/demo-5.js"></script>
         
-        
           <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const quantityInputs = document.querySelectorAll('.quantity-input');
-        
-                quantityInputs.forEach(input => {
-                    input.addEventListener('change', function () {
-                        const productId = this.getAttribute('data-product-id');
-                        const maxStock = parseInt(this.getAttribute('data-max-stock'));
-        
-                        const currentQuantity = parseInt(this.value, 10);
-        
-                        if (currentQuantity > maxStock) {
-                          alert('You cannot purchase more than the available stock.');
-                          this.value = maxStock; 
-                    //       swal({
-                    //     title: 'Stock Limit Exceeded',
-                    //     text: 'You cannot purchase more than the available stock.',
-                    //     icon: 'error',
-                    //     button: 'OK'
-                    // }).then(() => {
-                    //     this.value = maxStock; // Reset to maximum stock available
-                    //     // location.reload()
-                    // });
-                        }
+              const quantityInputs = document.querySelectorAll('.quantity-input');
+          
+              quantityInputs.forEach(input => {
+                input.addEventListener('change', function () {
+                  const productId = this.getAttribute('data-product-id');
+                  const maxStock = parseInt(this.getAttribute('data-max-stock'));
+          
+                  const currentQuantity = parseInt(this.value, 10);
+          
+                  if (currentQuantity > maxStock) {
+                    Swal.fire({
+                      icon: 'warning',
+                      title: 'Stock Limit Exceeded',
+                      text: 'You cannot purchase more than the available stock.',
+                      toast: true,
+                      position: 'top-end',
+                      showConfirmButton: false,
+                      timer: 3000,
+                      timerProgressBar: true,
+                      background: '#f8d7da',
+                      color: '#721c24',
+                      iconColor: '#f5c6cb',
+                      customClass: {
+                        popup: 'styled-toast',
+                        title: 'styled-title',
+                        content: 'styled-content'
+                      },
+                      didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                      }
                     });
+          
+                    this.value = maxStock;
+                  }
                 });
+              });
             });
-        </script>
+          </script>
+          
+          
         
         
           <script>

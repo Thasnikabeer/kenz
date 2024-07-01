@@ -68,11 +68,11 @@ exports.generateReport = async (req, res) => {
       doc.moveDown();
       doc.fontSize(15).text("Sales Report", { align: "center" });
       doc.moveDown(0.5);
-      doc.fontSize(11).text("Zouqs-Bag", { align: "center" });
+      doc.fontSize(11).text("Kenz", { align: "center" });
       doc.moveDown(0.5);
-      doc.fontSize(11).text("www.zouqs.shop", { align: "center" });
+      doc.fontSize(11).text("www.kenz.live", { align: "center" });
       doc.moveDown(2);
-      doc.fontSize(11).text(`Report Date: ${reportDate}`, { align: "right" });
+      doc.fontSize(11).text(`Date: ${reportDate}`, { align: "right" });
       doc.moveDown(0.5);
       doc
         .fontSize(11)

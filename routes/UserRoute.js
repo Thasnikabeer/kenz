@@ -143,8 +143,12 @@ router.post('/removecoupon', auth.isLogged, couponController.removeCoupon);
 //Razorpay
 router.get('/razorpayPage',userController.razorpayPage)
 router.post('/capture-payment',userController.capturePayment)
-
+router.post('/handle-payment-failure',userController.handlePaymentFailure);
 router.post('/razorpay-callback', userController.handleRazorpayCallback);
+router.post('/retryRazorpay', userController.retryRazorpay);
+router.get('/razorpayPage2', userController.razorpayPage2);
+router.post('/capturePayment2', userController.capturePayment2);
+router.get('/handlePaymentFailure2', userController.handlePaymentFailure2);
 
 router.post('/invoices/from-order/:orderId', invoiceController.createInvoiceFromOrder);
 router.get('/invoices/:id/pdf', invoiceController.generateInvoicePdf);

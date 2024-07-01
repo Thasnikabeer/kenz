@@ -240,7 +240,7 @@ const userData = async (req, res) => {
           await user.save();
           await referrer.save();
         }
-      }
+      } 
     } else {
       res.render("register", { message: "Registration failed" });
     }

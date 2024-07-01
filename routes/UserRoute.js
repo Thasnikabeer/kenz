@@ -50,7 +50,7 @@ router.get('/userVerification/google', (req, res, next) => {
 
 const storage=multer.diskStorage({
     destination:function (req,file,cb) {
-        cb(null,path.join(__dirname,'../public/userimage'))
+        cb(null,path.join(__dirname,'../public/userImage'))
     },
     filename:function(req,file,cb){
         // const name =Date.now()+'-'+file.originalname;

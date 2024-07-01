@@ -139,7 +139,7 @@ input[readonly] {
                           <div class="mt-3 mb-4">
 
                             <% if (user && user.image) { %>
-                                <img src="/userimage/<%= user.image %>" class="rounded-circle img-fluid" id="profileImage" style="width: 100px; position: relative; left: 130px;" />
+                                <img src="/userImage/<%= user.image %>" class="rounded-circle img-fluid" id="profileImage" style="width: 100px; position: relative; left: 130px;" />
                                 <button class="btn" ><a href="/editProfileImage">Edit</a></button>
                               <% } else { %>
                                 <p>No user or user image found</p>

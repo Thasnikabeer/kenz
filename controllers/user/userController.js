@@ -453,10 +453,10 @@ const viewProductList = async (req, res) => {
     let sortCriteria = {};
     switch (sortOption) {
       case "priceAsc":
-        sortCriteria = { Price: 1 };
+        sortCriteria = { price: 1 };
         break;
       case "priceDesc":
-        sortCriteria = { Price: -1 };
+        sortCriteria = { price: -1 };
         break;
       case "nameAsc":
         sortCriteria = { productName: 1 };
@@ -1286,7 +1286,7 @@ const razorpayPage = async (req, res) => {
 // capturePayment function to handle capturing the payment status
 const capturePayment = async (req, res) => {
   try {
-    console.log("clicked");
+    // console.log("clicked");
     const orderDetails = req.session.orderDetails;
     if (!orderDetails) {
       return res.status(400).send("Order details not found");
@@ -1335,7 +1335,7 @@ const capturePayment = async (req, res) => {
 
 const handlePaymentFailure = async (req, res) => {
   try {
-    console.log("failure checkingg", req.body);
+    // console.log("failure checkingg", req.body);
     const orderDetails = req.session.orderDetails;
     if (!orderDetails) {
       return res.status(400).send("Order details not found");
@@ -1430,7 +1430,7 @@ const retryRazorpay = async (req, res) => {
     );
 
     // Render the Razorpay payment page with order details
-    console.log("checkkiiiindd");
+    
     res.json({ order: razorpayOrder, orderDetails: orderDetails });
 
     // res.json('razorpayPage', { order: razorpayOrder, razorpayOrder: razorpayOrder,orderDetails: orderDetails });
@@ -1497,8 +1497,8 @@ const capturePayment2 = async (req, res) => {
       // order.status = "Submitted";
       // order.paymentStatus = "Paid";
       // await order.save();
-      const update=await Order.updateOne({_id:orderId},{$set:{paymentStatus:'paid',status:'Submitted'}})
-console.log('update:',update);
+      const update=await Order.updateOne({_id:orderId},{$set:{paymentStatus:'paid',status:'Submitted',payment:'online payment'}})
+      // console.log('update:',update);
       user.cart = [];
       await user.save();
       console.log("dataa saved");

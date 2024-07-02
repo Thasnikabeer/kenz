@@ -7,7 +7,7 @@
 
     <!-- Add Bootstrap CSS link (optional) -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
        body {
     font-family: 'Arial', sans-serif;
@@ -112,6 +112,7 @@
         <div style="margin-left: 700px;">
             <p>Total Product Amount: <%= totalOrderPrice %></p>
             <p>Discount amount: <%= order.discountAmount %></p>
+            <p>Final Total : <%= order.totalAmount %></p>
             <% if (order.paymentStatus === 'Failed') { %>
             <p>Paid Amount: 0</p>
             <% } else { %>
@@ -135,11 +136,23 @@
                 if (invoice._id) {
                     window.location.href = `/invoices/${invoice._id}/pdf`;
                 } else {
-                    alert('Failed to generate invoice.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Failed to generate invoice.',
+                    });
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                });
+            });
         });
     </script>
+    
 </body>
 </html>

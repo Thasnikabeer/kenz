@@ -126,7 +126,7 @@
                                       <button type="submit" class="signin" style="padding: 10px; background-color: rgb(60, 57, 57); color: white; border: none; border-radius: 5px;">LOGIN</button>
                                   </div>
                                   
-                                  <!-- Forgot Password -->
+                                  Forgot Password
                                   <div style="margin-bottom: 10px;">
                                       <a href="/forgot" style="display: inline-block; padding: 8px 15px; background-color: rgb(60, 57, 57); color: white; text-align: center; text-decoration: none; border-radius: 5px;">Forgot Password?</a>
                                   </div>
@@ -372,86 +372,7 @@
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->
 
-    <!-- Sign in / Register Modal -->
-    <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="icon-close"></i></span>
-                    </button>
-
-                    <div class="form-box">
-                        <div class="form-tab">
-                            <ul class="nav nav-pills nav-fill" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
-                                </li>
-                                <!-- <li class="nav-item">
-                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
-                                </li>
-                            </ul> -->
-                            <div class="login">
-                                <h2 class="active">LOGIN</h2>
-                                <form id="loginForm" method="post" action="/login" style="max-width: 400px; margin: 0 auto;">
-                                  <!-- Username and Password inputs -->
-                                  <div style="margin-bottom: 15px;">
-                                      <label for="email" style="display: block;">Email</label>
-                                      <input type="text" class="text" name="email" id="email" style="width: calc(100% - 10px); padding: 5px;">
-                                      <span id="emailError" class="error" style="color: red;"></span>
-                                  </div>
-                                  
-                                  <div style="margin-bottom: 15px;">
-                                      <label for="password" style="display: block;">Password</label>
-                                      <input type="password" class="text" name="password" id="password" style="width: calc(100% - 10px); padding: 5px;">
-                                      <span id="passwordError" class="error" style="color: red;"></span>
-                                  </div>
-                                  
-                                  <% if (locals.message) { %>
-                                  <div style="color: red; margin-bottom: 15px;"><%= message %></div>
-                                  <% } %>
-                                  
-                                  <!-- Login button -->
-                                  <div style="margin-bottom: 15px; text-align: right;">
-                                      <button type="submit" class="signin" style="padding: 10px; background-color: blue; color: white; border: none; border-radius: 5px;">LOGIN</button>
-                                  </div>
-                                  
-                                  <!-- Forgot Password -->
-                                  <div >
-                                      <a href="/forgot">Forgot your Password?</a>
-                                  </div>
-                                  
-                                  <!-- Create a new account -->
-                                  <div style="margin-bottom: 10px;">
-                                      <a href="/register" style="display: inline-block; padding: 8px 15px; background-color: blue; color: white; text-align: center; text-decoration: none; border-radius: 5px;">Create a new account</a>
-                                  </div>
-                                  
-                                  <!-- Login using Google -->
-                                  <div style="margin-bottom: 10px;">
-                                      <a href="/google/Verify"class="btn btn-login btn-g"> Login using Google</a>
-                                  </div>
-                              </form>
-                                    <!-- End .col-6 -->
-                                            <div class="col-sm-6">
-                                                <!-- <a href="#" class="btn btn-login btn-f">
-                                                    <i class="icon-facebook-f"></i>
-                                                    Login With Facebook
-                                                </a> -->
-                                            </div><!-- End .col-6 -->
-                                        </div><!-- End .row -->
-                                    </div><!-- End .form-choice -->
-                                </div><!-- .End .tab-pane -->
-                                <!-- End .row -->
-                                    </div><!-- End .form-choice -->
-                                </div><!-- .End .tab-pane -->
-                            </div><!-- End .tab-content -->
-                        </div><!-- End .form-tab -->
-                    </div><!-- End .form-box -->
-                </div><!-- End .modal-body -->
-            </div><!-- End .modal-content -->
-        </div><!-- End .modal-dialog -->
-    </div><!-- End .modal -->
-
+  
     <!-- Plugins JS File -->
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>

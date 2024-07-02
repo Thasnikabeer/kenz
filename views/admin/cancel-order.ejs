@@ -3,7 +3,8 @@
 
 
    
-    
+   
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="container-scroller">
   <%- include('../layouts/adminHeadersmid') %>
     <!-- partial:../../partials/_navbar.html -->
@@ -19,81 +20,102 @@
                 <div class="container">
   
             
-            <div class="col-md-12 grid-margin stretch-card">
-                
-           
-
-                <% if (canceledOrders.length === 0) { %>
-                    <p>No canceled orders found.</p>
-                <% } else { %>
-                    <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
-                        <thead>
-                            <tr style="background-color: #f6c2c2; color: white;">
-                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Order ID</th>
-                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">User Name</th>
-                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Product Details</th>
-                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Total amount</th>
-                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Cancellation Reason</th>
-                                <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% canceledOrders.forEach(order => { %>
-                                <tr>
-                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= order._id %></td>
-                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= order.userName %></td>
-                                    <td style="border: 1px solid #ddd; padding: 8px;">
-                                        <% if (order.products && order.products.length > 0) { %>
-                                            <% order.products.forEach(product => { %>
-                                                <p>
-                                                    <% if (product.product && product.product.productName) { %>
-                                                        Product Name: <%= product.product.productName %>,<br>
-                                                    <% } else { %>
-                                                        Product Name: N/A,<br>
-                                                    <% } %>
-                                                    <% if (product.product && product.product.price) { %>
-                                                        Product Price: <%= product.product.price %><br>
-                                                    <% } else { %>
-                                                        Product Price: N/A<br>
-                                                    <% } %>
-                                                    Product Quantity: <%= product.quantity %><br>
-                                                </p>
-                                            <% }) %>
-                                        <% } else { %>
-                                            No products
-                                        <% } %>
-                                    </td>
-                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= order.totalAmount %></td>
-                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= order.cancellation.reason %></td>
-                                    <td style="border: 1px solid #ddd; padding: 8px;">
-                                        <div class="button-container">
-                                            <form action="/admin/confirm-order-cancellation/<%= order.id %>" method="POST">
-                                                <!-- Include any form input fields if needed -->
-                                                <button type="submit" class="confirm-button" onclick="return confirmCancellation()" style="background-color: yellow; color: black;">
-                                                    Confirm Cancellation
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <% }) %>
-                        </tbody>
-                    </table>
-                    
-                <% } %>
-
-           
-            
-          </div>
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <% if (canceledOrders.length === 0) { %>
+                            <p>No canceled orders found.</p>
+                        <% } else { %>
+                            <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
+                                <thead>
+                                    <tr style="background-color: #f6c2c2; color: white;">
+                                        <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Order ID</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">User Name</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Product Details</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Total amount</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Cancellation Reason</th>
+                                        <th style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% canceledOrders.forEach(order => { %>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order._id %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.userName %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">
+                                                <% if (order.products && order.products.length > 0) { %>
+                                                    <% order.products.forEach(product => { %>
+                                                        <p>
+                                                            <% if (product.product && product.product.productName) { %>
+                                                                Product Name: <%= product.product.productName %>,<br>
+                                                            <% } else { %>
+                                                                Product Name: N/A,<br>
+                                                            <% } %>
+                                                            <% if (product.product && product.product.price) { %>
+                                                                Product Price: <%= product.product.price %><br>
+                                                            <% } else { %>
+                                                                Product Price: N/A<br>
+                                                            <% } %>
+                                                            Product Quantity: <%= product.quantity %><br>
+                                                        </p>
+                                                    <% }) %>
+                                                <% } else { %>
+                                                    No products
+                                                <% } %>
+                                            </td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.totalAmount %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;"><%= order.cancellation.reason %></td>
+                                            <td style="border: 1px solid #ddd; padding: 8px;">
+                                                <div class="button-container">
+                                                    <form action="/admin/confirm-order-cancellation/<%= order.id %>" method="POST" onsubmit="return confirmCancellation(event)">
+                                                        <!-- Include any form input fields if needed -->
+                                                        <button type="submit" class="confirm-button" style="background-color: yellow; color: black;">
+                                                            Confirm Cancellation
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        <% } %>
+                    </div>
           <a href="/admin/loadorder">Back to order details</a>
-            <script>
-              function confirmCancellation() {
-                  var isConfirmed = confirm("Are you sure you want to confirm the order cancellation?");
-                  return isConfirmed;
-              }
-            </script>
-
-            
+          <script>
+            function confirmCancellation(event) {
+                event.preventDefault(); // Prevent the default form submission
+        
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You are about to cancel the order. This action cannot be undone.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, cancel it!',
+                    cancelButtonText: 'No, keep it',
+                    showConfirmButton: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: 'Cancelled!',
+                            text: 'Your order has been cancelled.',
+                            icon: 'success',
+                            background: '#d4edda',
+                            color: '#155724',
+                            confirmButtonColor: '#28a745',
+                            position: 'center',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+        
+                        setTimeout(() => {
+                            event.target.submit(); // Submit the form after the delay
+                        }, 3000); // Wait for 3 seconds before proceeding
+                    }
+                });
+            }
+        </script>    
         </div>
         <!-- content-wrapper ends -->
   

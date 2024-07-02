@@ -213,24 +213,24 @@
                                            min="1"
                                            max="<%= cartItem.product.stock %>"
                                            data-max-stock="<%= cartItem.product.stock %>"
-                                           step="1"
-                                           data-decimals="0"
-                                           required
                                            data-product-id="<%= cartItem.product._id %>"
-                                           style="text-align: center;">
+                                           style="text-align: center;"
+                                           step="1">
                                     <% } %>
                                 </td>
                                 
-                                  <td style="vertical-align: middle;">
-                                      <% if (cartItem.product && cartItem.product.price) { %>
-                                      Rs.<span class="total-price" data-product-id="<%= cartItem.product._id %>"
-                                          data-product-price="<%= cartItem.product.price %>" style="display: block; margin: 0 auto;">
-                                          <%= cartItem.quantity * cartItem.product.price %>
-                                      </span>
-                                      <% } else { %>
-                                      Total Not Available
-                                      <% } %>
-                                  </td>
+                                <td style="vertical-align: middle;">
+                                    <% if (cartItem.product && cartItem.product.price) { %>
+                                    Rs.<span class="total-price" data-product-id="<%= cartItem.product._id %>"
+                                        data-product-price="<%= cartItem.product.price %>" style="display: block; margin: 0 auto;">
+                                        <%= cartItem.quantity * cartItem.product.price %>
+                                    </span>
+                                    <% } else { %>
+                                    Total Not Available
+                                    <% } %>
+                                </td>
+                                
+
                                   <td style="vertical-align: middle;">
                                       <button class="btn-remove" style="display: block; margin: 0 auto;" data-toggle="modal" data-target="#confirmationModal-<%= cartItem.product._id %>">
                                           <i class="icon-close"></i>
@@ -443,50 +443,88 @@
           <!-- Main JS File -->
           <script src="assets/js/main.js"></script>
           <script src="assets/js/demos/demo-5.js"></script>
-        
           <script>
             document.addEventListener('DOMContentLoaded', function () {
-              const quantityInputs = document.querySelectorAll('.quantity-input');
-          
-              quantityInputs.forEach(input => {
-                input.addEventListener('change', function () {
-                  const productId = this.getAttribute('data-product-id');
-                  const maxStock = parseInt(this.getAttribute('data-max-stock'));
-          
-                  const currentQuantity = parseInt(this.value, 10);
-          
-                  if (currentQuantity > maxStock) {
-                    Swal.fire({
-                      icon: 'warning',
-                      title: 'Stock Limit Exceeded',
-                      text: 'You cannot purchase more than the available stock.',
-                      toast: true,
-                      position: 'top-end',
-                      showConfirmButton: false,
-                      timer: 3000,
-                      timerProgressBar: true,
-                      background: '#f8d7da',
-                      color: '#721c24',
-                      iconColor: '#f5c6cb',
-                      customClass: {
-                        popup: 'styled-toast',
-                        title: 'styled-title',
-                        content: 'styled-content'
-                      },
-                      didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer);
-                        toast.addEventListener('mouseleave', Swal.resumeTimer);
-                      }
+                const quantityInputs = document.querySelectorAll('.quantity-input');
+        
+                quantityInputs.forEach(input => {
+                    input.addEventListener('input', function () {
+                        const maxStock = parseInt(this.getAttribute('data-max-stock'));
+                        let currentQuantity = parseInt(this.value, 10);
+        
+                        // Validate against stock limit
+                        if (currentQuantity > maxStock) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Stock Limit Exceeded',
+                                text: 'You cannot purchase more than the available stock.',
+                                toast: true,
+                                position: 'center',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                background: '#d4edda',
+                                iconColor: '#155724',
+                                customClass: {
+                                    title: 'text-success',
+                                },
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                                }
+                            });
+                            currentQuantity = maxStock;
+                        }
+        
+                        // Validate against maximum limit (10 pcs)
+                        if (currentQuantity > 10) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: "You can't purchase more than 10 pcs/ morethan available stock",
+                                toast: true,
+                                position: 'center',
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                background: '#d4edda',
+                                iconColor: '#155724',
+                                customClass: {
+                                    title: 'text-success',
+                                },
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                                }
+                            });
+                            currentQuantity = 10;
+                        }
+        
+                        // Update the input value with validated quantity
+                        this.value = currentQuantity;
+        
+                        // Update the total price display
+                        const productId = this.getAttribute('data-product-id');
+                        const productPrice = parseFloat(document.querySelector(`.total-price[data-product-id="${productId}"]`).getAttribute('data-product-price'));
+                        const totalPriceElement = document.querySelector(`.total-price[data-product-id="${productId}"]`);
+                        totalPriceElement.textContent = (currentQuantity * productPrice).toFixed(2);
                     });
-          
-                    this.value = maxStock;
-                  }
+        
+                    // Disable typing in the input field but allow up and down arrow keys
+                    input.addEventListener('keydown', function (e) {
+                        if (!['ArrowUp', 'ArrowDown', 'Backspace', 'Delete'].includes(e.key)) {
+                            e.preventDefault();
+                        }
+                    });
                 });
-              });
             });
-          </script>
+        </script>
+        
+        
           
-          
+            
+ 
+        
         
         
           <script>
@@ -600,27 +638,7 @@
               }
             });
           </script>
-          <script>
-            // Wait for the DOM to be ready
-            $(document).ready(function() {
-                // Add event listener to quantity inputs
-                $('.quantity-input').change(function() {
-                    var quantity = parseInt($(this).val()); // Get the entered quantity
-            
-                    // Check if quantity exceeds 10
-                    if (quantity > 10) {
-                        showToast('You can purchase maximum 10 pcs of a single product.');
-                    }
-                });
-            
-                // Function to show toast message
-                function showToast(message) {
-                    var toastElement = $('#toast-message');
-                    toastElement.text(message);
-                    toastElement.fadeIn(400).delay(3000).fadeOut(400);
-                }
-            });
-            </script>
+         
         
           </body>
         

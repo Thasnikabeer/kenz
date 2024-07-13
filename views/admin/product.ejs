@@ -76,14 +76,13 @@
                                       <td></td>
                                       <td style="border-right: 3px solid #ccc;">
                                           <% if (product.images.length > 0) { %>
-                                          <% product.images.forEach(image => { %>
-                                          <div style="max-width: 50px; max-height: 50px; overflow: hidden; border: 1px solid #ccc;">
-                                              <img src="/images/<%= image %>" style="width: 100%; height: auto;">
-                                          </div>
-                                          <% }); %>
+                                            <img src="/images/<%= product.images[0] %>"
+                                            style="max-width: 50px; max-height: 50px;">
                                           <% } else { %>
-                                          <div>No Image</div>
-                                          <% } %>
+                                            <!-- Display a placeholder image or text -->
+                                            No Image
+                                            <% } %>
+                                         
                                       </td>
                                       <td style="border-right: 3px solid #ccc;"><%= product.productName %></td>
                                       <td style="border-right: 3px solid #ccc;"><% if (product.category) { %>

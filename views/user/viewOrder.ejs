@@ -5,20 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Details</title>
 
-    <!-- Add Bootstrap CSS link (optional) -->
+    <!-- Add Bootstrap CSS link -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-       body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); /* Replace with the correct path to your image */
-    background-size: cover; /* Ensures the image covers the entire background */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
-    background-position: center center; /* Centers the image */
-}
-
+        body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url('https://img.freepik.com/premium-photo/full-size-photo-young-attractive-woman-happy-positive-smile-wear-casual-outfit-isolated-pink-color-background_525549-6199.jpg?w=740');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center top; /* Adjusted background position */
+    }
 
         .container {
             margin-top: 50px;
@@ -34,97 +33,147 @@
         .table th,
         .table td {
             padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+            text-align: center;
+            border: 1px solid #ddd;
         }
 
         .thead-dark th {
             background-color: #343a40;
             color: #fff;
         }
+
+        .btn {
+            padding: 8px 16px;
+            margin: 4px;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            border: none;
+        }
+
+        .btn-dark {
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+        }
     </style>
 </head>
 <body>
+    <% include('../layouts/productheader') %>
+
     <div class="container">
-        <h2>Order Details</h2>
+        <div class="page-header text-center" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU')">
+            <div class="container">
+                <h1 class="page-title">Order Details<span></span></h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
 
-        <table class="table" style="border-collapse: collapse; width: 100%;">
-            <thead class="thead-dark" style="border: 1px solid black; font-weight: bold;">
-                <tr>
-                    <th scope="col" style="border: 1px solid black;">#</th>
-                    <th scope="col" style="border: 1px solid black;">Image</th>
-                    <th scope="col" style="border: 1px solid black;">Product name</th>
-                    <th scope="col" style="border: 1px solid black;">Product price</th>
-                    <th scope="col" style="border: 1px solid black;">Product Quantity</th>
-                    <th scope="col" style="border: 1px solid black;">Product Price</th>
-                    <th scope="col" style="border: 1px solid black;">Cancel</th>
-                    <!-- <th scope="col" style="border: 1px solid black;">Return</th> -->
-                </tr>
-            </thead>
-            <tbody style="font-weight: bold;">
-                <% order.products.forEach((productDetail, index) => { %>
-                    <tr style="border: 1px solid black;">
-                        <td style="border: 1px solid black;"><%= index + 1 %></td>
-                        <td class="product-col" style="border: 1px solid black;">
-                            <div class="product">
-                                <figure class="product-media">
-                                    <a href="/product/<%= productDetail.product._id %>">
-                                        <img src="/images/<%= productDetail.product.images[0] %>" style="width: 50px;" alt="Product image">
-                                    </a>
-                                </figure>
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/home">Home</a></li>
+                    <li class="breadcrumb-item"><a href="/profile">Profile</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Order Details</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="page-content">
+            <div class="cart">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <table class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Order Id</th>
+                                        <th scope="col">Product name</th>
+                                        <th scope="col">Product price</th>
+                                        <th scope="col">Product Quantity</th>
+                                        <th scope="col">Product Price</th>
+                                        <th scope="col">Cancel</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% order.products.forEach((productDetail, index) => { %>
+                                        <tr>
+                                            <td><%= index + 1 %></td>
+                                            <td class="product-col">
+                                                <div class="product">
+                                                    <figure class="product-media">
+                                                        <a href="/product/<%= productDetail.product._id %>">
+                                                            <img src="/images/<%= productDetail.product.images[0] %>" style="width: 50px;" alt="Product image">
+                                                        </a>
+                                                    </figure>
+                                                </div>
+                                            </td>
+                                            <td><%= productDetail.product.productName %></td>
+                                            <td><%= productDetail.product.productName %></td>
+                                            <td><%= productDetail.product.price %></td>
+                                            <td><%= productDetail.quantity %></td>
+                                            <td><%= productDetail.quantity * productDetail.product.price %></td>
+                                            <td class="text-center">
+                                                <% if (order.status === 'delivered') { %>
+                                                    <p>Product Delivered</p>
+                                                <% } else if (order.status === 'Returned') { %>
+                                                    <p>Order Returned</p>
+                                                <% } else if (order.status === 'Cancelled') { %>
+                                                    <p>Order Cancelled</p>
+                                                <% } else if (order.status === 'Cancellation') { %>
+                                                    <p>Cancellation in Progress</p>
+                                                <% } else { %>
+                                                    <form action="/reasonpage/<%= order.id %>" method="GET">
+                                                        <button class="btn btn-danger">Cancel Order</button>
+                                                    </form>
+                                                <% } %>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+
+                            <div style="text-align: right; margin-top: 20px;">
+                                <div style="margin-bottom: 10px;">
+                                    <p>Total Product Amount: <%= totalOrderPrice %></p>
+                                    <p>Discount amount: <%= order.discountAmount %></p>
+                                    <p>Final Total: <%= order.totalAmount %></p>
+                                    <% if (order.paymentStatus === 'Failed') { %>
+                                        <p>Paid Amount: 0</p>
+                                    <% } else { %>
+                                        <p>Paid Amount: <%= order.totalAmount %></p>
+                                    <% } %>
+                                </div>
+                            
+                                <div>
+                                    <button id="btn-invoice" type="button" class="btn btn-dark" data-order-id="<%= order._id %>">Download Invoice</button>
+                                </div>
                             </div>
-                        </td>
-                        <td style="border: 1px solid black;"><%= productDetail.product.productName %></td>
-                        <td style="border: 1px solid black;"><%= productDetail.product.price %></td>
-                        <td style="border: 1px solid black;"><%= productDetail.quantity %></td>
-                        <td style="border: 1px solid black;"><%= productDetail.quantity * productDetail.product.price %></td>
-                        <td class="text-center" style="border: 1px solid black; text-align: center;">
-                            <% if (order.status === 'delivered') { %>
-                                <p>Product Delivered</p>
-                            <% } else if (order.status === 'Returned') { %>
-                                <p>Order Returned</p>
-                            <% } else if (order.status === 'Cancelled') { %>
-                                <p>Order Cancelled</p>
-                            <% } else if (order.status === 'Cancellation') { %>
-                                <p>Cancellation in Progress</p>
-                            <% } else { %>
-                                <form action="/reasonpage/<%= order.id %>" method="GET">
-                                    <button class="btn btn-danger">Cancel Order</button>
-                                </form>
-                            <% } %>
-                        </td>
-                        <!-- <td class="text-center" style="border: 1px solid #101010; text-align: center;">
-                            <% if (order.status.trim() === 'delivered' && !order.returned) { %>
-                                <form action="/orders/<%= order._id %>/return" method="POST"  onsubmit="return confirm('Are you sure you want to request a return?');">
-                                    <input type="text" name="returnReason" class="form-control" placeholder="Enter return reason" required>
-                                    <button type="submit" class="btn btn-primary">Request Return</button>
-                                </form>                                                             
-                            <% } else if (order.returned) { %>
-                                <p>Product Returned</p>
-                            <% } %>
-                        </td> -->
-                    </tr>
-                <% }); %>
-            </tbody>
-        </table>
-        
-        
-        <div style="margin-left: 700px;">
-            <p>Total Product Amount: <%= totalOrderPrice %></p>
-            <p>Discount amount: <%= order.discountAmount %></p>
-            <p>Final Total : <%= order.totalAmount %></p>
-            <% if (order.paymentStatus === 'Failed') { %>
-            <p>Paid Amount: 0</p>
-            <% } else { %>
-            <p>Paid Amount: <%= order.totalAmount %></p>
-            <% } %>
+                            
 
-            <div>
-                <button id="btn-invoice" type="button" class="btn btn-dark" data-order-id="<%= order._id %>">Download Invoice</button><br><br>
-            </div>
-        </div>
-    </div>
-    <a href="/order-history" style="margin-left: 200px;">Back to Order History</a>
+                            <a href="/order-history" class="btn-link" style="float: left; background-color: rgb(74, 70, 70); color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px;">Back to Order History</a>
+
+                        </div><!-- End .col-lg-12 -->
+                    </div><!-- End .row -->
+                </div><!-- End .container -->
+            </div><!-- End .cart -->
+        </div><!-- End .page-content -->
+    </div><!-- End .container -->
+
+    <% include('../layouts/productfooter.ejs') %>
+
     <script>
         document.getElementById('btn-invoice').addEventListener('click', function() {
             const orderId = this.getAttribute('data-order-id');
@@ -153,6 +202,5 @@
             });
         });
     </script>
-    
 </body>
 </html>

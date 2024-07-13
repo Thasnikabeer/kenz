@@ -1,7 +1,7 @@
 const express = require("express");
 const admin_route =express();
 const  nocache = require("nocache")
-const multerMiddleware =require('../middleware/multer').upload
+const multerMiddleware = require('../middleware/multer').multerMiddleware;
 
 const session = require("express-session");
 const config = require("../config/config");
@@ -91,6 +91,9 @@ admin_route.delete('/category/:categoryId', auth.isLogin, categoryController.del
 admin_route.get('/product',auth.isLogin,categoryController.product);
 admin_route.get('/add-product',auth.isLogin,categoryController.loadProduct)
 admin_route.post('/new-product',auth.isLogin, multerMiddleware.array('images', 3),categoryController.addProduct)
+
+
+
 admin_route.get('/edit-product/:productId',auth.isLogin,categoryController.LoadEditProduct);
 admin_route.post('/edit-product/:productId',auth.isLogin, multerMiddleware.array('images', 3),categoryController.editProduct);
 admin_route.post('/product/:id/update-status',auth.isLogin,categoryController.updateProductStatus);

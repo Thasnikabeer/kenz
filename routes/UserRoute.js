@@ -28,24 +28,24 @@ router.get('/google/Verify', passport.authenticate('google', {
     scope: ['email', 'profile']
 }));
 
-router.get('/userVerification/google', (req, res, next) => {
-    passport.authenticate('google', async (err, user, info) => {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            return res.redirect('/failed'); 
-        }
-        req.logIn(user, async (err) => {
-            if (err) {
-                return next(err);
-            }
-            // Pass the email to the user controller
-            await Controller.handleGoogleSuccess(req, res, user.email);
-        });
-    })(req, res, next);
-}); 
-
+// router.get('/userVerification/google', (req, res, next) => {
+//     passport.authenticate('google', async (err, user, info) => {
+//         if (err) {
+//             return next(err);
+//         }
+//         if (!user) {
+//             return res.redirect('/failed'); 
+//         }
+//         req.logIn(user, async (err) => {
+//             if (err) {
+//                 return next(err);
+//             }
+//             // Pass the email to the user controller
+//             await Controller.handleGoogleSuccess(req, res, user.email);
+//         });
+//     })(req, res, next);
+// }); 
+router.get("/userVerification/google/callback/",passport.authenticate("google", { failureRedirect: "/failed" }),userController.handleGoogleSuccess);
 
 
 const storage=multer.diskStorage({

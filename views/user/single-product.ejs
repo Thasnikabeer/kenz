@@ -37,6 +37,8 @@
     <!--<link rel="stylesheet" href="/assets/css/demos/demo-5.css">
      <link rel="stylesheet" href="/assets/css/style.css">-->
     <link rel="stylesheet" href="/assets/css/plugins/nouislider/nouislider.css">
+
+    <script src="https://unpkg.com/js-image-zoom@0.7.0/js-image-zoom.js" type="application/javascript"></script>
 </head>
 
 <body>
@@ -85,7 +87,7 @@
                                 <div class="dropdown compare-dropdown">
                                     <div class="wishlist">
                                         <a href="/wishlist" title="Wishlist">
-                                            <i class="icon-heart-o" style="color: #c66;"></i>
+                                            <i class="icon-heart-o" style="color: rgb(19, 18, 18);"></i>
 
                                     </div>
                                     <!-- End .compare-dropdown  -->
@@ -96,7 +98,7 @@
                                 <div class="dropdown cart-dropdown">
                                     <a href="/cartlist" class="dropdown-toggle" role="button" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false" data-display="static">
-                                        <i class="icon-shopping-cart" style="color: #c66;"></i>
+                                        <i class="icon-shopping-cart" style="color: rgb(19, 18, 18);"></i>
                                     </a>
                                 </div>
                                 <!-- End .cart-dropdown -->
@@ -122,6 +124,7 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/home">Home</a></li>
                             <li class="breadcrumb-item"><a href="/product-list">Shop</a></li>
+                            <li class="breadcrumb-item"><a href="/profile">Profile</a></li>
                             <li class="breadcrumb-item active" aria-current="page">
                                 <%= product.productName %>
                             </li>
@@ -146,7 +149,7 @@
                                             </a>
                                         </figure><!-- End .product-main-image -->
 
-                                        <style>
+                                        <!-- <style>
                                             .zoom {
                                                 padding: 78px;
 
@@ -163,29 +166,25 @@
                                                 /* Safari 3-8 */
                                                 transform: scale(1.5);
                                             }
- 
+                                        </style> -->
 
-
-
-
-                                        </style>
-
-                                        <div id="product-zoom-gallery" class="product-image-gallery">
+                                        <div id="product-zoom-gallery" class="product-image-gallery imf">
+                                            
+                                         
                                             <a class="product-gallery-item active" href="#" data-image="/images/<%=product.images[0]%>" data-zoom-image="/images/<%=product.images[0]%>">
                                                 <img src="/images/<%=product.images[0]%>" alt="product side">
                                             </a>
+                                          
 
                                             <a class="product-gallery-item" href="#" data-image="/images/<%=product.images[1]%>" data-zoom-image="/images/<%=product.images[1]%>">
                                                 <img src="/images/<%=product.images[1]%>" alt="product cross">
                                             </a>
 
-                                            <a class="product-gallery-item" href="#" data-image="/images/<%=product.images[2]%>" data-zoom-image="/images/<%=product.images[1]%>">
+                                            <a class="product-gallery-item" href="#" data-image="/images/<%=product.images[2]%>" data-zoom-image="/images/<%=product.images[2]%>">
                                                 <img src="/images/<%=product.images[2]%>" alt="product with model">
                                             </a>
 
-                                            <!-- <a class="product-gallery-item" href="#" data-image="assetsmolla/images/products/single/4.jpg" data-zoom-image="assetsmolla/images/products/single/4-big.jpg">
-                                                <img src="/images/<%=product.images[2]%>" alt="product back">
-                                            </a> -->
+                                           
                                         </div><!-- End .product-image-gallery -->
                                     </div><!-- End .row -->
                                 </div><!-- End .product-gallery -->
@@ -516,7 +515,33 @@
             </div><!-- End .mobile-menu-container -->
     
     
-            <!-- Plugins JS File -->
+     <script>
+const elem = document.querySelector('.imf');
+
+let x, y, height, width;
+elem.onmouseenter = () => {
+    const size = elem.getBoundingClientRect();
+    x = size.x;
+    y = size.y;
+    width = size.width;
+    height = size.height;
+
+}
+elem.onmousemove = e => {
+    const horizontel = (e.clientX - x) / width * 100;
+    const vertical = (e.clientY - y) / height * 100;
+    console.log(vertical);
+
+    elem.style.setProperty('--x', horizontel + '%')
+    elem.style.setProperty('--y', vertical + '%')
+    console.log(elem);
+}
+
+
+
+     </script>       <!-- Plugins JS File -->
+     
+ 
             <script src="assetsmolla/js/jquery.min.js"></script>
     <script src="assetsmolla/js/bootstrap.bundle.min.js"></script>
     <script src="assetsmolla/js/jquery.hoverIntent.min.js"></script>

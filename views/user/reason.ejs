@@ -1,24 +1,32 @@
-<!-- cancellation-reason.ejs -->
 <html lang="en">
 <head>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 20px;
-        }
-
-        h2 {
-            color: #333;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://img.freepik.com/premium-photo/full-size-photo-young-attractive-woman-happy-positive-smile-wear-casual-outfit-isolated-pink-color-background_525549-6199.jpg?w=740');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center top;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Ensures the form covers the entire viewport height */
         }
 
         form {
-            max-width: 600px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 800px; /* Increased max-width */
             background-color: #fff;
-            padding: 20px;
+            padding: 40px; /* Increased padding */
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
         }
 
         label {
@@ -42,35 +50,32 @@
             color: white;
             padding: 10px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
             cursor: pointer;
+            width: 100%;
         }
 
         button:hover {
-            background-color:#c66;
+            background-color: #c44;
         }
     </style>
 </head>
 <body>
-    <h2 style="margin-left:440px;">Enter Cancellation Reason</h2>
-    <form action="/cancel-order/<%= order.id %>/<%= order.productId %>" method="POST">
-        <label for="predefinedReason">Select a predefined reason:</label>
-        <select id="predefinedReason" name="predefinedReason">
-            <option value="item_out_of_stock">Size issues</option>
-            <option value="changed_mind">Changed my mind</option>
-            <option value="Wrong Product Recived">Wrong Product Recived</option>
-            <option value="It's a trial order">It's a trial order</option>
-            
-        </select>
-    
-        <br>
-    
-        <!-- <label for="customReason">Or enter a custom reason:</label>
-        <textarea id="customReason" name="customReason" rows="4" cols="50"></textarea>
-     -->
-        <br>
-    
-        <button type="submit">Submit Reason</button>
-    </form>
+    <div>
+        <h2>Enter Cancellation Reason</h2>
+        <form action="/cancel-order/<%= order.id %>/<%= order.productId %>" method="POST">
+            <label for="predefinedReason">Select a predefined reason:</label>
+            <select id="predefinedReason" name="predefinedReason">
+                <option value="item_out_of_stock">Size issues</option>
+                <option value="changed_mind">Changed my mind</option>
+                <option value="Wrong Product Received">Wrong Product Received</option>
+                <option value="It's a trial order">It's a trial order</option>
+            </select>
+        
+            <br><br>
+        
+            <button type="submit">Submit Reason</button>
+        </form>
+    </div>
 </body>
 </html>

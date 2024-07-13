@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    // required: true,
   },
   wallet: 
    { 
@@ -46,11 +46,11 @@ const userSchema = new mongoose.Schema({
   },
   phone:{
     type:String,
-    required:true
+    // required:true
  },
  is_admin:{
   type:Number,
-  required:true
+  // required:true
 },
 is_varified:{
   type:Boolean,

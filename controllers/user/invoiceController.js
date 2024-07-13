@@ -75,7 +75,7 @@ const generateInvoicePdf = async (req, res) => {
      // Add company details in left column
      doc.fontSize(10).text('Ship From:', leftColumnX, currentY);
      currentY += 20;
-     doc.fontSize(10).text('KenZ.shop', leftColumnX, currentY);
+     doc.fontSize(10).text('kenz.live', leftColumnX, currentY);
      currentY += 15;
      doc.fontSize(10).text('Tavera Tower', leftColumnX, currentY);
      currentY += 15;

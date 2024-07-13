@@ -94,7 +94,7 @@
                 <div class="form-group">
                     <label for="name" class="text-light">Category Name</label>
                     <input type="hidden" name="id" value="">
-                    <input type="text" name="categoryName" id="categoryName" placeholder="KenZ Modest wear">
+                    <input type="text" name="categoryName" id="categoryName" placeholder="Enter a category name" >
                     <span id="categoryNameError" class="error"></span>
                 </div>
                 <% if (typeof message !== 'undefined') { %>
@@ -112,13 +112,13 @@
         
                 <div class="form-group">
                     <label for="offerAmount" class="text-light">Offer Amount (%)</label>
-                    <input type="text" name="offerAmount" id="offerAmount" placeholder="50">
+                    <input type="text" name="offerAmount" id="offerAmount" placeholder="Enter a value" required>
                     <span id="offerAmountError" class="error"></span>
                 </div>
         
                 <div class="form-group">
                     <label for="offerEndDate" class="text-light">Offer End Date</label>
-                    <input type="date" name="offerEndDate" id="offerEndDate">
+                    <input type="date" name="offerEndDate" id="offerEndDate" required>
                     <span id="offerEndDateError" class="error"></span>
                 </div>
         
@@ -129,47 +129,47 @@
         </form>
         
         <script>
-        function categoryValidation() {
-            var categoryName = document.getElementById('categoryName').value;
-            var offerAmount = document.getElementById('offerAmount').value;
-            var offerEndDate = document.getElementById('offerEndDate').value;
+            function categoryValidation() {
+                var categoryName = document.getElementById('categoryName').value;
+                var offerAmount = document.getElementById('offerAmount').value;
+                var offerEndDate = document.getElementById('offerEndDate').value;
         
-            document.getElementById('categoryNameError').innerText = "";
-            document.getElementById('offerAmountError').innerText = "";
-            document.getElementById('offerEndDateError').innerText = "";
+                document.getElementById('categoryNameError').innerText = "";
+                document.getElementById('offerAmountError').innerText = "";
+                document.getElementById('offerEndDateError').innerText = "";
         
-            // Validate Category Name
-            if (categoryName.trim() === "") {
-                document.getElementById('categoryNameError').innerText = "Category Name is required";
-                return false;
-            }
-            if (!/^[a-zA-Z\s]+$/.test(categoryName)) { // Allow spaces in category names
-                document.getElementById('categoryNameError').innerText = "Category Name must be alphabetic characters";
-                return false;
-            }
-        
-            // Validate Offer Amount if Offer Type is selected
-            if (offerAmount.trim() !== "") {
-                if (!/^\d+$/.test(offerAmount) || parseInt(offerAmount) <= 0) {
-                    document.getElementById('offerAmountError').innerText = "Offer Amount must be a positive integer";
+                // Validate Category Name
+                if (categoryName.trim() === "") {
+                    document.getElementById('categoryNameError').innerText = "Category Name is required";
                     return false;
                 }
-                if (offerEndDate.trim() === "") {
-                    document.getElementById('offerEndDateError').innerText = "Offer End Date is required when amount is entered";
+                if (!/^[a-zA-Z\s]+$/.test(categoryName)) { // Allow spaces in category names
+                    document.getElementById('categoryNameError').innerText = "Category Name must be alphabetic characters";
                     return false;
                 }
-            }
         
-            return true;
-        }
+                // Validate Offer Amount if Offer Type is selected
+                if (offerAmount.trim() !== "") {
+                    if (!/^\d+$/.test(offerAmount) || parseInt(offerAmount) <= 0 || parseInt(offerAmount) > 100) {
+                        document.getElementById('offerAmountError').innerText = "Offer Amount must be a positive integer between 1 and 100";
+                        return false;
+                    }
+                    if (offerEndDate.trim() === "") {
+                        document.getElementById('offerEndDateError').innerText = "Offer End Date is required when amount is entered";
+                        return false;
+                    }
+                }
+        
+                return true;
+            }
         </script>
+        
         
         
     </div>
     
         <!-- content-wrapper ends -->
   <%- include('../layouts/adminFooters') %>   
-
 
 
 

@@ -163,10 +163,10 @@
                     <span id="minOrderAmountError" style="color: red;"></span>
 
                 </div>
-                <div>
+                <!-- <div>
                     <label for="maxDiscountAmount">Max Discount Amount</label>
                     <input type="number" id="maxDiscountAmount" name="maxDiscountAmount" value="1000" required>
-                  </div>
+                  </div> -->
 
 
                 <div class="form-group">
@@ -235,19 +235,23 @@
 
 
             if (discountValue.trim() === '') {
-                document.getElementById('discountValueError').innerHTML = 'Discount Value is required';
-                event.preventDefault();
-            } else if (discountType === 'percentage' && Number(discountValue) > 100) {
-                document.getElementById('discountValueError').innerHTML = 'Discount value cannot be greater than 100% for percentage type.';
-                event.preventDefault();
-            } else {
-                var discountValueRegex = /^\d+$/;
+    document.getElementById('discountValueError').innerHTML = 'Discount Value is required';
+    event.preventDefault();
+} else if (discountType === 'percentage' && Number(discountValue) > 100) {
+    document.getElementById('discountValueError').innerHTML = 'Discount value cannot be greater than 100% for percentage type.';
+    event.preventDefault();
+} else {
+    var discountValueRegex = /^\d+$/;
 
-                if (!discountValueRegex.test(discountValue) || parseInt(discountValue) <= 0) {
-                    document.getElementById('discountValueError').innerHTML = 'Discount Value must be a valid positive integer';
-                    event.preventDefault();
-                }
-            }
+    if (!discountValueRegex.test(discountValue) || parseInt(discountValue) <= 0) {
+        document.getElementById('discountValueError').innerHTML = 'Discount Value must be a valid positive integer';
+        event.preventDefault();
+    } else if (discountType === 'fixed' && Number(discountValue) > 100) {
+        document.getElementById('discountValueError').innerHTML = 'Discount value cannot be greater than 100 for fixed type.';
+        event.preventDefault();
+    }
+}
+
 
             if (expirationDate.trim() === '') {
                 document.getElementById('expirationDateError').innerHTML = 'Expiration Date is required';

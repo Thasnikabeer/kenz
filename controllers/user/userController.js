@@ -32,20 +32,22 @@ const razorpayInstance = new Razorpay({
 
 //-------------------------------------------------
 
-const handleGoogleSuccess = async (req, res, Email) => {
+const handleGoogleSuccess = async (req, res) => {
   try {
-    console.log(Email);
-    const userEmail = Email;
-    const userData = await User.findOne({ email: userEmail });
+    console.log("googolr id coming ");
+    const googleUser = req.user
+    console.log("googolrUser is >>>>>>> ",googleUser);
+    const email= googleUser.email
+    console.log("==============EMAIL IS ==============",email);
+    
+    const userData = await User.findOne({ email: email });
     if (userData) {
-      req.session.user = userData;
+      req.session.user_id = userData._id;
       res.redirect("/home");
     } else {
-      const dataGoogle = await googleUser.findOne({ email: userEmail });
-      if (dataGoogle) {
-        req.session.user = dataGoogle;
-        res.redirect("/home");
-      }
+      
+        res.redirect("/login");
+      
     }
   } catch (error) {
     console.error("Google authentication error", error);
@@ -136,6 +138,8 @@ const resetPassword = async (name, email, token) => {
   }
 };
 
+
+
 // register
 const register = async (req, res) => {
   try {
@@ -144,6 +148,9 @@ const register = async (req, res) => {
     res.redirect(error.message);
   }
 };
+
+
+
 
 const userData = async (req, res) => {
   try {
@@ -432,7 +439,7 @@ const viewProductList = async (req, res) => {
     const sortOption = req.query.sort || "asc";
     const searchQuery = req.query.search || "";
 
-    // Pagination variables
+   
     // Pagination variables
     const page = parseInt(req.query.page) || 1; // Current page number
     const perPage = 6; // Number of products per page
@@ -479,16 +486,6 @@ const viewProductList = async (req, res) => {
       .sort(sortCriteria)
       .skip((page - 1) * perPage)
       .limit(perPage);
-
-    /* const products = await Product.find(query)
-       .populate('category')
-       .sort({ Price: sortOption === 'asc' ? 1 : -1 })
-       .skip((page - 1) * perPage)
-       .limit(perPage);
-       */
-
-    // Fetch offered categories
-    //const offeredCategories = await Category.find({ offer: { $exists: true } });
 
     res.render("productList", {
       products,
@@ -746,8 +743,11 @@ const loadCartList = async (req, res) => {
 const addtoCart = async (req, res) => {
   try {
     const productId = req.params.productId;
+    console.log("product is is :::",productId)
     const product = await Product.findById(productId);
+    console.log("Product lis is>>>>",product)
     const userId = req.session.user_id;
+    console.log("user is ===",userId)
 
     if (!userId) {
       return res.redirect("/login");
@@ -763,7 +763,6 @@ const addtoCart = async (req, res) => {
         if (existingCartItem.quantity < 10) {
           existingCartItem.quantity += 1;
         } else {
-          //req.flash('error', 'You can only add up to 10 of each product to your cart.');
           return res.redirect("/product-list");
         }
       } else {
@@ -794,12 +793,8 @@ const addtoCart = async (req, res) => {
 const updateQuantity = async (req, res) => {
   const productId = req.params.productId;
   const newQuantity = req.body.quantity;
-  // console.log("updateeee", productId);
-  // console.log("updateeee", newQuantity);
-
   try {
     const product = await Product.findById(productId);
-    console.log("newwww", product);
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
@@ -926,7 +921,6 @@ const orderSucess = async (req, res) => {
 
 const placeorder = async (req, res) => {
   try {
-    console.log("Hello from place ORder");
     const userId = req.session.user_id;
     const user = await User.findById(userId).populate(
       "cart.product chosenAddress"
@@ -985,7 +979,6 @@ const placeorder = async (req, res) => {
 
       // Continue with the order creation logic
       if (totalAmountAfterDiscount < 2000) {
-        console.log("less");
         const order = new Order({
           userId,
           userName,
@@ -1119,7 +1112,7 @@ const placeorder = async (req, res) => {
                 orderedQuantity
               );
             }
-            console.log("helllooo world");
+            // console.log("helllooo world");
             // product.stock -= orderedQuantity;
             // await product.save();
           } else {
@@ -1132,7 +1125,22 @@ const placeorder = async (req, res) => {
         console.error("Error creating Razorpay order:", razorpayError);
         res.status(500).send("Error creating Razorpay order");
       }
-    } else {
+    }
+   
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    else {
       // Handle other payment methods if needed
       res.status(400).send("Invalid payment method selected.");
     }
@@ -1547,8 +1555,10 @@ const handlePaymentFailure2 = async (req, res) => {
 // CANCEL ORDER
 
 const orderCancel = async (req, res) => {
+  console.log("cancelc checkkkkkkkkkkk")
   console.log("Reached orderCancel route");
   const orderId = req.params.orderId;
+  console.log("cancelc check",orderId)
   const { predefinedReason, customReason } = req.body;
 
   try {
@@ -1565,6 +1575,21 @@ const orderCancel = async (req, res) => {
       predefinedReason || customReason || "No reason provided";
     order.cancellation.cancelledByAdmin = false;
 
+   
+      // const cancelledAmount=order.totalAmount;
+      // await User.findByIdAndUpdate(order.userId,{
+      //   $inc : { wallet : cancelledAmount },
+      //   $push: {
+      //     walletHistory: {
+      //       type: 'credit',
+      //       amount: cancelledAmount,
+      //       description : 'Refund for cancelled order',
+      //     }
+      //   }
+      // })
+    
+
+
     await order.save();
 
     res.redirect("/order-history");
@@ -1573,6 +1598,7 @@ const orderCancel = async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
 
 //cancelled order-reason page
 const reasonpage = async (req, res) => {
@@ -1750,19 +1776,45 @@ const deletewishlist = async (req, res) => {
   }
 };
 
+// const wallet = async (req, res) => {
+//   try {
+//     const userId = req.session.user_id;
+//     const user = await User.findById(userId);
+
+//     res.render("wallet", {
+//       walletAmount: user.wallet,
+//       walletHistory: user.walletHistory,
+//     });
+//   } catch (error) {
+//     console.log(error.message);
+//   }
+// };
 const wallet = async (req, res) => {
   try {
     const userId = req.session.user_id;
     const user = await User.findById(userId);
 
+    const page = parseInt(req.query.page) || 1; // Current page number
+    const limit = 10; // Number of records per page
+
+    const skip = (page - 1) * limit;
+    const walletHistory = user.walletHistory.slice(skip, skip + limit);
+
+    const count = user.walletHistory.length;
+    const totalPages = Math.ceil(count / limit);
+
     res.render("wallet", {
       walletAmount: user.wallet,
-      walletHistory: user.walletHistory,
+      walletHistory,
+      currentPage: page,
+      totalPages,
     });
   } catch (error) {
     console.log(error.message);
   }
 };
+
+
 
 module.exports = {
   register,

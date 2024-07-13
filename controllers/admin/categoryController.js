@@ -5,8 +5,9 @@ const Order=require('../../models/orderModel');
 //category management
 const { upload } = require('../../middleware/multer');
 
-const sharp=require('sharp');
-
+const sharp = require('sharp');
+const fs = require('fs').promises;
+const path = require('path');
 
 
 
@@ -296,7 +297,7 @@ const product = async (req, res) => {
         
         // Count total products for pagination
         const totalProducts = await Product.countDocuments(query);
-
+      
         res.render('product', {
             products,
             categories,
@@ -324,35 +325,115 @@ const loadProduct = async (req, res) => {
 };
 
 
+// const addProduct = async (req, res) => {
+//     try {
+//         const { productName, category, size, oldPrice, stock, description, offerType, offerAmount, offerEndDate } = req.body;
+//         let images = [];
+//         if (req.files && Array.isArray(req.files)) {
+//             images = await Promise.all(req.files.map(async (file) => {
+//                 const filename = file.filename;
+//                 console.log("product imageeee checkinggggg")
+
+//                 // Log the filename being processed
+//                 console.log('Processing file:', filename);
+
+//                 // Check if file exists
+//                 if (!filename) {
+//                     throw new Error('Input file is missing: ' + filename);
+//                 }
+
+//                 // Crop the image to 100x100 pixels
+//                 await sharp(`public/images/${filename}`)
+//                     .resize({ width: 458, height: 458, fit: 'inside', withoutEnlargement: true }) // Resize without enlarging smaller images
+//                     .jpeg({ quality: 100 }) // Adjust JPEG quality to improve image quality
+//                     .toFile(`public/images/cropped_${filename}`);
+
+//                 // Return the new filename
+//                 return `cropped_${filename}`;
+               
+//             }));
+//         }
+
+
+//         const newProduct = new Product({
+//             productName,
+//             category,
+//             size,
+//             oldPrice,
+//             stock,
+//             description,
+//             images,
+//             offer: {
+//                 type: offerType,
+//                 amount: offerAmount,
+//                 endDate: offerEndDate,
+//             },
+//         });
+
+//         await newProduct.save();
+//         await updateProductPrices(newProduct);
+
+//         console.log('Images:', images);
+//         res.redirect('/admin/product');
+//     } catch (error) {
+//         console.error('Error adding new product:', error.message);
+//         res.status(500).send('Error adding new product: ' + error.message);
+//     }
+// };
+
+const ensureDirectoryExistence = async (dir) => {
+    try {
+        await fs.access(dir);
+    } catch (err) {
+        await fs.mkdir(dir, { recursive: true });
+    }
+};
+
+
 const addProduct = async (req, res) => {
     try {
         const { productName, category, size, oldPrice, stock, description, offerType, offerAmount, offerEndDate } = req.body;
 
         let images = [];
+
         if (req.files && Array.isArray(req.files)) {
+            await ensureDirectoryExistence('public/images');
+
             images = await Promise.all(req.files.map(async (file) => {
                 const filename = file.filename;
+                const originalFilePath = file.path;
+                const croppedImageFilename = `cropped_${filename}`;
+                const croppedFilePath = path.join('public', 'images', croppedImageFilename);
 
-                // Log the filename being processed
-                console.log('Processing file:', filename);
+                console.log('Original image path:', originalFilePath);
+                console.log('Cropped image path:', croppedFilePath);
 
-                // Check if file exists
-                if (!filename) {
-                    throw new Error('Input file is missing: ' + filename);
+                try {
+                    // Crop and save the image
+                    await sharp(originalFilePath)
+                        .resize({ width: 458, height: 458, fit: 'inside', withoutEnlargement: true })
+                        .toFile(croppedFilePath);
+
+                    console.log(`Cropped image saved: ${croppedFilePath}`);
+                } catch (err) {
+                    console.error('Error processing image:', err.message);
+                    throw err;
                 }
 
-                // Crop the image to 100x100 pixels
-                await sharp(`public/images/${filename}`)
-                    .resize({ width: 100, height: 100, fit: 'inside', withoutEnlargement: true }) // Resize without enlarging smaller images
-                    .jpeg({ quality: 100 }) // Adjust JPEG quality to improve image quality
-                    .toFile(`public/images/cropped_${filename}`);
+                return croppedImageFilename;
+            }));
 
-                // Return the new filename
-                return `cropped_${filename}`;
-               
+            // Ensure the original files are deleted after cropping
+            await Promise.all(req.files.map(async (file) => {
+                const originalFilePath = file.path;
+                try {
+                    await fs.unlink(originalFilePath);
+                    console.log(`Deleted original image: ${originalFilePath}`);
+                } catch (err) {
+                    console.error('Error deleting file:', err.message);
+                }
             }));
         }
-
 
         const newProduct = new Product({
             productName,
@@ -371,7 +452,6 @@ const addProduct = async (req, res) => {
 
         await newProduct.save();
         await updateProductPrices(newProduct);
-
         console.log('Images:', images);
         res.redirect('/admin/product');
     } catch (error) {
@@ -379,6 +459,67 @@ const addProduct = async (req, res) => {
         res.status(500).send('Error adding new product: ' + error.message);
     }
 };
+
+
+
+// new add prdct
+
+// const addProduct = async (req, res) => {
+//     try {
+//         const { productName, category, size, oldPrice, stock, description, offerType, offerAmount, offerEndDate } = req.body;
+
+//         let images = [];
+
+//         if (req.files && Array.isArray(req.files)) {
+//             images = await Promise.all(req.files.map(async (file) => {
+//                 const filename = file.filename;
+//                 const croppedImageFilename = `cropped_${filename}`;
+
+//                 console.log('Original image path:', file.path);
+//                 console.log('Cropped image path:', `public/images/${croppedImageFilename}`);
+
+//                 // Crop and save the image
+//                 await sharp(file.path)
+//                     .resize({ width: 458, height: 458, fit: 'inside', withoutEnlargement: true })
+//                     .toFile(`public/images/${croppedImageFilename}`);
+
+//                 // Delete the original uploaded image after cropping
+//                 try {
+//                     await fs.unlink(file.path); // Attempt to delete the file
+//                     console.log(`Deleted original image: ${file.path}`);
+//                 } catch (err) {
+//                     console.error('Error deleting file:', err.message);
+//                 }
+
+//                 return croppedImageFilename;
+//             }));
+//         }
+
+//         const newProduct = new Product({
+//             productName,
+//             category,
+//             size,
+//             oldPrice,
+//             stock,
+//             description,
+//             images,
+//             offer: {
+//                 type: offerType,
+//                 amount: offerAmount,
+//                 endDate: offerEndDate,
+//             },
+//         });
+
+//         await newProduct.save();
+
+//         console.log('Images:', images);
+//         res.redirect('/admin/product');
+//     } catch (error) {
+//         console.error('Error adding new product:', error.message);
+//         res.status(500).send('Error adding new product: ' + error.message);
+//     }
+// };
+
 
 
 const LoadEditProduct = async (req, res) => {
@@ -392,16 +533,29 @@ const LoadEditProduct = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
-
 const editProduct = async (req, res) => {
     try {
         const productId = req.params.productId;
         const { productName, category, size, oldPrice, stock, description, offerType, offerAmount, offerEndDate } = req.body;
-
         let images = [];
+
+        // Retrieve the existing product from the database
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
+
+
+     
+
+        // Check if there are files and if they are an array
         if (req.files && Array.isArray(req.files)) {
+            // Map filenames from files array
             images = req.files.map((file) => file.filename);
         }
+
+        // Ensure product.images is an array before concatenating
+        images = [...(product.images || []), ...images];
 
         // Check if the offer is being deleted
         const offerDeleted = !offerType && !offerAmount && !offerEndDate;
@@ -416,16 +570,12 @@ const editProduct = async (req, res) => {
             oldPrice,
             stock,
             description,
-            // Set offer fields if not deleted, otherwise remove offer
-            ...(offerDeleted ? { offer: {} } : {
-                offer: {
-                    type: offerType,
-                    amount: offerAmount,
-                    endDate: offerEndDate,
-                },
-            }),
-            price: newPrice, // Set the new price
-            ...(images.length > 0 && { images }),
+            images,
+            offer: {
+                type: offerType,
+                amount: offerAmount,
+                endDate: offerEndDate,
+            },
         };
 
         const updatedProduct = await Product.findByIdAndUpdate(
@@ -438,9 +588,6 @@ const editProduct = async (req, res) => {
             return res.status(404).send('Product not found');
         }
 
-        // Update product prices based on the updated product
-        await updateProductPrices(updatedProduct);
-
         res.redirect('/admin/product');
     } catch (error) {
         console.error('Error updating product:', error.message);
@@ -448,10 +595,6 @@ const editProduct = async (req, res) => {
     }
 };
 
-function calculateNewPrice(oldPrice, offerAmount) {
-    const productDiscount = offerAmount / 100;
-    return oldPrice - (oldPrice * productDiscount);
-}
 
 const removeImage = async (req, res) => {
     try {
@@ -463,10 +606,8 @@ const removeImage = async (req, res) => {
         }
         // Filter out the image to be removed
         product.images = product.images.filter(image => image !== imageName);
-        console.log(`${product.images}`);
         // Save the updated product
         await product.save();
-        console.log(`${product.images}`);
         // Redirect back to the edit product page or wherever appropriate
         res.redirect('/admin/edit-product/' + productId);
     } catch (error) {
@@ -485,6 +626,7 @@ const addImage = async (req, res) => {
 
         // Handle image upload
         if (req.files && Array.isArray(req.files)) {
+            console.log("first image checkingg")
             const newImages = await Promise.all(req.files.map(async (file) => {
                 const filename = file.filename;
 
@@ -493,7 +635,7 @@ const addImage = async (req, res) => {
                     .resize({ width: 458, height: 458, fit: 'inside', withoutEnlargement: true })
                     .jpeg({ quality: 100 })
                     .toFile(`public/images/cropped_${filename}`);
-
+                    console.log("second image checkingg")
                 // Return the new filename
                 return `cropped_${filename}`;
             }));
@@ -519,8 +661,10 @@ const addImage = async (req, res) => {
 
 
 
-
-
+function calculateNewPrice(oldPrice, offerAmount) {
+    const productDiscount = offerAmount / 100;
+    return oldPrice - (oldPrice * productDiscount);
+}
 
 
 

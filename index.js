@@ -61,6 +61,14 @@ app.set('view engine', 'ejs');
 app.set('views',[ path.resolve(__dirname, 'views/user'),
 path.resolve(__dirname, 'views/admin')]);
 
+
+app.use(passport.initialize())
+app.use(passport.session())
+
+
+
+
+
 // Serve static files
 app.use(express.static('public', {
   extensions: ['html', 'htm', 'webp', 'jpg', 'jpeg', 'png'], // Specify allowed file extensions

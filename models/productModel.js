@@ -31,10 +31,6 @@ const mongoose=require("mongoose");
         type: Number,
 
     },
-    // category: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Category',
-    // },
     soldCount: {
         type: Number,
         default: 0

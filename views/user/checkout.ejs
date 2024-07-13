@@ -1,78 +1,95 @@
 <%- include('../layouts/productheader') %>
 
-    <div class="header-middle sticky-header">
-        <div class="container">
-            <div class="header-left">
-                <button class="mobile-menu-toggler">
-                    <span class="sr-only">Toggle mobile menu</span>
-                    <i class="icon-bars"></i>
-                </button>
+<div class="header-middle sticky-header">
+    <div class="container">
+        <div class="header-left">
+            <button class="mobile-menu-toggler">
+                <span class="sr-only">Toggle mobile menu</span>
+                <i class="icon-bars"></i>
+            </button>
 
-                <a href="/home" class="logo">
-                    <h2 style="color: #c66;;">KenZ</h2>
-                </a>
+            <a href="/home" class="logo">
+                <h2 style="color: black;;">KenZ</h2>
+            </a>
+            <nav class="main-nav">
+                <ul class="menu sf-arrows">
+                    
+                    <li>
+                        <a href="/home" class="sf-with-ul">Home</a>
 
-                <nav class="main-nav">
-                    <ul class="menu sf-arrows">
-                        <li class="megamenu-container active">
-                            <a href="/home" class="sf-with-ul">Home</a>
+                        <div class="megamenu megamenu-md">
 
+                        </div><!-- End .megamenu megamenu-md -->
+                    </li>
+                    <li>
+                        <a href="/product-list" class="sf-with-ul">Shop</a>
 
-                        </li>
-                        <li>
-                            <a href="/product-list" class="sf-with-ul">Shop</a>
+                        <div class="megamenu megamenu-md">
 
-                            <div class="megamenu megamenu-md">
-                                <div class="row no-gutters">
-                                    <div class="col-md-8">
+                        </div><!-- End .megamenu megamenu-md -->
+                    </li>
+                    <li>
+                        <a href="/profile" class="sf-with-ul">Profile</a>
 
-                                    </div><!-- End .col-md-8 -->
+                        <div class="megamenu megamenu-md">
 
+                        </div><!-- End .megamenu megamenu-md -->
+                    </li>
 
-                                </div><!-- End .row -->
-                            </div><!-- End .megamenu megamenu-md -->
-                        </li>
+                </ul><!-- End .menu -->
+            </nav><!-- End .main-nav -->
+        </div><!-- End .header-left -->
 
-                    </ul><!-- End .menu -->
-                </nav><!-- End .main-nav -->
-            </div><!-- End .header-left -->
+        <div class="header-right">
 
-            <div class="header-right">
-
-                <div class="dropdown compare-dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false" data-display="static" title="Compare Products"
-                        aria-label="Compare Products">
-                        <i class="icon-random"></i>
-                    </a>
-
+            <div class="dropdown compare-dropdown">
+                <div class="wishlist">
+                    <a href="/wishlist" title="Wishlist">
+                        <i class="icon-heart-o"></i>
 
                 </div><!-- End .compare-dropdown -->
 
-                <div class="dropdown cart-dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false" data-display="static">
-                        <i class="icon-shopping-cart"></i>
+
+            </div><!-- End .compare-dropdown -->
+
+            <div class="dropdown cart-dropdown">
+                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false" data-display="static">
+                 <i class="icon-shopping-cart" style="color: black;"></i>
+             </a>
+             
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-cart-products">
+
+                    </div><!-- End .cart-product -->
+
+                    <div class="dropdown-cart-total">
+
+                    </div><!-- End .dropdown-cart-total -->
+
+                    <div class="dropdown-cart-action">
+                        <a href="/cartlist" class="btn btn-primary">View Cart</a>
+                    </div><!-- End .dropdown-cart-total -->                       
+                </div><!-- End .dropdown-menu -->
+            </div><!-- End .cart-dropdown -->
+            <div class="dropdown compare-dropdown">
+                <div class="logout">
+                    <a href="/logout" title="Logout" style="color: black;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 1a1 1 0 0 1 1 1v3h-1V2H2v12h8v-3h1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h8z"/>
+                            <path fill-rule="evenodd" d="M13.5 8a.5.5 0 0 0 0-1h-7a.5.5 0 0 0 0 1h7z"/>
+                            <path fill-rule="evenodd" d="M12.354 4.646a.5.5 0 0 0-.708.708L14.293 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3z"/>
+                        </svg>
+                        Logout
                     </a>
-
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <div class="dropdown-cart-products">
-
-
-                        </div><!-- End .cart-product -->
-
-                        <div class="dropdown-cart-total">
-
-                        </div>
-                        <div class="dropdown-cart-action">
-                            <a href="/cartList" class="btn btn-primary">View Cart</a>
-                        </div><!-- End .dropdown-cart-total -->
-                    </div><!-- End .dropdown-menu -->
-                </div><!-- End .cart-dropdown -->
-            </div><!-- End .header-right -->
-        </div><!-- End .container -->
-    </div><!-- End .header-middle -->
-    </header><!-- End .header -->
+                </div><!-- End .logout -->
+            </div><!-- End .compare-dropdown -->
+            <!-- End .compare-dropdown -->
+            
+        </div><!-- End .header-right -->
+    </div><!-- End .container -->
+</div><!-- End .header-middle -->
+</header><!-- End .header -->
 
     <main class="main">
         <div class="page-header text-center" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU')">
@@ -101,7 +118,7 @@
                         <div class="row">
                             <div class="col-lg-9">
                                 <a href="/loadcoupon">
-                                    <p style="border: 3px ; width: 300px; padding: 15px; text-align: center; background-color: #c66; color: #fff;">
+                                    <p style="border: 3px ; width: 300px; padding: 15px; text-align: center; background-color: rgb(129, 134, 134); color: #fff;">
                                         <b>Available Coupons</b>
                                     </p>
                                 </a>
@@ -234,10 +251,13 @@
                                     <div class="card">
                                         <div class="card-header" id="heading-3">
                                             <h2 class="card-title">
+                                                
                                                 <input type="radio" name="paymentMethod" value="cashOnDelivery" id="cashOnDelivery" required>
                                                 <label for="cashOnDelivery" style="font-size: 16px; font-weight: bold;">COD</label>
                                                 <input type="radio" name="paymentMethod" value="onlinePayment" id="onlinePayment" required>
                                                 <label for="onlinePayment" style="font-size: 16px; font-weight: bold;">Online Payment</label>
+                                                <input type="radio" name="paymentMethod" value="wallet" id="wallet" required>
+                                                <label for="wallet" style="font-size: 16px; font-weight: bold;">wallet</label>
                                             </h2>
                                         </div>
                                     </div>
@@ -247,6 +267,15 @@
                                             You can't choose COD for the amount that exceeds Rs. 1000
                                         </div>
                                     </div>
+                                    <% if (totalCartPrice > 1000) { %>
+                                        <tr>
+                                            <td colspan="2" style="font-size: 12px; color: rgb(31, 212, 31);">Choose Online, Can't choose COD for order above 1000!</td>
+                                        </tr>
+                                    <% } %>
+                                    
+                                    
+                                        
+                                    <br><br>
                             
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-outline-primary-2 btn-order mt-3">

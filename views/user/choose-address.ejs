@@ -25,106 +25,100 @@
     /* Additional hover styling if needed */
 }
 
+
 </style>
 
-    <div class="header-middle sticky-header">
-        <div class="container">
-            <div class="header-left">
-                <button class="mobile-menu-toggler">
-                    <span class="sr-only">Toggle mobile menu</span>
-                    <i class="icon-bars"></i>
-                </button>
+<div class="header-middle sticky-header">
+    <div class="container">
+        <div class="header-left">
+            <button class="mobile-menu-toggler">
+                <span class="sr-only">Toggle mobile menu</span>
+                <i class="icon-bars"></i>
+            </button>
 
-                <a href="/home" class="logo">
-                    <h2 style="color: black;;">KenZ</h2>
-                </a>
-                <nav class="main-nav">
-                    <ul class="menu sf-arrows">
-                        <!-- <a href="/home" class="sf-with-ul">Home</a>
+            <a href="/home" class="logo">
+                <h2 style="color: black;;">KenZ</h2>
+            </a>
+            <nav class="main-nav">
+                <ul class="menu sf-arrows">
+                    
+                    <li>
+                        <a href="/home" class="sf-with-ul">Home</a>
 
-                    <li class="megamenu-container active">
+                        <div class="megamenu megamenu-md">
 
-                        <div class="megamenu demo">
-                           
-                        
-                            
-                        </div>
-                        End .megamenu -->
-                        <!-- </li> -->
-                        <li>
-                            <a href="/home" class="sf-with-ul">Home</a>
+                        </div><!-- End .megamenu megamenu-md -->
+                    </li>
+                    <li>
+                        <a href="/product-list" class="sf-with-ul">Shop</a>
 
-                            <div class="megamenu megamenu-md">
+                        <div class="megamenu megamenu-md">
 
-                            </div><!-- End .megamenu megamenu-md -->
-                        </li>
-                        <li>
-                            <a href="/product-list" class="sf-with-ul">Shop</a>
+                        </div><!-- End .megamenu megamenu-md -->
+                    </li>
+                    <li>
+                        <a href="/profile" class="sf-with-ul">Profile</a>
 
-                            <div class="megamenu megamenu-md">
+                        <div class="megamenu megamenu-md">
 
-                            </div><!-- End .megamenu megamenu-md -->
-                        </li>
+                        </div><!-- End .megamenu megamenu-md -->
+                    </li>
 
-                    </ul><!-- End .menu -->
-                </nav><!-- End .main-nav -->
-            </div><!-- End .header-left -->
+                </ul><!-- End .menu -->
+            </nav><!-- End .main-nav -->
+        </div><!-- End .header-left -->
 
-            <div class="header-right">
+        <div class="header-right">
 
-                <div class="dropdown compare-dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false" data-display="static" title="Compare Products"
-                        aria-label="Compare Products">
-                        <i class="icon-random"></i>
-                    </a>
+            <div class="dropdown compare-dropdown">
+                <div class="wishlist">
+                    <a href="/wishlist" title="Wishlist">
+                        <i class="icon-heart-o"></i>
 
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <ul class="compare-products">
-                            <li class="compare-product">
-                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                <h4 class="compare-product-title"><a href="product.html">Blue Night Dress</a></h4>
-                            </li>
-                            <li class="compare-product">
-                                <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                <h4 class="compare-product-title"><a href="product.html">White Long Skirt</a></h4>
-                            </li>
-                        </ul>
-
-
-                    </div><!-- End .dropdown-menu -->
                 </div><!-- End .compare-dropdown -->
 
-                <div class="dropdown cart-dropdown">
-                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false" data-display="static">
-                        <i class="icon-shopping-cart"></i>
-                        <span class="cart-count">2</span>
+
+            </div><!-- End .compare-dropdown -->
+
+            <div class="dropdown cart-dropdown">
+                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false" data-display="static">
+                 <i class="icon-shopping-cart" style="color: black;"></i>
+             </a>
+             
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-cart-products">
+
+                    </div><!-- End .cart-product -->
+
+                    <div class="dropdown-cart-total">
+
+                    </div><!-- End .dropdown-cart-total -->
+
+                    <div class="dropdown-cart-action">
+                        <a href="/cartlist" class="btn btn-primary">View Cart</a>
+                    </div><!-- End .dropdown-cart-total -->                       
+                </div><!-- End .dropdown-menu -->
+            </div><!-- End .cart-dropdown -->
+            <div class="dropdown compare-dropdown">
+                <div class="logout">
+                    <a href="/logout" title="Logout" style="color: black;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 1a1 1 0 0 1 1 1v3h-1V2H2v12h8v-3h1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h8z"/>
+                            <path fill-rule="evenodd" d="M13.5 8a.5.5 0 0 0 0-1h-7a.5.5 0 0 0 0 1h7z"/>
+                            <path fill-rule="evenodd" d="M12.354 4.646a.5.5 0 0 0-.708.708L14.293 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3z"/>
+                        </svg>
+                        Logout
                     </a>
+                </div><!-- End .logout -->
+            </div><!-- End .compare-dropdown -->
+            <!-- End .compare-dropdown -->
+            
+        </div><!-- End .header-right -->
+    </div><!-- End .container -->
+</div><!-- End .header-middle -->
+</header><!-- End .header -->
 
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <div class="dropdown-cart-products">
-                            <div class="product">
-                                <div class="product-cart-details">
-
-
-                                    <div class="product">
-                                        <div class="product-cart-details">
-
-
-                                            <div class="dropdown-cart-total">
-
-                                            </div><!-- End .dropdown-cart-total -->
-
-                                            <div class="dropdown-cart-action">
-                                                <a href="/cartList" class="btn btn-primary">View Cart</a>
-                                            </div><!-- End .dropdown-cart-total -->
-                                        </div><!-- End .dropdown-menu -->
-                                    </div><!-- End .cart-dropdown -->
-                                </div><!-- End .header-right -->
-                            </div><!-- End .container -->
-                        </div><!-- End .header-middle -->
-                        </header><!-- End .header -->
 
                         <main class="main">
                             <div class="page-header text-center"

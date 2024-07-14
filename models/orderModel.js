@@ -12,8 +12,8 @@ const orderSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ['Paid', 'Failed','COD','paid'],
-    default: 'COD',
+    enum: ['Paid', 'Failed','COD','paid','walletPaid'],
+    default: 'paid',
   },
   address: {
     type: mongoose.Schema.Types.ObjectId,

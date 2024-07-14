@@ -118,6 +118,20 @@ const confirmOrderCancellation = async (req, res) => {
             walletHistory:{
               type:'credit',
               amount:canceledAmount,
+              description : 'Refund for cancelled order'
+            }
+          }
+        });
+      }
+      else if (order.payment === 'wallet') {
+        const canceledAmount = order.totalAmount;
+        // increment wallet and add transaction to history
+        await User.findByIdAndUpdate(userId, { 
+          $inc: { wallet: canceledAmount } ,
+          $push:{
+            walletHistory:{
+              type:'credit',
+              amount:canceledAmount,
             }
           }
         });

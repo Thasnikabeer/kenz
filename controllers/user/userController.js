@@ -851,6 +851,8 @@ const loadcheckout = async (req, res) => {
     }
 
     const chosenAddress = user.chosenAddress;
+    let flashMessage = req.flash('error'); 
+    console.log("flashMessage:",flashMessage);
 
     // Calculate total cart price
     let totalCartPrice = 0;
@@ -878,6 +880,7 @@ const loadcheckout = async (req, res) => {
       shippingCharge,
       discountAmount,
       finalTotal,
+      messages: { error: flashMessage }
     });
   } catch (error) {
     console.error(error.message);
@@ -976,7 +979,6 @@ const placeorder = async (req, res) => {
     if (paymentMethod === "cashOnDelivery" && totalAmountAfterDiscount < 1000) {
       //   return res.status(400).send("You can't choose COD for the amount that exceeds Rs. 1000.");
       // }
-
       // Continue with the order creation logic
       if (totalAmountAfterDiscount < 2000) {
         const order = new Order({
@@ -994,6 +996,9 @@ const placeorder = async (req, res) => {
           razorpayOrderId: uuid.v4(), // Generate a unique UUID as the placeholder value
         });
       }
+
+
+
       const order = new Order({
         userId,
         userName,
@@ -1048,7 +1053,66 @@ const placeorder = async (req, res) => {
 
       // Render the success page
       res.render("ordersuccess", { discountAmount, order });
-    } else if (paymentMethod === "onlinePayment") {
+    }
+    else if(paymentMethod === "wallet") {
+      if (user.wallet < totalAmountAfterDiscount) {
+        console.log('insuf');
+        req.flash('error', 'Insufficient wallet balance.');
+        return res.redirect('/checkout')
+        // return res.status(400).send("Insufficient wallet balance.");
+      }
+      const order = new Order({
+        userId,
+        userName,
+        chosenAddress: user.chosenAddress,
+        products: user.cart.map((cartItem) => ({
+          product: cartItem.product,
+          quantity: cartItem.quantity,
+        })),
+        totalAmount: totalAmountAfterDiscount,
+        discountAmount,
+        payment: paymentMethod,
+        razorpayOrderId: uuid.v4(), // Generate a unique UUID as the placeholder value
+      });
+
+      await order.save();
+
+      // Deduct the amount from the user's wallet
+      user.wallet -= totalAmountAfterDiscount;
+
+      // Update wallet history
+      user.walletHistory.push({
+        type: 'debit',
+        amount: totalAmountAfterDiscount,
+        description: 'Order Payment',
+        timestamp: new Date(),
+      });
+
+      // Update stock for each product in the order
+      for (const orderProduct of order.products) {
+        const productId = orderProduct.product._id;
+        const orderedQuantity = orderProduct.quantity;
+
+        const product = await Product.findById(productId);
+
+        if (product) {
+          const remainingStock = Math.max(product.stock - orderedQuantity, 0);
+          await Product.findByIdAndUpdate(productId, { stock: remainingStock });
+        } else {
+          console.error("Product not found:", productId);
+        }
+      }
+
+      // Clear the user's cart
+      user.cart = [];
+      await user.save();
+
+      // Render the success page
+      return res.render("ordersuccess", { discountAmount, order });
+    }
+
+   
+    else if (paymentMethod === "onlinePayment") {
       // Create Razorpay order
       const razorpayOrderOptions = {
         amount: totalAmountAfterDiscount * 100,
@@ -1111,10 +1175,7 @@ const placeorder = async (req, res) => {
                 product.stock,
                 orderedQuantity
               );
-            }
-            // console.log("helllooo world");
-            // product.stock -= orderedQuantity;
-            // await product.save();
+            }         
           } else {
             console.error("Product not found:", productId);
           }
@@ -1126,19 +1187,6 @@ const placeorder = async (req, res) => {
         res.status(500).send("Error creating Razorpay order");
       }
     }
-   
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     else {
       // Handle other payment methods if needed
@@ -1216,49 +1264,49 @@ function calculateDiscount(totalAmount, coupon, userTotalUsage) {
   }
 }
 
-// Helper function to calculate the discount amount based on coupon type
-function calculateDiscount(totalAmount, coupon, userTotalUsage) {
-  // Check if the coupon is expired
-  const currentDate = new Date();
-  const currentDateWithoutTime = new Date(
-    currentDate.toISOString().split("T")[0]
-  );
-  const expirationDateWithoutTime = new Date(
-    coupon.expirationDate.toISOString().split("T")[0]
-  );
+// // Helper function to calculate the discount amount based on coupon type
+// function calculateDiscount(totalAmount, coupon, userTotalUsage) {
+//   // Check if the coupon is expired
+//   const currentDate = new Date();
+//   const currentDateWithoutTime = new Date(
+//     currentDate.toISOString().split("T")[0]
+//   );
+//   const expirationDateWithoutTime = new Date(
+//     coupon.expirationDate.toISOString().split("T")[0]
+//   );
 
-  console.log("CURRENT DATE ", currentDateWithoutTime);
-  console.log("EXPIRED DATE ", expirationDateWithoutTime);
-  if (currentDateWithoutTime > expirationDateWithoutTime) {
-    throw new Error("Coupon has expired.");
-  }
-  if (totalAmount < coupon.conditions.minOrderAmount) {
-    throw new Error(
-      "Total amount does not meet the minimum order amount condition."
-    );
-  }
+//   console.log("CURRENT DATE ", currentDateWithoutTime);
+//   console.log("EXPIRED DATE ", expirationDateWithoutTime);
+//   if (currentDateWithoutTime > expirationDateWithoutTime) {
+//     throw new Error("Coupon has expired.");
+//   }
+//   if (totalAmount < coupon.conditions.minOrderAmount) {
+//     throw new Error(
+//       "Total amount does not meet the minimum order amount condition."
+//     );
+//   }
 
-  // Check if the user has reached the maximum usage limit for the coupon
-  if (userTotalUsage >= coupon.usageLimits.perUser) {
-    throw new Error("Coupon usage limit per user exceeded.");
-  }
+//   // Check if the user has reached the maximum usage limit for the coupon
+//   if (userTotalUsage >= coupon.usageLimits.perUser) {
+//     throw new Error("Coupon usage limit per user exceeded.");
+//   }
 
-  // Check if the overall usage limit for the coupon has been reached
-  if (coupon.usageLimits.totalUses <= 0) {
-    throw new Error("Coupon has reached the overall usage limit.");
-  }
+//   // Check if the overall usage limit for the coupon has been reached
+//   if (coupon.usageLimits.totalUses <= 0) {
+//     throw new Error("Coupon has reached the overall usage limit.");
+//   }
 
-  // If all validations pass, calculate and return the discount
-  if (coupon.type === "percentage") {
-    // If the discount type is percentage, apply the percentage discount
-    return (coupon.value / 100) * totalAmount;
-  } else if (coupon.type === "fixed") {
-    // If the discount type is fixed, apply the fixed discount
-    return coupon.value;
-  } else {
-    return 0; // Default to no discount
-  }
-}
+//   // If all validations pass, calculate and return the discount
+//   if (coupon.type === "percentage") {
+//     // If the discount type is percentage, apply the percentage discount
+//     return (coupon.value / 100) * totalAmount;
+//   } else if (coupon.type === "fixed") {
+//     // If the discount type is fixed, apply the fixed discount
+//     return coupon.value;
+//   } else {
+//     return 0; // Default to no discount
+//   }
+// }
 
 const razorpayPage = async (req, res) => {
   try {
@@ -1644,19 +1692,28 @@ const requestReturn = async (req, res) => {
 
     await order.save();
 
-    // If payment method was online, add refunded amount to user's wallet
-    if (order.payment === "onlinePayment") {
+    // Add refunded amount to user's wallet for online, wallet, and COD payments
+    if (["onlinePayment", "wallet", "cashOnDelivery"].includes(order.payment)) {
       const refundedAmount = order.totalAmount;
-      await User.findByIdAndUpdate(order.userId, {
-        $inc: { wallet: refundedAmount },
-        $push: {
-          walletHistory: {
-            type: "credit",
-            amount: refundedAmount,
-            description: "Refund for returned order",
+      const userUpdateResult = await User.findByIdAndUpdate(
+        order.userId,
+        {
+          $inc: { wallet: refundedAmount },
+          $push: {
+            walletHistory: {
+              type: "credit",
+              amount: refundedAmount,
+              description: "Refund for returned order",
+            },
           },
         },
-      });
+        { new: true }
+      );
+
+      if (!userUpdateResult) {
+        console.log(`User with ID ${order.userId} not found`);
+        return res.status(404).json({ message: "User not found" });
+      }
     }
 
     res.redirect("/order-history");
@@ -1802,12 +1859,14 @@ const wallet = async (req, res) => {
 
     const count = user.walletHistory.length;
     const totalPages = Math.ceil(count / limit);
+    
 
     res.render("wallet", {
       walletAmount: user.wallet,
       walletHistory,
       currentPage: page,
       totalPages,
+      
     });
   } catch (error) {
     console.log(error.message);

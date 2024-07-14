@@ -120,62 +120,129 @@
 
 
 <script>
+    // let cropper;
+    // let currentInput;
+    // let croppedFiles = new Map(); // To store the cropped files
+
+    // function previewImage(event) {
+    //     const input = event.target;
+    //     const file = input.files[0];
+    //     currentInput = input; // Save the reference to the current input
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = function(e) {
+    //             const cropperImage = document.getElementById('cropperImage');
+    //             cropperImage.src = e.target.result;
+    //             document.getElementById('cropperModal').style.display = 'block';
+    //             if (cropper) {
+    //                 cropper.destroy();
+    //             }
+    //             cropper = new Cropper(cropperImage, {
+    //                 aspectRatio: 3 / 4, // Portrait aspect ratio
+    //                 viewMode: 1,
+    //             });
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // }
+
+    // function cropImage() {
+    //     if (cropper) {
+    //         cropper.getCroppedCanvas({
+    //             width: 300, // desired width
+    //             height: 400, // desired height
+    //         }).toBlob(function(blob) {
+    //             const croppedImageSrc = URL.createObjectURL(blob);
+    //             const imagePreview = currentInput.previousElementSibling;
+    //             if (imagePreview && imagePreview.tagName === 'IMG') {
+    //                 imagePreview.src = croppedImageSrc;
+    //             }
+    //             // Replace the file input with the cropped image blob
+    //             const dataTransfer = new DataTransfer();
+    //             const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
+    //             dataTransfer.items.add(file);
+    //             currentInput.files = dataTransfer.files;
+    //             // Store the cropped file in the Map
+    //             croppedFiles.set(currentInput.name, file);
+    //             closeModal();
+    //         }, 'image/jpeg');
+    //     }
+    // }
+
+    // function closeModal() {
+    //     document.getElementById('cropperModal').style.display = 'none';
+    //     if (cropper) {
+    //         cropper.destroy();
+    //         cropper = null;
+    //     }
+    // }
+
+
     let cropper;
-    let currentInput;
-    let croppedFiles = new Map(); // To store the cropped files
+let currentInput;
+let croppedFiles = new Map(); // To store the cropped files
 
-    function previewImage(event) {
-        const input = event.target;
-        const file = input.files[0];
-        currentInput = input; // Save the reference to the current input
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const cropperImage = document.getElementById('cropperImage');
-                cropperImage.src = e.target.result;
-                document.getElementById('cropperModal').style.display = 'block';
-                if (cropper) {
-                    cropper.destroy();
-                }
-                cropper = new Cropper(cropperImage, {
-                    aspectRatio: 3 / 4, // Portrait aspect ratio
-                    viewMode: 1,
-                });
-            };
-            reader.readAsDataURL(file);
-        }
+function previewImage(event, imageNumber) {
+    const input = event.target;
+    const file = input.files[0];
+    currentInput = input; // Save the reference to the current input
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const cropperImage = document.getElementById('cropperImage');
+            cropperImage.src = e.target.result;
+            document.getElementById('cropperModal').style.display = 'block';
+            if (cropper) {
+                cropper.destroy();
+            }
+            cropper = new Cropper(cropperImage, {
+                aspectRatio: 3 / 4, // Portrait aspect ratio
+                viewMode: 1,
+            });
+        };
+        reader.readAsDataURL(file);
     }
+}
 
-    function cropImage() {
-        if (cropper) {
-            cropper.getCroppedCanvas({
-                width: 300, // desired width
-                height: 400, // desired height
-            }).toBlob(function(blob) {
-                const croppedImageSrc = URL.createObjectURL(blob);
-                const imagePreview = currentInput.previousElementSibling;
-                if (imagePreview && imagePreview.tagName === 'IMG') {
-                    imagePreview.src = croppedImageSrc;
-                }
-                // Replace the file input with the cropped image blob
-                const dataTransfer = new DataTransfer();
-                const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
-                dataTransfer.items.add(file);
-                currentInput.files = dataTransfer.files;
-                // Store the cropped file in the Map
-                croppedFiles.set(currentInput.name, file);
-                closeModal();
-            }, 'image/jpeg');
-        }
+function cropImage() {
+    if (cropper) {
+        cropper.getCroppedCanvas({
+            width: 300, // desired width
+            height: 400, // desired height
+        }).toBlob(function(blob) {
+            const croppedImageSrc = URL.createObjectURL(blob);
+            const imagePreview = currentInput.previousElementSibling;
+            if (imagePreview && imagePreview.tagName === 'IMG') {
+                imagePreview.src = croppedImageSrc;
+            }
+            // Replace the file input with the cropped image blob
+            const dataTransfer = new DataTransfer();
+            const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
+            dataTransfer.items.add(file);
+            currentInput.files = dataTransfer.files;
+            // Store the cropped file in the Map
+            croppedFiles.set(currentInput.name, file);
+            closeModal();
+        }, 'image/jpeg');
     }
+}
 
-    function closeModal() {
-        document.getElementById('cropperModal').style.display = 'none';
-        if (cropper) {
-            cropper.destroy();
-            cropper = null;
-        }
+function removeImage(imageNumber) {
+    const input = document.getElementById(`image${imageNumber}`);
+    const preview = document.getElementById(`previewImage${imageNumber}`);
+    input.value = ''; // Clear the input field
+    preview.src = ''; // Clear the preview image
+    preview.style.display = 'none'; // Hide the preview image
+}
+
+function closeModal() {
+    document.getElementById('cropperModal').style.display = 'none';
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
     }
+}
+
 </script>
 
 
@@ -267,69 +334,55 @@
                     <p id="descriptionError" class="error-message"></p>
                 </div>
 
+               
+
                 <!-- <div class="form-group">
-                    <label class="sign-form-label" for="form3Example4cd">Product Images</label>
-                    <div class="d-flex flex-row align-items-center mb-3"></div>
-                    <div class="form-outline flex-fill mb-0">
-                        <label class="sign-form-label" for="form3Example4cd">Product Images</label>
-                        <div class="form-outline flex-fill mb-0">
-                            <label class="sign-form-label" for="form3Example4cd">Image 1</label>
-                            <input type="file"  name="images" id="image1" onchange="displayImagePreview(this, 1)" accept="image/*"><br><br>
-                            <img id="imagePreview1" alt="" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                            <canvas id="croppedCanvas1" style="display: none;"></canvas>
-                            <input type="hidden" id="croppedImage1" name="croppedImage1">
-                        </div>
-                    
-                    <div class="form-outline flex-fill mb-0">
-                      <label class="sign-form-label" for="form3Example4cd">Image 2</label>
-                      <input type="file"  id="image2" onchange="displayImagePreview(this, 2)" accept="image/*"><br><br>
-                      <img id="imagePreview2" name="images" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                      <input type="hidden" id="croppedImage2" name="croppedImage2">
-                    </div>
-                    <div class="form-outline flex-fill mb-0">
-                      <label class="sign-form-label" for="form3Example4cd">Image 3</label>
-                      <input type="file"  id="image3" onchange="displayImagePreview(this, 3)" accept="image/*"><br><br>
-                      <img id="imagePreview3" name="images"  style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                      <input type="hidden" id="croppedImage3" name="croppedImage3">
-                    </div>
-                    <p id="imageError" class="error-message"></p>
-                  </div>
-                  
-                  
-        
+                    <label for="image1">Image 1</label>
+                    <img  class="image-preview"  />
+                    <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event)">
+                    <button type="button" onclick="removeImage(1)">Remove</button>
+                </div>
+            
+                 Image 2 -->
+                <!-- <div class="form-group">
+                    <label for="image2">Image 2</label>
+                    <img  class="image-preview"  />
+                    <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event)">
+                    <button type="button" onclick="removeImage(2)">Remove</button>
                 </div> -->
+            
+                <!-- Image 3 -->
+                <!-- <div class="form-group">
+                    <label for="image3">Image 3</label>
+                    <img  class="image-preview" />
+                    <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event)">
+                    <button type="button" onclick="removeImage(3)">Remove</button>
+                </div> --> 
+
 
                 <div class="form-group">
                     <label for="image1">Image 1</label>
-                    <img  class="image-preview" src="/assets/imgs/theme/upload.svg" alt="product image" />
-                    <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event)">
-                    <!-- <img id="imagePreview1" alt="" style="max-width: 100px; max-height: 100px; margin-top: 10px;"> -->
-                    <!-- <canvas id="croppedCanvas1" style="display: none;"></canvas> -->
-                    <!-- <input type="hidden" id="croppedImage1" name="croppedImage1"> -->
-                    <!-- <button type="button" class="btn btn-primary mt-2" onchange="openCropperModal(1)">Crop Image</button> -->
+                    <img id="previewImage1" class="image-preview" />
+                    <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event, 1)">
+                    <button type="button" onclick="removeImage(1)">Remove</button>
                 </div>
             
                 <!-- Image 2 -->
                 <div class="form-group">
                     <label for="image2">Image 2</label>
-                    <img  class="image-preview" src="/assets/imgs/theme/upload.svg" alt="product image" />
-                    <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event)">
-                    <!-- <img id="imagePreview2" alt="" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                    <canvas id="croppedCanvas2" style="display: none;"></canvas>
-                    <input type="hidden" id="croppedImage2" name="croppedImage2">
-                    <button type="button" class="btn btn-primary mt-2" onclick="openCropperModal(2)">Crop Image</button> -->
+                    <img id="previewImage2" class="image-preview" />
+                    <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event, 2)">
+                    <button type="button" onclick="removeImage(2)">Remove</button>
                 </div>
             
                 <!-- Image 3 -->
                 <div class="form-group">
                     <label for="image3">Image 3</label>
-                    <img  class="image-preview" />
-                    <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event)">
-                    <!-- <img id="imagePreview3" alt="" style="max-width: 100px; max-height: 100px; margin-top: 10px;">
-                    <canvas id="croppedCanvas3" style="display: none;"></canvas>
-                    <input type="hidden" id="croppedImage3" name="croppedImage3">
-                    <button type="button" class="btn btn-primary mt-2" onclick="openCropperModal(3)">Crop Image</button> -->
+                    <img id="previewImage3" class="image-preview" />
+                    <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event, 3)">
+                    <button type="button" onclick="removeImage(3)">Remove</button>
                 </div>
+            
                 <div id="productError" class="error-message"></div>
         
                 <button type="submit">Submit</button>
@@ -337,28 +390,6 @@
           </div>
         </div>
       </div>
-
-
-
-      <!-- <div id="cropperModal" class="modal fade" tabindex="-1" aria-labelledby="cropperModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="cropperModalLabel">Crop Image</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="image-container">
-                        <img id="cropperImage" src="" alt="Crop Image" style="max-width: 100%;">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="cropImageButton">Crop Image</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
 
     <!-- Modal for cropping -->
     <div id="cropperModal" class="modal">
@@ -370,78 +401,12 @@
             <button onclick="closeModal()">Cancel</button>
         </div>
     </div>
-
-
       <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
       <script>
-//           let cropper;
-// let currentImageInput;
 
-// Function to open Cropper modal for a specific image
-// function openCropperModal(imageNumber) {
-//     currentImageInput = document.getElementById(`image${imageNumber}`);
-//     const file = currentImageInput.files[0];
-    
-//     if (!file) {
-//         alert('Please select an image to crop.');
-//         return;
-//     }
 
-//     const reader = new FileReader();
-
-//     reader.onload = function(e) {
-//         $('#cropperImage').attr('src', e.target.result);
-
-//         // Initialize Cropper.js for the uploaded image
-//         const image = document.getElementById('cropperImage');
-//         cropper = new Cropper(image, {
-//             aspectRatio: 1, // Example aspect ratio (adjust as needed)
-//             viewMode: 2, // Allow resizing within the crop box
-//             ready: function() {
-//                 // Do something when Cropper is ready
-//             },
-//         });
-
-//         // Show the modal
-//         $('#cropperModal').modal('show');
-//     };
-
-//     reader.readAsDataURL(file);
-// }
-
-// // Function to handle cropping and saving cropped image
-// $('#cropImageButton').click(function() {
-//     if (!cropper) {
-//         return;
-//     }
-
-//     // Get cropped canvas
-//     const canvas = cropper.getCroppedCanvas({
-//         width: 458, // Adjust width as needed
-//         height: 458, // Adjust height as needed
-//     });
-
-//     // Convert canvas to base64-encoded JPEG
-//     const croppedImage = canvas.toDataURL('image/jpeg', 1.0);
-
-//     // Update preview image and hidden input
-//     const imagePreviewId = currentImageInput.id.replace('image', 'imagePreview');
-//     const croppedCanvasId = currentImageInput.id.replace('image', 'croppedCanvas');
-//     const croppedImageId = currentImageInput.id.replace('image', 'croppedImage');
-
-//     document.getElementById(imagePreviewId).src = croppedImage;
-//     document.getElementById(croppedCanvasId).getContext('2d').drawImage(canvas, 0, 0, canvas.width, canvas.height);
-//     document.getElementById(croppedImageId).value = croppedImage;
-
-//     // Hide modal
-//     $('#cropperModal').modal('hide');
-
-//     // Reset Cropper instance
-//     cropper.destroy();
-//     cropper = null;
-// });
 
 // Handle form submission (optional, if you have additional validation or processing)
 function productValidation() {
@@ -451,10 +416,9 @@ function productValidation() {
       </script>
       
 
+
+
       
-
-
-
 <script>
   function productValidation() {
       var isValid = true;
@@ -582,12 +546,5 @@ function productValidation() {
       });
   }
 </script>
-
-
-
-
-
-    
-
   </div>
   <%- include('../layouts/adminFooters') %>

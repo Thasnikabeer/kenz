@@ -27,7 +27,8 @@ const userSchema = new mongoose.Schema({
     {
       type: {
         type: String, // or whichever type you are using for 'credit' or 'debit'
-      },
+        enum: ['credit', 'debit'],
+        },
       amount: {
         type: Number,
       },

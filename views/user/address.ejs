@@ -90,6 +90,62 @@
         </div><!-- End .header-right -->
     </div><!-- End .container -->
 </div><!-- End .header-middle -->
+<style>
+    .btn-add-address {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-left: 150px; /* Adjust margin-left to maintain previous position */
+      font-size: 16px;
+      color: #fff;
+      background-color: #ea8dd9;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    .btn-add-address:hover {
+      background-color: #0056b3; /* Darker shade for hover */
+    }
+  
+    .btn-add-address i {
+      margin-right: 5px;
+    }
+  
+    /* Style for Edit and Delete buttons */
+    .update-btn,
+    .delete-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-left: 20px; /* Adjust margin-left to space out buttons */
+    }
+  
+    .update-btn {
+      background-color: #ea8dd9;
+      border: 1px solid #ea8dd9;
+    }
+  
+    .delete-btn {
+      background-color: red;
+      border: 1px solid red;
+    }
+  
+    .update-btn:hover,
+    .delete-btn:hover {
+      opacity: 0.8;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </header><!-- End .header -->
 
     <main class="main">
@@ -111,7 +167,11 @@
         <div class="card">
             <br>
             <br>
-            <h4> <a href="/add-Address" style=" margin-left: 150px;">Add New Address</a></h4>
+            <h4>
+                <a href="/add-Address" class="btn-add-address">
+                  <i class="fa fa-plus"></i> Add New Address
+                </a>
+              </h4>
             <div class="card-body" style=" margin: 50px; border: 2px solid black; padding: 3rem;">
                 <% console.log("Addresses:", addresses); %>
                     <% if (addresses && addresses.length> 0) { %>
@@ -142,15 +202,14 @@
                                 </p>
                                 <div class="form-group">
                                     <a href="/update-address/<%= userAddress._id %>">
-                                        <button type="submit" class="btn btn-primary text-dark update Border border-primary" style="background-color: #0056b3;">Edit</button>
-                                    </a>
-                                    
-                                    <a href="#" onclick="confirmDelete('/delete-address/<%= userAddress._id %>')">
-                                        <button type="submit" class="btn text-dark updat Border border-danger" style="background-color: red;">Delete</button>
-                                    </a>
-                                    
-                                </div>
+                                        <button type="submit" class="btn btn-primary text-dark update-btn" style="background-color: #ea8dd9; color: white;">Edit</button>
 
+                                    </a>
+                          
+                                    <a href="#" onclick="confirmDelete('/delete-address/<%= userAddress._id %>')">
+                                        <button type="button" class="btn btn-danger text-dark delete-btn">Delete</button>
+                                      </a>
+                                  </div>
                             </div>
                             <br>
                             <% }) %>
@@ -165,11 +224,21 @@
 
     <script>
         function confirmDelete(url) {
-            if (confirm("Are you sure you want to delete this address?")) {
-                window.location.href = url;
+          Swal.fire({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this address!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = url;
             }
+          });
         }
-    </script>
+      </script>
   <%- include('../layouts/userFooter') %>
     </body>
 

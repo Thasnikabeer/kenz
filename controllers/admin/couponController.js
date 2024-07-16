@@ -114,10 +114,6 @@ const editCoupon = async (req, res) => {
                 }
             });
         }
-
-
-
-
         const updatedCoupon = await Coupon.findByIdAndUpdate(
             couponId,
             {
@@ -159,6 +155,8 @@ const deleteCoupon=async (req,res)=>{
         console.log(error.message);
     }
 }
+
+
 module.exports = {
 
     coupon,

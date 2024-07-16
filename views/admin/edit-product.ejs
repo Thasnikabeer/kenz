@@ -108,66 +108,6 @@
 </style>
 
 
-<script>
-
-let cropper;
-    let currentInput;
-    let croppedFiles = new Map(); // To store the cropped files
-
-    function previewImage(event) {
-        const input = event.target;
-        const file = input.files[0];
-        currentInput = input; // Save the reference to the current input
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const cropperImage = document.getElementById('cropperImage');
-                cropperImage.src = e.target.result;
-                document.getElementById('cropperModal').style.display = 'block';
-                if (cropper) {
-                    cropper.destroy();
-                }
-                cropper = new Cropper(cropperImage, {
-                    aspectRatio: 3 / 4, // Portrait aspect ratio
-                    viewMode: 1,
-                });
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function cropImage() {
-        if (cropper) {
-            cropper.getCroppedCanvas({
-                width: 300, // desired width
-                height: 400, // desired height
-            }).toBlob(function(blob) {
-                const croppedImageSrc = URL.createObjectURL(blob);
-                const imagePreview = currentInput.previousElementSibling;
-                if (imagePreview && imagePreview.tagName === 'IMG') {
-                    imagePreview.src = croppedImageSrc;
-                }
-                // Replace the file input with the cropped image blob
-                const dataTransfer = new DataTransfer();
-                const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
-                dataTransfer.items.add(file);
-                currentInput.files = dataTransfer.files;
-                // Store the cropped file in the Map
-                croppedFiles.set(currentInput.name, file);
-                closeModal();
-            }, 'image/jpeg');
-        }
-    }
-
-    function closeModal() {
-        document.getElementById('cropperModal').style.display = 'none';
-        if (cropper) {
-            cropper.destroy();
-            cropper = null;
-        }
-    }
-
-</script>
 
 <body>
   <div class="container-scroller">
@@ -219,10 +159,11 @@ let cropper;
             <div class="form-group">
               <label for="offerType" class="text-light">Offer Type</label>
               <select name="offerType" id="offerType">
+                <option value="" selected>Select offer type</option>
                 <option value="">Percentage</option>
                 <!-- Add other offer types as needed -->
               </select>
-              <span id="offerTypeError" class="error-message"></span>
+              <!-- <span id="offerTypeError" class="error-message"></span> -->
             </div>
 
             <div class="form-group">
@@ -250,7 +191,7 @@ let cropper;
             <img  class="image-preview" />
             <input type="file" name="images"  id="images" accept="image/*" onchange="previewImage(event)">
             <span id="imageError" class="error-message"></span>
-            <div id="productError" class="px-2 my-2 text-center text-danger"></div>
+            <!-- <div id="productError" class="px-2 my-2 text-center text-danger"></div> -->
             <br>
             <button type="submit" class="btn text-dark update">Upload Images</button>
 
@@ -277,7 +218,10 @@ let cropper;
             <div id="productError" class="px-2 my-2 text-center text-danger"></div>
             <div class="mb-3 mt-4 mb-lg-4 d-grid gap-2">
               <div class="form-group">
-                <button style="color: #ccc;" type="submit" class="btn text-dark update">Save Changes</button>
+                <button type="submit" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 20px;">
+                  Submit
+              </button>
+              
               </div>
             </div>
           </form>
@@ -348,123 +292,67 @@ let cropper;
                 }
               </script>
 
-<!-- <script>
-  function productValidation(event) {
-      let isValid = true;
+<script>
 
-      // Product Name Validation
-      const productName = document.getElementById('productName').value;
-      if (!productName) {
-          document.getElementById('productNameError').innerText = "Product Name is required.";
-          isValid = false;
-      } else {
-          document.getElementById('productNameError').innerText = "";
-      }
-
-      // Category Validation
-      const category = document.getElementById('inputState').value;
-      if (!category) {
-          document.getElementById('categoryError').innerText = "Category is required.";
-          isValid = false;
-      } else {
-          document.getElementById('categoryError').innerText = "";
-      }
-
-      // Size Validation
-      const size = document.getElementById('size').value;
-      if (!size) {
-          document.getElementById('sizeError').innerText = "Size is required.";
-          isValid = false;
-      } else {
-          document.getElementById('sizeError').innerText = "";
-      }
-
-      // Price Validation
-      const price = document.getElementById('price').value;
-      if (!price || isNaN(price)) {
-          document.getElementById('priceError').innerText = "Valid Price is required.";
-          isValid = false;
-      } else {
-          document.getElementById('priceError').innerText = "";
-      }
-
-      // Stock Validation
-      const stock = document.getElementById('stock').value;
-      if (!stock || isNaN(stock)) {
-          document.getElementById('stockError').innerText = "Valid Stock is required.";
-          isValid = false;
-      } else {
-          document.getElementById('stockError').innerText = "";
-      }
-
-      // Offer Amount Validation
-      const offerAmount = document.getElementById('offerAmount').value;
-      if (offerAmount && (isNaN(offerAmount) || offerAmount < 0 || offerAmount > 100)) {
-          document.getElementById('offerAmountError').innerText = "Offer Amount must be between 0 and 100.";
-          isValid = false;
-      } else {
-          document.getElementById('offerAmountError').innerText = "";
-      }
-
-      // Offer End Date Validation
-      const offerEndDate = document.getElementById('offerEndDate').value;
-      if (offerEndDate && !Date.parse(offerEndDate)) {
-          document.getElementById('offerEndDateError').innerText = "Valid Offer End Date is required.";
-          isValid = false;
-      } else {
-          document.getElementById('offerEndDateError').innerText = "";
-      }
-
-      // Description Validation
-      const description = document.getElementById('description').value;
-      if (!description) {
-          document.getElementById('descriptionError').innerText = "Description is required.";
-          isValid = false;
-      } else {
-          document.getElementById('descriptionError').innerText = "";
-      }
-
-      if (!isValid) {
-          event.preventDefault(); // Prevent form submission if validation fails
-      }
-      return isValid;
-  }
-
-  function validateImageUpload() {
-      const images = document.getElementById('images').files;
-      if (images.length === 0) {
-          document.getElementById('imageError').innerText = "At least one image is required.";
-          return false;
-      } else {
-          document.getElementById('imageError').innerText = "";
-      }
-      return true;
-  }
-
-  function validateOfferAmount() {
-      const offerAmount = document.getElementById('offerAmount').value;
-      if (isNaN(offerAmount) || offerAmount < 0 || offerAmount > 100) {
-          document.getElementById('offerAmountError').innerText = "Offer Amount must be between 0 and 100.";
-      } else {
-          document.getElementById('offerAmountError').innerText = "";
-      }
-  }
-
-  function displayImagePreview(input) {
-      const index = input.id.replace('productImage', '');
-      const preview = document.getElementById(`imagePreview${index}`);
-      if (input.files && input.files[0]) {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-              preview.src = e.target.result;
-              preview.style.display = 'block';
+  let cropper;
+      let currentInput;
+      let croppedFiles = new Map(); // To store the cropped files
+  
+      function previewImage(event) {
+          const input = event.target;
+          const file = input.files[0];
+          currentInput = input; // Save the reference to the current input
+          if (file) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                  const cropperImage = document.getElementById('cropperImage');
+                  cropperImage.src = e.target.result;
+                  document.getElementById('cropperModal').style.display = 'block';
+                  if (cropper) {
+                      cropper.destroy();
+                  }
+                  cropper = new Cropper(cropperImage, {
+                      aspectRatio: 3 / 4, // Portrait aspect ratio
+                      viewMode: 1,
+                  });
+              };
+              reader.readAsDataURL(file);
           }
-          reader.readAsDataURL(input.files[0]);
       }
-  }
-</script> -->
-         
-
+  
+      function cropImage() {
+          if (cropper) {
+              cropper.getCroppedCanvas({
+                  width: 300, // desired width
+                  height: 400, // desired height
+              }).toBlob(function(blob) {
+                  const croppedImageSrc = URL.createObjectURL(blob);
+                  const imagePreview = currentInput.previousElementSibling;
+                  if (imagePreview && imagePreview.tagName === 'IMG') {
+                      imagePreview.src = croppedImageSrc;
+                  }
+                  // Replace the file input with the cropped image blob
+                  const dataTransfer = new DataTransfer();
+                  const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
+                  dataTransfer.items.add(file);
+                  currentInput.files = dataTransfer.files;
+                  // Store the cropped file in the Map
+                  croppedFiles.set(currentInput.name, file);
+                  closeModal();
+              }, 'image/jpeg');
+          }
+      }
+  
+      function closeModal() {
+          document.getElementById('cropperModal').style.display = 'none';
+          if (cropper) {
+              cropper.destroy();
+              cropper = null;
+          }
+      }
+  
+  </script>
+  
 <script>
   function productValidation() {
     var isValid = true;
@@ -477,7 +365,13 @@ let cropper;
     if (productName === "") {
       document.getElementById('productNameError').innerText = 'Product Name is required';
       isValid = false;
-    }
+    }else if (!/^[A-Za-z]+$/.test(productName.trim())) {
+            document.getElementById('productNameError').innerText = 'Product name should only contain letters';
+            isValid = false;
+            } else {
+         // Clear any previous error messages if valid
+            document.getElementById('productNameError').innerText = '';
+            }
 
     // Validate Category
     var category = document.getElementById('inputState').value;
@@ -522,7 +416,7 @@ let cropper;
     // Validate Offer Type
     var offerType = document.getElementById('offerType').value;
     if (offerType === "") {
-      document.getElementById('offerTypeError').innerText = 'Offer Type is required';
+      document.getElementById('offerTypeError').innerText = 'Please select offer type';
       isValid = false;
     }
 
@@ -566,11 +460,11 @@ let cropper;
     }
 
     // Validate Images (at least three images are required)
-    var images = document.getElementById('images').files;
-    if (images.length < 3) {
-      document.getElementById('imageError').innerText = 'Please upload at least three images';
-      isValid = false;
-    }
+    // var images = document.getElementById('images').files;
+    // if (images.length  3) {
+    //   document.getElementById('imageError').innerText = 'Please upload at least three images';
+    //   isValid = false;
+    // }
 
     // Display or clear general product error
     var productError = document.getElementById('productError');
@@ -589,243 +483,7 @@ let cropper;
       element.innerText = "";
     });
   }
-</script>
-
-
-
-
-<!-- <script>
-                function productValidation(event) {
-                  var productName = document.getElementById('productName').value;
-                  var size = document.getElementById('size').value;
-                  var price = document.getElementById('price').value;
-                  var stock = document.getElementById('stock').value;
-                  var description = document.getElementById('description').value;
-                  var images = document.getElementById('images').value;
-                  document.getElementById('offerTypeError').innerText = "";
-                  document.getElementById('offerAmountError').innerText = "";
-                  document.getElementById('offerEndDateError').innerText = "";
-
-
-                  document.getElementById('productNameError').innerText = "";
-                  document.getElementById('sizeError').innerText = "";
-                  document.getElementById('priceError').innerText = "";
-                  document.getElementById('stockError').innerText = "";
-                  document.getElementById('discriptionError').innerText = "";
-                  document.getElementById('imageError').innerText = "";
-                  var offerType = document.getElementById('offerType').value;
-                  var offerAmount = document.getElementById('offerAmount').value;
-                  var offerEndDate = document.getElementById('offerEndDate').value;
-
-
-                  // Validate product Name
-                  if (productName.trim() === "") {
-                    document.getElementById('productNameError').innerText = "Product  Name is required";
-                    event.preventDefault();
-                  }
-
-
-                  if (!/^[a-zA-Z]+$/.test(productName)) {
-                    document.getElementById('productNameError').innerText = "Product Must Be Characters";
-                    event.preventDefault();
-                  }
-                  // validate size field
-                  if (size.trim() === "") {
-                    document.getElementById('sizeError').innerText = "Size is required";
-                    event.preventDefault();
-                  }
-                  if (!/^[a-zA-Z]+$/.test(size)) {
-                    document.getElementById('sizeError').innerText = " Size Must Be Characters";
-                    event.preventDefault();
-                  }
-
-                  // validate price field
-                  if (price.trim() === "") {
-                    document.getElementById('priceError').innerText = "Price is required";
-                    event.preventDefault();
-                  } else {
-                    var priceRegex = /^\d+$/;
-
-                    if (!priceRegex.test(price) || parseInt(price) <= 0) {
-                      document.getElementById('priceError').innerText = 'Price must be a valid positive integer';
-                      event.preventDefault();
-                    }
-                  }
-
-                  // validate Stock field
-                  if (stock.trim() === "") {
-                    document.getElementById('stockError').innerText = "Stock is required";
-                    event.preventDefault();
-                  } else {
-
-                    var stockRegex = /^\d+$/;
-
-                    if (!stockRegex.test(stock) || parseInt(stock) < 0) {
-                      document.getElementById('stockError').innerText = 'Stock must be a valid positive integer';
-                      event.preventDefault();
-                    }
-                  }
-                  // Product offer validation
-                  if (offerType && (!/^\d+$/.test(offerAmount) || parseInt(offerAmount) <= 0)) {
-                    document.getElementById('offerAmountError').innerText = "Offer Amount must be a positive integer";
-                    return false;
-                  }
-                  // Validate Offer End Date if Offer Amount is provided
-                  if (offerAmount && offerEndDate.trim() === "") {
-                    document.getElementById('offerEndDateError').innerText = "Offer End Date is required";
-                    return false;
-                  } else if (offerAmount && new Date(offerEndDate) <= new Date()) {
-                    document.getElementById('offerEndDateError').innerText = "Offer End Date must be in the future";
-                    return false;
-                  }
-
-                  // description validation
-                  if (description.trim() === "") {
-                    document.getElementById('discriptionError').innerText = "Description is required";
-                    event.preventDefault();
-                  }
-
-                };
-
-
-              </script> -->
-
-
-              
-
-
-              <!-- <script>
-                function validateOfferAmount() {
-                  const offerAmountInput = document.getElementById('offerAmount');
-                  const offerAmountValue = offerAmountInput.value.trim();
-
-                  if (!/^\d+$/.test(offerAmountValue) || parseFloat(offerAmountValue) <= 0) {
-                    // Display an error message (you can adapt this to your UI)
-                    document.getElementById('offerAmountError').innerText = "Offer Amount must be a positive integer";
-                    return false;
-                  }
-
-                  // Clear any previous error message
-                  document.getElementById('offerAmountError').innerText = "";
-                  return true;
-                }
-              </script> -->
-
-              <script>
-                function productValidation() {
-                    var isValid = true;
-              
-                    // Reset errors
-                    clearValidationErrors();
-              
-                    // Validate Product Name
-                    var productName = document.getElementById('productName').value.trim();
-                    if (productName === "") {
-                        document.getElementById('productNameError').innerText = 'Product Name is required';
-                        isValid = false;
-                    }
-              
-                    // Validate Category
-                    var category = document.getElementById('inputState').value;
-                    if (category === "") {
-                        document.getElementById('categoryError').innerText = 'Category is required';
-                        isValid = false;
-                    }
-              
-                    // Validate Size
-                    var size = document.getElementById('size').value.trim();
-                    if (size === "") {
-                        document.getElementById('sizeError').innerText = 'Size is required';
-                        isValid = false;
-                    }
-              
-                    // Validate Price
-                    var price = document.getElementById('price').value.trim();
-                    if (price === "") {
-                        document.getElementById('priceError').innerText = 'Price is required';
-                        isValid = false;
-                    } else if (isNaN(price)) {
-                        document.getElementById('priceError').innerText = 'Only numbers are allowed';
-                        isValid = false;
-                    } else if (price <= 0) {
-                        document.getElementById('priceError').innerText = 'Price should be positive';
-                        isValid = false;
-                    }
-              
-                    // Validate Stock
-                    var stock = document.getElementById('stock').value.trim();
-                    if (stock === "") {
-                        document.getElementById('stockError').innerText = 'Stock is required';
-                        isValid = false;
-                    } else if (isNaN(stock)) {
-                        document.getElementById('stockError').innerText = 'Only numbers are allowed';
-                        isValid = false;
-                    } else if (stock <= 0) {
-                        document.getElementById('stockError').innerText = 'Stock should be positive';
-                        isValid = false;
-                    }
-              
-                    // // Validate Offer Type
-                    // var offerType = document.getElementById('offerType').value;
-                    // if (offerType === "") {
-                    //     document.getElementById('offerTypeError').innerText = 'Offer Type is required';
-                    //     isValid = false;
-                    // }
-              
-                    // Validate Offer Amount
-                    var offerAmount = document.getElementById('offerAmount').value.trim();
-                    if (offerAmount === "") {
-                        document.getElementById('offerAmountError').innerText = 'Offer Amount is required';
-                        isValid = false;
-                    } else if (isNaN(offerAmount)) {
-                        document.getElementById('offerAmountError').innerText = 'Only numbers are allowed';
-                        isValid = false;
-                    } else if (offerAmount <= 0 || offerAmount > 100) {
-                        document.getElementById('offerAmountError').innerText = 'Offer Amount should be between 1 and 100';
-                        isValid = false;
-                    }
-              
-                    // Validate Offer End Date
-                    var offerEndDate = document.getElementById('offerEndDate').value;
-                    if (offerEndDate === "") {
-                        document.getElementById('offerEndDateError').innerText = 'Offer End Date is required';
-                        isValid = false;
-                    }
-              
-                    // Validate Description
-                    var description = document.getElementById('description').value.trim();
-                    if (description === "") {
-                        document.getElementById('descriptionError').innerText = 'Description is required';
-                        isValid = false;
-                    }
-              
-                    return isValid;
-                }
-              
-                function clearValidationErrors() {
-                    document.getElementById('productNameError').innerText = '';
-                    document.getElementById('categoryError').innerText = '';
-                    document.getElementById('sizeError').innerText = '';
-                    document.getElementById('priceError').innerText = '';
-                    document.getElementById('stockError').innerText = '';
-                    document.getElementById('offerTypeError').innerText = '';
-                    document.getElementById('offerAmountError').innerText = '';
-                    document.getElementById('offerEndDateError').innerText = '';
-                    document.getElementById('descriptionError').innerText = '';
-                }
-              
-                function displayImagePreview(input) {
-                    if (input.files && input.files[0]) {
-                        var reader = new FileReader();
-                        reader.onload = function (e) {
-                            document.getElementById('imagePreview' + input.id.replace('productImage', '')).src = e.target.result;
-                            document.getElementById('imagePreview' + input.id.replace('productImage', '')).style.display = 'block';
-                        }
-                        reader.readAsDataURL(input.files[0]);
-                    }
-                }
-              </script>
-
+</script>           
             </div>
 
 

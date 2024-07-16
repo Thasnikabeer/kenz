@@ -178,7 +178,7 @@ Date(date).toLocaleDateString('en-US', options) : '' ; } %>
                 <img src="/images/<%= product.images[0] %>" alt="<%= product.productName %>" class="product-image" style="height: 400px; width: 450px;">
             </a>
             <div class="product-action-vertical">
-                <a href="/addwhitelist/<%= product._id %>" class="btn-product-icon btn-wishlist btn-expandable">
+                <a href="/addwhitelist/<%= product._id %>" class="btn-product-icon btn-wishlist btn-expandable"  onclick="addToWishList('<%= product.productName %>')"  >
                 <span>add to wishlist</span>
                 </a>
             </div>
@@ -337,7 +337,7 @@ Date(date).toLocaleDateString('en-US', options) : '' ; } %>
 
                             <% categories.forEach(category => { %>
                                 <% if (!category.blocked) { %>
-                                    <!-- Check if the category is not blocked -->
+                                
                                     <div class="filter-item">
                                         <div class="custom-control custom-checkbox">
                                             <h5>
@@ -345,7 +345,7 @@ Date(date).toLocaleDateString('en-US', options) : '' ; } %>
                                                     <%= category.categoryName %>
                                                     <% if(category.isSelected) { %>
                                                         <i class="fas fa-check"></i>
-                                                        <!-- Add your check icon class or HTML here -->
+                                                        
                                                     <% } %>
                                                 </a>
                                             </h5>
@@ -541,6 +541,21 @@ Date(date).toLocaleDateString('en-US', options) : '' ; } %>
     </body>
     <script>
     function addToCart(productName) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: `${productName} added to cart successfully`,
+            showConfirmButton: false,
+            timer: 10000, // Close the alert after 1.5 seconds
+            iconColor: '#4BB543', // Green color
+            customClass: {
+                popup: 'swal-popup-class',
+                content: 'swal-content-class',
+                closeButton: 'swal-close-button-class',
+            },
+        });
+    }
+    function addToWishList(productName) {
         Swal.fire({
             icon: 'success',
             title: 'Success!',

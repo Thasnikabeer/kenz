@@ -1,4 +1,6 @@
 <%- include('../layouts/productheader') %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <style>
     aside > * {
     border: 1px solid #000;
@@ -278,12 +280,12 @@ input[readonly] {
               var name = document.getElementById('editName').value;
               var email = document.getElementById('editEmail').value;
               var phone = document.getElementById('editPhone').value;
-        
+          
               // Reset error messages
               document.getElementById('nameError').innerHTML = '';
               document.getElementById('emailError').innerHTML = '';
               document.getElementById('phoneError').innerHTML = '';
-        
+          
               // Validate name
               if (name.trim() === '') {
                 document.getElementById('nameError').innerHTML = 'First Name is required';
@@ -292,7 +294,7 @@ input[readonly] {
                 document.getElementById('nameError').innerHTML = 'Invalid characters in the name';
                 return false;
               }
-        
+          
               // Validate email
               if (email.trim() === '') {
                 document.getElementById('emailError').innerHTML = 'Email is required';
@@ -301,7 +303,7 @@ input[readonly] {
                 document.getElementById('emailError').innerHTML = 'Invalid email address';
                 return false;
               }
-        
+          
               // Validate phone
               if (phone.trim() === '') {
                 document.getElementById('phoneError').innerHTML = 'Phone Number is required';
@@ -310,25 +312,39 @@ input[readonly] {
                 document.getElementById('phoneError').innerHTML = 'Invalid phone number';
                 return false;
               }
-        
-              
-        
-              return true; 
+          
+              // Show SweetAlert confirmation
+              Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to update your profile?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  // Form submission after confirmation
+                  document.getElementById('profileForm').submit(); // Submit the form
+                }
+              });
+          
+              return false; // Prevent form from submitting immediately
             }
-        
+          
             function isValidName(name) {
               // Allow only letters, spaces, and apostrophes
               return /^[a-zA-Z\s']*$/i.test(name);
             }
-        
+          
             function isValidEmail(email) {
-                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                 return emailRegex.test(email);
+              var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              return emailRegex.test(email);
             }
-        
+          
             function isValidPhone(phone) {
-                var phoneRegex = /^(?:(?!0+$)\d{10})$/;
-                return phoneRegex.test(phone);
+              var phoneRegex = /^(?:(?!0+$)\d{10})$/;
+              return phoneRegex.test(phone);
             }
           </script>
         

@@ -238,19 +238,27 @@
                                     <div class="product-details-action">
                                         <div class="product-details-action">
                                             <div class="details-action-col">
-                                                <% if (product.stock> 0) { %>
-                                                    <a href="/add-to-cart/<%= product._id %>"
-                                                        class="btn-product btn-cart"><span>add to cart</span></a>
-                                                    <% } else { %>
-                                                        <span class="btn-product btn-out-of-stock"><span>Out of
-                                                                Stock</span></span>
-                                                        <% } %>
+                                                <% if (product.stock > 0) { %>
+                                                    <a href="/add-to-cart/<%= product._id %>" class="btn btn-primary blue-button" title="Add to cart"
+                                                        style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 16px;">
+                                                        <span>Add to Cart</span>
+                                                    </a>
+                                                <% } else { %>
+                                                    <span class="btn btn-danger red-button" style="background-color: red; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 14px;">
+                                                        Out of Stock
+                                                    </span>
+                                                    
+                                                <% } %>
                                             </div><!-- End .details-action-col -->
-                                            <div class="details-action-wrapper">
-                                                <a href="/wishlist/<%= product._id %>"
-                                                    class="btn-product btn-wishlist" title="Wishlist"><span>Add to
-                                                        Wishlist</span></a>
-                                            </div><!-- End .details-action-wrapper -->
+                                            
+                                            <div class="details-action-col">
+                                                <a href="/addwhitelist/<%= product._id %>" class="btn btn-primary blue-button" title="Add to Wishlist"
+                                                    style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 16px;">
+                                                    <span>Add to Wishlist</span>
+                                                </a>
+                                            </div><!-- End .details-action-col -->
+                                            
+                                            
                                         </div><!-- End .product-details-action -->
                                     <div class="product-details-footer">
                                         

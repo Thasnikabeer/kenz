@@ -119,131 +119,7 @@
 </style>
 
 
-<script>
-    // let cropper;
-    // let currentInput;
-    // let croppedFiles = new Map(); // To store the cropped files
 
-    // function previewImage(event) {
-    //     const input = event.target;
-    //     const file = input.files[0];
-    //     currentInput = input; // Save the reference to the current input
-    //     if (file) {
-    //         const reader = new FileReader();
-    //         reader.onload = function(e) {
-    //             const cropperImage = document.getElementById('cropperImage');
-    //             cropperImage.src = e.target.result;
-    //             document.getElementById('cropperModal').style.display = 'block';
-    //             if (cropper) {
-    //                 cropper.destroy();
-    //             }
-    //             cropper = new Cropper(cropperImage, {
-    //                 aspectRatio: 3 / 4, // Portrait aspect ratio
-    //                 viewMode: 1,
-    //             });
-    //         };
-    //         reader.readAsDataURL(file);
-    //     }
-    // }
-
-    // function cropImage() {
-    //     if (cropper) {
-    //         cropper.getCroppedCanvas({
-    //             width: 300, // desired width
-    //             height: 400, // desired height
-    //         }).toBlob(function(blob) {
-    //             const croppedImageSrc = URL.createObjectURL(blob);
-    //             const imagePreview = currentInput.previousElementSibling;
-    //             if (imagePreview && imagePreview.tagName === 'IMG') {
-    //                 imagePreview.src = croppedImageSrc;
-    //             }
-    //             // Replace the file input with the cropped image blob
-    //             const dataTransfer = new DataTransfer();
-    //             const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
-    //             dataTransfer.items.add(file);
-    //             currentInput.files = dataTransfer.files;
-    //             // Store the cropped file in the Map
-    //             croppedFiles.set(currentInput.name, file);
-    //             closeModal();
-    //         }, 'image/jpeg');
-    //     }
-    // }
-
-    // function closeModal() {
-    //     document.getElementById('cropperModal').style.display = 'none';
-    //     if (cropper) {
-    //         cropper.destroy();
-    //         cropper = null;
-    //     }
-    // }
-
-
-    let cropper;
-let currentInput;
-let croppedFiles = new Map(); // To store the cropped files
-
-function previewImage(event, imageNumber) {
-    const input = event.target;
-    const file = input.files[0];
-    currentInput = input; // Save the reference to the current input
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const cropperImage = document.getElementById('cropperImage');
-            cropperImage.src = e.target.result;
-            document.getElementById('cropperModal').style.display = 'block';
-            if (cropper) {
-                cropper.destroy();
-            }
-            cropper = new Cropper(cropperImage, {
-                aspectRatio: 3 / 4, // Portrait aspect ratio
-                viewMode: 1,
-            });
-        };
-        reader.readAsDataURL(file);
-    }
-}
-
-function cropImage() {
-    if (cropper) {
-        cropper.getCroppedCanvas({
-            width: 300, // desired width
-            height: 400, // desired height
-        }).toBlob(function(blob) {
-            const croppedImageSrc = URL.createObjectURL(blob);
-            const imagePreview = currentInput.previousElementSibling;
-            if (imagePreview && imagePreview.tagName === 'IMG') {
-                imagePreview.src = croppedImageSrc;
-            }
-            // Replace the file input with the cropped image blob
-            const dataTransfer = new DataTransfer();
-            const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
-            dataTransfer.items.add(file);
-            currentInput.files = dataTransfer.files;
-            // Store the cropped file in the Map
-            croppedFiles.set(currentInput.name, file);
-            closeModal();
-        }, 'image/jpeg');
-    }
-}
-
-function removeImage(imageNumber) {
-    const input = document.getElementById(`image${imageNumber}`);
-    const preview = document.getElementById(`previewImage${imageNumber}`);
-    input.value = ''; // Clear the input field
-    preview.src = ''; // Clear the preview image
-    preview.style.display = 'none'; // Hide the preview image
-}
-
-function closeModal() {
-    document.getElementById('cropperModal').style.display = 'none';
-    if (cropper) {
-        cropper.destroy();
-        cropper = null;
-    }
-}
-
-</script>
 
 
 <div class="container-scroller">
@@ -257,8 +133,8 @@ function closeModal() {
           
             
             <div class="col-md-12 grid-margin stretch-card">
-              <form action="/admin/new-product" method="POST" id="add_product_form" onsubmit="return productValidation()" enctype="multipart/form-data">
-                <div class="new_user">
+              <!-- <form action="/admin/new-product"  method="POST" id="add_product_form" onsubmit="return productValidation()" enctype="multipart/form-data">
+                <div class="new_user">  
                   <h2></h2><br>
                 <div class="form-group">
                     <label for="productName">Product Name</label>
@@ -268,7 +144,7 @@ function closeModal() {
         
                 <div class="form-group col-md-4">
                     <label for="category">Category</label>
-                    <select name="category" id="category">
+                    <select name="category" id="inputState">
                         <option value="" selected>Select category</option>
 
                         <% categories.forEach(category => { %>
@@ -311,7 +187,7 @@ function closeModal() {
                     <select name="offerType" id="offerType">
                         <option value="" selected>Select offer type</option>
                         <option value="percentage">Percentage</option>
-                        <!-- Add other offer types as needed -->
+                      
                     </select>
                     <p id="offerTypeError" class="error-message"></p>
                 </div>
@@ -336,58 +212,180 @@ function closeModal() {
 
                
 
-                <!-- <div class="form-group">
-                    <label for="image1">Image 1</label>
-                    <img  class="image-preview"  />
-                    <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event)">
-                    <button type="button" onclick="removeImage(1)">Remove</button>
-                </div>
-            
-                 Image 2 -->
-                <!-- <div class="form-group">
-                    <label for="image2">Image 2</label>
-                    <img  class="image-preview"  />
-                    <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event)">
-                    <button type="button" onclick="removeImage(2)">Remove</button>
-                </div> -->
-            
-                <!-- Image 3 -->
-                <!-- <div class="form-group">
-                    <label for="image3">Image 3</label>
-                    <img  class="image-preview" />
-                    <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event)">
-                    <button type="button" onclick="removeImage(3)">Remove</button>
-                </div> --> 
-
-
                 <div class="form-group">
                     <label for="image1">Image 1</label>
                     <img id="previewImage1" class="image-preview" />
                     <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event, 1)">
-                    <button type="button" onclick="removeImage(1)">Remove</button>
+                    <span id="imageError" class="error-message"></span>
                 </div>
             
-                <!-- Image 2 -->
+              
                 <div class="form-group">
                     <label for="image2">Image 2</label>
                     <img id="previewImage2" class="image-preview" />
                     <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event, 2)">
-                    <button type="button" onclick="removeImage(2)">Remove</button>
+                    <span id="imageError" class="error-message"></span>
+                    
                 </div>
             
-                <!-- Image 3 -->
                 <div class="form-group">
                     <label for="image3">Image 3</label>
                     <img id="previewImage3" class="image-preview" />
                     <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event, 3)">
-                    <button type="button" onclick="removeImage(3)">Remove</button>
+                    <span id="imageError" class="error-message"></span>
                 </div>
             
                 <div id="productError" class="error-message"></div>
         
                 <button type="submit">Submit</button>
-            </form>
-          </div>
+            </form> -->
+            <form action="/admin/new-product" method="POST" id="add_product_form" onsubmit="return productValidation()" enctype="multipart/form-data">
+                <div class="new_user">  
+                    <h2></h2><br>
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" name="productName" id="productName" placeholder="Enter product name">
+                        <p id="productNameError" class="error-message"></p>
+                    </div>
+            
+                    <div class="form-group col-md-4">
+                        <label for="category">Category</label>
+                        <select name="category" id="category">
+                            <option value="" selected>Select category</option>
+                            <% categories.forEach(category => { %>
+                                <% if (!category.blocked) { %>
+                                    <option value="<%= category._id %>"><%= category.categoryName %></option>
+                                <% } %>
+                            <% }); %>
+                        </select>
+                        <p id="categoryError" class="error-message"></p>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="size">Size</label>
+                        <select name="size" id="size">
+                            <option value="">Select size</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                        <p id="sizeError" class="error-message"></p>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" name="oldPrice" id="price" placeholder="Enter price">
+                        <p id="priceError" class="error-message"></p>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="stock">Stock</label>
+                        <input type="number" name="stock" id="stock" placeholder="Enter stock">
+                        <p id="stockError" class="error-message"></p>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="offerType">Offer Type</label>
+                        <select name="offerType" id="offerType">
+                            <option value="" selected>Select offer type</option>
+                            <option value="percentage">Percentage</option>
+                        </select>
+                        <p id="offerTypeError" class="error-message"></p>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="offerAmount">Offer Amount (%)</label>
+                        <input type="number" name="offerAmount" id="offerAmount" min="0" step="any">
+                        <p id="offerAmountError" class="error-message"></p>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="offerEndDate">Offer End Date</label>
+                        <input type="date" name="offerEndDate" id="offerEndDate">
+                        <p id="offerEndDateError" class="error-message"></p>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="description">Description</label><br>
+                        <textarea name="description" id="description" cols="50" rows="5"></textarea>
+                        <p id="descriptionError" class="error-message"></p>
+                    </div>
+            
+                    <!-- //////////////////morning
+                    <div class="form-group">
+                        <label for="image1">Image 1</label>
+                        <img id="previewImage1" class="image-preview" />
+                        <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event, 1)">
+                        <button type="button" id="removeImage1" style="display: none;" onclick="removeImage(1)">Remove</button>
+                        <button type="button" id="removeCroppedImageButton2" style="display: none;" onclick="removeCroppedImage(2)">Remove Cropped Image</button>
+
+                        <span id="image1Error" class="error-message"></span>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="image2">Image 2</label>
+                        <img id="previewImage2" class="image-preview" />
+                        <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event, 2)">
+                        <button type="button" id="removeImage2" style="display: none;" onclick="removeImage(2)">Remove</button>
+                        <button type="button" id="removeCroppedImageButton3" style="display: none;" onclick="removeCroppedImage(3)">Remove Cropped Image</button>
+
+                        <span id="image2Error" class="error-message"></span>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="image3">Image 3</label>
+                        <img id="previewImage3" class="image-preview" />
+                        <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event, 3)">
+                        <button type="button" id="removeImage3" style="display: none;" onclick="removeImage(3)">Remove</button>
+                        <button type="button" id="removeCroppedImageButton" style="display: none;" onclick="removeCroppedImage()">Remove Cropped Image</button>
+
+                        <span id="image3Error" class="error-message"></span>
+                    </div>
+            
+                    <div id="productError" class="error-message"></div>
+            
+                    <button type="submit" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px;">
+                        Submit
+                    </button>
+                    
+                </div>
+            </form> -->
+            <div class="form-group">
+                <label for="image1">Image 1</label>
+                <img id="previewImage1" class="image-preview" />
+                <input type="file" name="images" id="image1" accept="image/*" onchange="previewImage(event, 1)">
+                <button type="button" id="removeImage1" style="display: none;" onclick="removeImage(1)">Remove</button>
+                <button type="button" id="removeCroppedImageButton1" style="display: none;" onclick="removeCroppedImage(1)">Remove Cropped Image</button>
+                <span id="image1Error" class="error-message"></span>
+            </div>
+            <div class="form-group">
+                <label for="image2">Image 2</label>
+                <img id="previewImage2" class="image-preview" />
+                <input type="file" name="images" id="image2" accept="image/*" onchange="previewImage(event, 2)">
+                <button type="button" id="removeImage2" style="display: none;" onclick="removeImage(2)">Remove</button>
+                <button type="button" id="removeCroppedImageButton2" style="display: none;" onclick="removeCroppedImage(2)">Remove Cropped Image</button>
+                <span id="image2Error" class="error-message"></span>
+            </div>
+            <div class="form-group">
+                <label for="image3">Image 3</label>
+                <img id="previewImage3" class="image-preview" />
+                <input type="file" name="images" id="image3" accept="image/*" onchange="previewImage(event, 3)">
+                <button type="button" id="removeImage3" style="display: none;" onclick="removeImage(3)">Remove</button>
+                <button type="button" id="removeCroppedImageButton3" style="display: none;" onclick="removeCroppedImage(3)">Remove Cropped Image</button>
+                <span id="image3Error" class="error-message"></span>
+            </div>
+    
+            <div id="productError" class="error-message"></div>
+    
+            <button type="submit" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px;">
+                Submit
+            </button>
+        </div>
+    </form>
+  
+        </div>
         </div>
       </div>
 
@@ -404,147 +402,333 @@ function closeModal() {
       <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+      
+
+
+
       <script>
+        function productValidation() {
+            var productName = document.getElementById('productName').value;
+            var category = document.getElementById('category').value;
+            var size = document.getElementById('size').value;
+            var price = document.getElementById('price').value;
+            var stock = document.getElementById('stock').value;
+            var offerType = document.getElementById('offerType').value;
+            var offerAmount = document.getElementById('offerAmount').value;
+            var offerEndDate = document.getElementById('offerEndDate').value;
+            var description = document.getElementById('description').value;
+            var image1 = document.getElementById('image1').value;
+            var image2 = document.getElementById('image2').value;
+            var image3 = document.getElementById('image3').value;
+    
+            // Reset previous errors
+            resetErrors();
+    
+            var isValid = true;
+    
+            if (productName.trim() === '') {
+            document.getElementById('productNameError').innerText = 'Please enter product name';
+            isValid = false;
+            } else if (!/^[A-Za-z]+$/.test(productName.trim())) {
+            document.getElementById('productNameError').innerText = 'Product name should only contain letters';
+            isValid = false;
+            } else {
+         // Clear any previous error messages if valid
+            document.getElementById('productNameError').innerText = '';
+            }
+    
+            if (category === '') {
+                document.getElementById('categoryError').innerText = 'Please select a category';
+                isValid = false;
+            }
+            if (size === '') {
+                document.getElementById('sizeError').innerText = 'Please select a size';
+                isValid = false;
+            }
+    
+            if (price.trim() === '') {
+                document.getElementById('priceError').innerText = 'Please enter price';
+                isValid = false;
+            } else if (isNaN(price)) {
+            document.getElementById('priceError').innerText = 'Only numbers are allowed';
+            isValid = false;
+            } else if(price <= 0) {
+             document.getElementById('priceError').innerText = 'Price should be positive';
+             isValid = false;
+         }
 
-
-
-// Handle form submission (optional, if you have additional validation or processing)
-function productValidation() {
-    // Add your validation logic here
-    return true; // R
+            if (stock.trim() === '') {
+                document.getElementById('stockError').innerText = 'Please enter stock';
+                isValid = false;
+            } else if (isNaN(stock)) {
+            document.getElementById('stockError').innerText = 'Only numbers are allowed';
+            isValid = false;
+            } else if(stock <= 0) {
+             document.getElementById('stockError').innerText = 'stock should be positive';
+             isValid = false;
+         }
+    
+            if (offerType === '') {
+                document.getElementById('offerTypeError').innerText = 'Please select offer type';
+                isValid = false;
+            }
+            var offerAmount = document.getElementById('offerAmount').value.trim();
+          if (offerAmount === "") {
+            document.getElementById('offerAmountError').innerText = 'Offer Amount is required';
+            isValid = false;
+          } else if (isNaN(offerAmount)) {
+            document.getElementById('offerAmountError').innerText = 'Only numbers are allowed';
+            isValid = false;
+          } else if (offerAmount <= 0) {
+            document.getElementById('offerAmountError').innerText = 'Offer Amount should be positive';
+            isValid = false;
+          } else if (offerAmount < 1 || offerAmount > 99) {
+            document.getElementById('offerAmountError').innerText = 'Offer Amount should be between 1 and 99';
+            isValid = false;
           }
-      </script>
+        var offerEndDate = document.getElementById('offerEndDate').value.trim();
+          if (offerEndDate === "") {
+            document.getElementById('offerEndDateError').innerText = 'Offer End Date is required';
+            isValid = false;
+          } else {
+            var today = new Date();
+            var selectedDate = new Date(offerEndDate);
       
-
-
-
-      
-<script>
-  function productValidation() {
-      var isValid = true;
-
-      // Reset errors
-      clearValidationErrors();
-
-      // Validate Product Name
-      var productName = document.getElementById('productName').value.trim();
-      if (productName === "") {
-          document.getElementById('productNameError').innerText = 'Product Name is required';
-          isValid = false;
-      }
-
-      // Validate Category
-      var category = document.getElementById('category').value;
-      if (category === "") {
-          document.getElementById('categoryError').innerText = 'Category is required';
-          isValid = false;
-      }
-
-      // Validate Size
-      var size = document.getElementById('size').value.trim();
-      if (size === "") {
-          document.getElementById('sizeError').innerText = 'Size is required';
-          isValid = false;
-      }
-
-      // Validate Price
-      var price = document.getElementById('price').value.trim();
-      if (price === "") {
-          document.getElementById('priceError').innerText = 'Price is required';
-          isValid = false;
-      } else if (isNaN(price)) {
-          document.getElementById('priceError').innerText = 'Only numbers are allowed';
-          isValid = false;
-      } else if (price <= 0) {
-          document.getElementById('priceError').innerText = 'Price should be positive';
-          isValid = false;
-      }
-
-      // Validate Stock
-      var stock = document.getElementById('stock').value.trim();
-      if (stock === "") {
-          document.getElementById('stockError').innerText = 'Stock is required';
-          isValid = false;
-      } else if (isNaN(stock)) {
-          document.getElementById('stockError').innerText = 'Only numbers are allowed';
-          isValid = false;
-      } else if (stock <= 0) {
-          document.getElementById('stockError').innerText = 'Stock should be positive';
-          isValid = false;
-      }
-
-      // Validate Offer Type
-      var offerType = document.getElementById('offerType').value;
-      if (offerType === "") {
-          document.getElementById('offerTypeError').innerText = 'Offer Type is required';
-          isValid = false;
-      }
-
-      // Validate Offer Amount
-      var offerAmount = document.getElementById('offerAmount').value.trim();
-      if (offerAmount === "") {
-          document.getElementById('offerAmountError').innerText = 'Offer Amount is required';
-          isValid = false;
-      } else if (isNaN(offerAmount)) {
-          document.getElementById('offerAmountError').innerText = 'Only numbers are allowed';
-          isValid = false;
-      } else if (offerAmount <= 0) {
-          document.getElementById('offerAmountError').innerText = 'Offer Amount should be positive';
-          isValid = false;
-      } else if (offerAmount < 1 || offerAmount > 99) {
-          document.getElementById('offerAmountError').innerText = 'Offer Amount should be between 1 and 99';
-          isValid = false;
-      }
-
-      // Validate Offer End Date
-      var offerEndDate = document.getElementById('offerEndDate').value.trim();
-      if (offerEndDate === "") {
-          document.getElementById('offerEndDateError').innerText = 'Offer End Date is required';
-          isValid = false;
-      } else {
-          var today = new Date();
-          var selectedDate = new Date(offerEndDate);
-
-          // Compare dates
-          if (selectedDate < today) {
+            // Compare dates
+            if (selectedDate < today) {
               document.getElementById('offerEndDateError').innerText = 'Offer End Date should be today or later';
               isValid = false;
+            }
           }
-      }
+            // if (offerEndDate.trim() === '') {
+            //     document.getElementById('offerEndDateError').innerText = 'Please select offer end date';
+            //     isValid = false;
+            // }
+    
+            if (description.trim() === '') {
+                document.getElementById('descriptionError').innerText = 'Please enter description';
+                isValid = false;
+            }
+            if (image1.trim() === '') {
+                document.getElementById('image1Error').innerText = 'Please upload image 1';
+                isValid = false;
+            }
+    
+            if (image2.trim() === '') {
+                document.getElementById('image2Error').innerText = 'Please upload image 2';
+                isValid = false;
+            }
+    
+            if (image3.trim() === '') {
+                document.getElementById('image3Error').innerText = 'Please upload image 3';
+                isValid = false;
+            }
+    
+            return isValid;
+        }
+    
+        function resetErrors() {
+            var errorMessages = document.getElementsByClassName('error-message');
+            for (var i = 0; i < errorMessages.length; i++) {
+                errorMessages[i].innerText = '';
+            }
+        }
+    </script>
 
-      // Validate Description
-      var description = document.getElementById('description').value.trim();
-      if (description === "") {
-          document.getElementById('descriptionError').innerText = 'Description is required';
-          isValid = false;
-      }
 
-      // Validate Images (at least three images are required)
-      var images1 = document.getElementById('image1').files;
-      var images2 = document.getElementById('image2').files;
-      var images3 = document.getElementById('image3').files;
-      if (images1.length === 0 || images2.length === 0 || images3.length === 0) {
-          document.getElementById('imageError').innerText = 'Please upload all three images';
-          isValid = false;
-      }
 
-      // Display or clear general product error
-      var productError = document.getElementById('productError');
-      if (!isValid) {
-          productError.innerText = "Please correct the errors above.";
-          return false; // Prevent form submission
-      } else {
-          productError.innerText = "";
-          return true; // Allow form submission
-      }
-  }
 
-  function clearValidationErrors() {
-      var errorMessages = document.querySelectorAll('.error-message');
-      errorMessages.forEach(function(element) {
-          element.innerText = "";
-      });
-  }
+
+  
+
+<!-- /////////////////////////////////morninggg///////////////////////////////// 
+<script>
+    let cropper;
+    let currentInput;
+    let croppedFiles = new Map(); // To store the cropped files
+
+    function previewImage(event, imageNumber) {
+        const input = event.target;
+        const file = input.files[0];
+        currentInput = input; // Save the reference to the current input
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const cropperImage = document.getElementById('cropperImage');
+                cropperImage.src = e.target.result;
+                document.getElementById('cropperModal').style.display = 'block';
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(cropperImage, {
+                    aspectRatio: 3 / 4, // Portrait aspect ratio
+                    viewMode: 1,
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function cropImage() {
+        if (cropper) {
+            cropper.getCroppedCanvas({
+                width: 300, // desired width
+                height: 400, // desired height
+            }).toBlob(function(blob) {
+                const croppedImageSrc = URL.createObjectURL(blob);
+                const imagePreview = currentInput.previousElementSibling;
+                if (imagePreview && imagePreview.tagName === 'IMG') {
+                    imagePreview.src = croppedImageSrc;
+                    imagePreview.style.display = 'block'; // Display the cropped image preview
+                }
+                // Replace the file input with the cropped image blob
+                const dataTransfer = new DataTransfer();
+                const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
+                dataTransfer.items.add(file);
+                currentInput.files = dataTransfer.files;
+                // Store the cropped file in the Map
+                croppedFiles.set(currentInput.name, file);
+                // Show the remove cropped image button
+                const removeCroppedButton = document.getElementById(`removeCroppedImage${currentInput.id}`);
+                if (removeCroppedButton) {
+                    removeCroppedButton.style.display = 'inline-block';
+                }
+                closeModal();
+            }, 'image/jpeg');
+        }
+    }
+
+    function removeImage(imageNumber) {
+        const input = document.getElementById(`image${imageNumber}`);
+        const preview = document.getElementById(`previewImage${imageNumber}`);
+        input.value = ''; // Clear the input field
+        preview.src = ''; // Clear the preview image
+        preview.style.display = 'none'; // Hide the preview image
+    }
+
+    function removeCroppedImage(imageNumber) {
+        const preview = document.getElementById(`previewImage${imageNumber}`);
+        preview.src = ''; // Clear the cropped image preview
+        preview.style.display = 'none'; // Hide the cropped image preview
+        // Hide the remove cropped image button
+        const removeCroppedButton = document.getElementById(`removeCroppedImage${imageNumber}`);
+        if (removeCroppedButton) {
+            removeCroppedButton.style.display = 'none';
+        }
+        // Clear the stored cropped file
+        croppedFiles.delete(`image${imageNumber}`);
+    }
+
+    function closeModal() {
+        document.getElementById('cropperModal').style.display = 'none';
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+    }
+</script> -->
+
+
+<script>
+let cropper;
+let currentInput;
+let croppedFiles = new Map(); // To store the cropped files
+
+function previewImage(event, imageNumber) {
+    const input = event.target;
+    const file = input.files[0];
+    currentInput = input; // Save the reference to the current input
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const cropperImage = document.getElementById('cropperImage');
+            cropperImage.src = e.target.result;
+            document.getElementById('cropperModal').style.display = 'block';
+            if (cropper) {
+                cropper.destroy();
+            }
+            cropper = new Cropper(cropperImage, {
+                aspectRatio: 3 / 4, // Portrait aspect ratio
+                viewMode: 1,
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function cropImage() {
+    if (cropper) {
+        cropper.getCroppedCanvas({
+            width: 300, // desired width
+            height: 400, // desired height
+        }).toBlob(function(blob) {
+            const croppedImageSrc = URL.createObjectURL(blob);
+            const imagePreview = document.getElementById(`previewImage${currentInput.id.replace('image', '')}`);
+            if (imagePreview && imagePreview.tagName === 'IMG') {
+                imagePreview.src = croppedImageSrc;
+                imagePreview.style.display = 'block'; // Display the cropped image preview
+            }
+            // Replace the file input with the cropped image blob
+            const dataTransfer = new DataTransfer();
+            const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
+            dataTransfer.items.add(file);
+            currentInput.files = dataTransfer.files;
+            // Store the cropped file in the Map
+            croppedFiles.set(currentInput.name, file);
+            // Show the remove cropped image button
+            const removeCroppedButton = document.getElementById(`removeCroppedImageButton${currentInput.id.replace('image', '')}`);
+            if (removeCroppedButton) {
+                removeCroppedButton.style.display = 'inline-block';
+            }
+            closeModal();
+        }, 'image/jpeg');
+    }
+}
+
+function removeImage(imageNumber) {
+    const input = document.getElementById(`image${imageNumber}`);
+    const preview = document.getElementById(`previewImage${imageNumber}`);
+    input.value = ''; // Clear the input field
+    preview.src = ''; // Clear the preview image
+    preview.style.display = 'none'; // Hide the preview image
+    const removeButton = document.getElementById(`removeImage${imageNumber}`);
+    if (removeButton) {
+        removeButton.style.display = 'none';
+    }
+    const removeCroppedButton = document.getElementById(`removeCroppedImageButton${imageNumber}`);
+    if (removeCroppedButton) {
+        removeCroppedButton.style.display = 'none';
+    }
+    croppedFiles.delete(`image${imageNumber}`);
+}
+
+function removeCroppedImage(imageNumber) {
+    const preview = document.getElementById(`previewImage${imageNumber}`);
+    preview.src = ''; // Clear the cropped image preview
+    preview.style.display = 'none'; // Hide the cropped image preview
+    const removeCroppedButton = document.getElementById(`removeCroppedImageButton${imageNumber}`);
+    if (removeCroppedButton) {
+        removeCroppedButton.style.display = 'none';
+    }
+    croppedFiles.delete(`image${imageNumber}`);
+}
+
+function closeModal() {
+    document.getElementById('cropperModal').style.display = 'none';
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+}
 </script>
-  </div>
+
+
+
+
+
+
+
+
+
+  
   <%- include('../layouts/adminFooters') %>

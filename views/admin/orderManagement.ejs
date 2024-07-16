@@ -33,20 +33,19 @@
 
                         <br>
                     <div class="container">
-                           
+                        <button class="btn-cancelled-orders" onclick="location.href='/admin/canceled-orders'" type="button" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px;">
+                            Cancelled Orders Details
+                        </button>
                         
-              <button class="btn1" onclick="location.href='/admin/canceled-orders'" type="button">
-                Cancelled Orders Details
-              </button> 
 
-              <button class="btn1" onclick="location.href='/admin/order-return'" type="button">
+              <button class="btn1" onclick="location.href='/admin/order-return'" type="button"style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px;">
                 Return Orders Details
               </button>
                        <br><br> <hr>    
                        <table class="table table-hover" style="text-align: center; border-collapse: collapse; width: 100%;">
                         <thead>
                             <tr style="background-color: #f6c2c2; color: rgb(18, 17, 17);">
-                                <th scope="col" style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">SL.NO</th>
+                                <!-- <th scope="col" style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">SL.NO</th> -->
                                 <th scope="col" style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Name</th>
                                 <th scope="col" style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Product Count</th>
                                 <th scope="col" style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">Product Name</th>
@@ -60,7 +59,7 @@
                         <tbody>
                             <% for (var i=0; i < order.length; i++) { %>
                                 <tr>
-                                    <td style="border: 1px solid #ddd; padding: 8px;"><%= i+1 %></td>
+                                    <!-- <td style="border: 1px solid #ddd; padding: 8px;"><%= i+1 %></td> -->
                                     <td style="border: 1px solid #ddd; padding: 8px;"><%= order[i].userName %></td>
                                     <td style="border: 1px solid #ddd; padding: 8px;">
                                         <% if (order[i].products && order[i].products.length > 0) { %>
@@ -114,24 +113,29 @@
                                     </td>
                                     <td style="border: 1px solid #ddd; padding: 8px;"><%= newStatus ? newStatus : order[i].status %></td>
                                     <td style="border: 1px solid #ddd; padding: 8px;">
-                                        <form action="/admin/update-status/<%= order[i]._id %>" method="POST">
-                                            <select name="newStatus">
-                                                <option value="processing">Choose</option>
+                                        <form action="/admin/update-status/<%= order[i]._id %>" method="POST" style="display: flex; align-items: center; gap: 10px;">
+                                            <select name="newStatus" style="padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px; background-color: white; color: black;">
+                                                <option value="" disabled selected>Choose</option>
                                                 <option value="processing">Processing</option>
                                                 <option value="pending">Pending</option>
                                                 <option value="shipped">Shipped</option>
                                                 <option value="delivered">Delivered</option>
                                             </select>
-                                            <button type="submit">Update Status</button>
+                                            <button type="submit" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 16px;">
+                                                Update Status
+                                            </button>
                                         </form>
+                                        
                                     </td>
                                 </tr>
                             <% } %>
                         </tbody>
                     </table>
+                    <br><br>
+                    <a href="/admin/home" style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; border: 2px solid #000; font-size: 10px; text-decoration: none; display: inline-block;">
+                        Back To Home
+                    </a>
                     
-                                    <a href="/admin/home">Back To Home</a>
-                         
 <br><br>
 
 <nav aria-label="Page navigation">

@@ -262,11 +262,21 @@ const updateCategoryStatus = async (req, res) => {
 
 
 //  delete category
+// const deleteCategory = async (req, res) => {
+//     try {
+//         await Category.deleteOne({ _id: req.params.categoryId }); 
+        
+//         res.redirect('/admin/category');
+//     } catch (error) {
+//         console.error('Error deleting category:', error.message);
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
 const deleteCategory = async (req, res) => {
     try {
         await Category.deleteOne({ _id: req.params.categoryId }); 
         
-        res.redirect('/admin/category');
+        res.redirect('/admin/category'); // Redirect to category list page after deletion
     } catch (error) {
         console.error('Error deleting category:', error.message);
         res.status(500).send('Internal Server Error');
@@ -393,6 +403,7 @@ const ensureDirectoryExistence = async (dir) => {
 const addProduct = async (req, res) => {
     try {
         const { productName, category, size, oldPrice, stock, description, offerType, offerAmount, offerEndDate } = req.body;
+        console.log("++++++++++++++++++=data is comin here ===================",req.body)
 
         let images = [];
 

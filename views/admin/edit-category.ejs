@@ -72,24 +72,23 @@
         text-decoration: underline;
     }
 
-</style> 
+</style>
 <div class="container-scroller">
   <!-- partial:../../partials/_navbar.html -->
   <%- include('../layouts/adminHeadersmid.ejs') %>
-  
-    <!-- partial -->
+
     <!-- partial -->
     <div class="main-panel">
       <div class="content-wrapper" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUZTqYvv38DZhhKiWQ4qEMiQpvB8S2zfRNp-DPYG8v-JrQqLl5_lcnD_-b8oozMh5D9Yw&usqp=CAU'); background-size: cover; background-position: center;">
-        
+
         <h2 style="color: rgb(10, 109, 170); text-align: center;">Edit Category</h2>
-          
+
         <div class="col-md-12 grid-margin stretch-card">
             <form action="/admin/edit-category/<%= category._id %>" method="POST" id="add_user" onsubmit="return editCategoryValidation()">
                 <div class="new_user">
                     <div class="form-group">
                         <label for="name" class="text-light">Category Name</label>
-                        <input type="text" name="categoryName" id="categoryName" value="<%= category.categoryName %>" placeholder="enter a category" required>
+                        <input type="text" name="categoryName" id="categoryName" value="<%= category.categoryName %>" placeholder="Enter a category name" >
                         <span id="categoryNameError" class="error"></span>
                         <% if (typeof message !== 'undefined') { %>
                             <div class="alert alert-danger" style="color: red;">
@@ -106,51 +105,20 @@
                     </div>
                     <div class="form-group">
                         <label for="offerAmount" class="text-light">Offer Amount (%)</label>
-                        <input type="text" value="<%= category.offer ? category.offer.amount : '' %>" name="offerAmount" id="offerAmount" placeholder="Offer Amount" required>
+                        <input type="text" value="<%= category.offer ? category.offer.amount : '' %>" name="offerAmount" id="offerAmount" placeholder="Offer Amount" >
                         <span id="offerAmountError" class="error"></span>
                     </div>
                     <div class="form-group">
                         <label for="offerEndDate" class="text-light">Offer End Date</label>
-                        <input type="date" name="offerEndDate" id="offerEndDate" value="<%= category.offer && category.offer.endDate && category.offer.endDate instanceof Date ? category.offer.endDate.toISOString().split('T')[0] : '' %>" required>
+                        <input type="date" name="offerEndDate" id="offerEndDate" value="<%= category.offer && category.offer.endDate && category.offer.endDate instanceof Date ? category.offer.endDate.toISOString().split('T')[0] : '' %>" >
+                        <span id="offerEndDateError" class="error"></span>
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn text-dark update">Save</button>
                     </div>
                 </div>
             </form>
-            
-            <script>
-                function editCategoryValidation() {
-                    var categoryName = document.getElementById("categoryName").value;
-                    var offerType = document.getElementById("offerType").value;
-                    var offerAmount = document.getElementById("offerAmount").value;
-            
-                    document.getElementById('categoryNameError').innerText = "";
-                    document.getElementById('offerAmountError').innerText = "";
-            
-                    // Validate Category Name
-                    if (categoryName.trim() === "") {
-                        document.getElementById('categoryNameError').innerText = "Category Name is required";
-                        return false;
-                    }
-                    if (!/^[a-zA-Z\s]+$/.test(categoryName)) {  // Allow spaces in category names
-                        document.getElementById('categoryNameError').innerText = "Category Name must be alphabetic characters";
-                        return false;
-                    }
-            
-                    // Validate Offer Amount if Offer Type is selected
-                    if (offerType !== "" && (offerAmount.trim() === "" || !/^\d+$/.test(offerAmount) || parseInt(offerAmount) <= 0 || parseInt(offerAmount) > 100)) {
-                        document.getElementById('offerAmountError').innerText = "Offer Amount must be a positive integer between 1 and 100";
-                        return false;
-                    }
-            
-                    return true;
-                }
-            </script>
-            
-                
         </div>
-          
       </div>
       <!-- content-wrapper ends -->
       <!-- partial:../../partials/_footer.html -->
@@ -158,3 +126,52 @@
     </div>
   </div>
 </div>
+<script>
+    function editCategoryValidation() {
+        var categoryName = document.getElementById("categoryName").value;
+        var offerType = document.getElementById("offerType").value;
+        var offerAmount = document.getElementById("offerAmount").value;
+        var offerEndDate = document.getElementById("offerEndDate").value;
+
+        document.getElementById('categoryNameError').innerText = "";
+        document.getElementById('offerAmountError').innerText = "";
+        document.getElementById('offerEndDateError').innerText = "";
+
+        // Validate Category Name
+        if (categoryName.trim() === "") {
+            document.getElementById('categoryNameError').innerText = "Category Name is required";
+            return false;
+        }
+        if (!/^[a-zA-Z\s]+$/.test(categoryName)) {  // Allow spaces in category names
+            document.getElementById('categoryNameError').innerText = "Category Name must be alphabetic characters";
+            return false;
+        }
+
+        // Validate Offer Amount if Offer Type is selected
+        if (offerType !== "" && (offerAmount.trim() === "" || !/^\d+$/.test(offerAmount) || parseInt(offerAmount) <= 0 || parseInt(offerAmount) > 100)) {
+            document.getElementById('offerAmountError').innerText = "Offer Amount must be a positive integer between 1 and 100";
+            return false;
+        }
+
+        // Validate Offer End Date
+        if (offerEndDate.trim() === "") {
+            document.getElementById('offerEndDateError').innerText = "Offer End Date is required";
+            return false;
+        }
+        if (isNaN(Date.parse(offerEndDate))) {
+            document.getElementById('offerEndDateError').innerText = "Offer End Date must be a valid date";
+            return false;
+        }
+         // Ensure Offer End Date is not in the past
+         var currentDate = new Date();
+        var endDate = new Date(offerEndDate);
+        currentDate.setHours(0, 0, 0, 0); // Set time to midnight to only compare dates
+        if (endDate < currentDate) {
+            document.getElementById('offerEndDateError').innerText = "Offer End Date not in the past";
+            return false;
+        }
+
+        
+        return true;
+    }
+</script>

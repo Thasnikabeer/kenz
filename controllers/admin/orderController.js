@@ -145,32 +145,95 @@ const confirmOrderCancellation = async (req, res) => {
   }
 };
 
-const viewCanceledOrders = async (req, res) => {
-  try {
-    // Fetch all canceled orders
-    const canceledOrders = await Order.find({ status: 'Cancellation' }).populate('products.product');
+// const viewCanceledOrders = async (req, res) => {
+//   try {
+//     // Fetch all canceled orders
+//     const canceledOrders = await Order.find({ status: 'Cancellation' }).populate('products.product');
 
-    // Render the view and pass the canceled orders
-    res.render('cancel-order', { canceledOrders });
+//     // Render the view and pass the canceled orders
+//     res.render('cancel-order', { canceledOrders });
+//   } catch (error) {
+//     console.error('Error fetching canceled orders:', error.message);
+//     res.status(500).send('Internal Server Error');
+//   }
+// };
+
+const viewCanceledOrders = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Current page number, default is 1
+  const limit = parseInt(req.query.limit) || 10; // Number of orders per page, default is 10
+
+  try {
+    // Get total count of canceled orders
+    const totalOrders = await Order.countDocuments({ status: 'Cancellation' });
+
+    // Fetch paginated canceled orders
+    const canceledOrders = await Order.find({ status: 'Cancellation' })
+      .populate('products.product')
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    // Render the view and pass the canceled orders and pagination details
+    res.render('cancel-order', {
+      canceledOrders,
+      currentPage: page,
+      totalPages,
+      limit,
+      totalOrders
+    });
   } catch (error) {
     console.error('Error fetching canceled orders:', error.message);
     res.status(500).send('Internal Server Error');
   }
 };
 
-const viewReturnedOrders = async (req, res) => {
-  try {
-    // Fetch all returned orders
-    const returnedOrders = await Order.find({ returned: true }).populate('userId').populate('products.product');
 
-    // Render the view and pass the returned orders
-    res.render('return-order', { returnedOrders });
+// const viewReturnedOrders = async (req, res) => {
+//   try {
+//     // Fetch all returned orders
+//     const returnedOrders = await Order.find({ returned: true }).populate('userId').populate('products.product');
+
+//     // Render the view and pass the returned orders
+//     res.render('return-order', { returnedOrders });
+//   } catch (error) {
+//     console.error('Error fetching returned orders:', error.message);
+//     res.status(500).send('Internal Server Error');
+//   }
+// };
+
+const viewReturnedOrders = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; // Current page number, default is 1
+  const limit = parseInt(req.query.limit) || 10; // Number of orders per page, default is 10
+
+  try {
+    // Get total count of returned orders
+    const totalOrders = await Order.countDocuments({ returned: true });
+
+    // Fetch paginated returned orders
+    const returnedOrders = await Order.find({ returned: true })
+      .populate('userId')
+      .populate('products.product')
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalOrders / limit);
+
+    // Render the view and pass the returned orders and pagination details
+    res.render('return-order', {
+      returnedOrders,
+      currentPage: page,
+      totalPages,
+      limit,
+      totalOrders
+    });
   } catch (error) {
     console.error('Error fetching returned orders:', error.message);
     res.status(500).send('Internal Server Error');
   }
 };
-
 
 
 module.exports = {

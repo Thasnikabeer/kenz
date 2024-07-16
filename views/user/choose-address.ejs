@@ -1,14 +1,14 @@
 <%- include('../layouts/productheader') %>
 <style>
 .blue-button {
-    background-color: #007bff; /* Standard blue color */
+    background-color: #ea8dd9; /* Standard blue color */
     color: #fff; /* Text color */
-    border-color: #007bff; /* Border color */
+    border-color: #ea8dd9; /* Border color */
     /* Additional styling if needed */
 }
 
 .blue-button:hover {
-    background-color: #0056b3; /* Darker shade of blue on hover */
+    background-color: ea8dd9; /* Darker shade of blue on hover */
     border-color: #0056b3; /* Darker border color on hover */
     /* Additional hover styling if needed */
 }
@@ -27,6 +27,7 @@
 
 
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
 <div class="header-middle sticky-header">
     <div class="container">
@@ -117,6 +118,9 @@
         </div><!-- End .header-right -->
     </div><!-- End .container -->
 </div><!-- End .header-middle -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 </header><!-- End .header -->
 
 
@@ -140,8 +144,14 @@
                             <div class="card">
                                 <br>
                                 <br>
-                                <h4 style="margin: 7rem;">Choose Address</h3>
-                                    <h4> <a href="/choose-addAddress" style=" margin-left: 150px;">Add New Address</a>
+                                <!-- <h4 style="margin: 7rem;">Choose Address</h3> -->
+                                    <h4>
+                                        <a href="/choose-addAddress" style="margin-left: 150px; background-color: black; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; font-size: 16px;">
+                                            Add New Address
+                                        </a>
+                                        
+                                    </h4>
+                                    
                                     </h4>
 
 
@@ -181,21 +191,28 @@
                                                             <input type="hidden" name="selectedAddressId"
                                                                 value="<%= userAddress._id %>">
                                                             <div class="form-group">
-                                                                <button type="submit"
-                                                                    class="btn text-dark update Border border-primary">Choose
-                                                                    This Address</button>
+                                                                <button type="submit" class="btn btn-primary"
+                                                            style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 16px;">
+                                                            Choose This Address
+                                                            </button>
+
                                                             </div>
                                                         </form>
                                                         <div class="form-group">
                                                             <a href="/edit-address/<%= userAddress._id %>">
-                                                                <button type="submit" class="btn text-dark update Border border-primary blue-button">Edit</button>
+                                                                <button type="submit" class="btn btn-primary blue-button"
+                                                                style="background-color: black; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 16px;">
+                                                                Edit
+                                                                </button>
                                                             </a>
                                                             
                                                             
                                                             <a href="#" onclick="confirmDelete('/delete-chooseaddress/<%= userAddress._id %>')">
-                                                                <button type="submit" class="btn text-dark update Border border-danger red-button">Delete</button>
+                                                                <button type="button" class="btn btn-danger red-button"
+                                                                        style="background-color: red; color: white; padding: 8px 16px; border-radius: 5px; text-decoration: none; font-size: 16px;">
+                                                                    Delete
+                                                                </button>
                                                             </a>
-                                                            
 
                                                         </div>
 
@@ -364,11 +381,21 @@
 
 
                     <script>
-                        function confirmDelete(url) {
-                            if (confirm("Are you sure you want to delete this address?")) {
-                                window.location.href = url;
-                            }
+                        function confirmDelete(deleteUrl) {
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: 'You will not be able to recover this item!',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Yes, delete it!'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Redirect to the delete URL or handle delete action here
+                                    window.location.href = deleteUrl; // Example: redirect to delete URL
+                                }
+                            });
                         }
                     </script>
-
                     <%- include('../layouts/productfooter.ejs') %>

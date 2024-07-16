@@ -199,7 +199,11 @@
       <br><br>
           <div>
               <h4 style="text-align: center;">Wallet History</h4><br>
-      
+              <% if (walletAmount === 0) { %>
+                <div style="background-color: #ea8dd9; color: white; padding: 10px; border-radius: 5px; text-align:center">
+                    Your Wallet Amount is Empty
+                </div>
+            <% } else { %>
               <table>
                   <thead >
                       <tr style="text-align: center;">
@@ -220,6 +224,7 @@
                       <% }) %>
                   </tbody>
               </table>
+              <% } %>
           </div>
           <div class="pagination">
             <% if (currentPage > 1) { %>

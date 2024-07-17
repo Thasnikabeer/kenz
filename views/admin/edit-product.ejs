@@ -293,197 +293,165 @@
               </script>
 
 <script>
-
   let cropper;
-      let currentInput;
-      let croppedFiles = new Map(); // To store the cropped files
-  
-      function previewImage(event) {
-          const input = event.target;
-          const file = input.files[0];
-          currentInput = input; // Save the reference to the current input
-          if (file) {
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                  const cropperImage = document.getElementById('cropperImage');
-                  cropperImage.src = e.target.result;
-                  document.getElementById('cropperModal').style.display = 'block';
-                  if (cropper) {
-                      cropper.destroy();
-                  }
-                  cropper = new Cropper(cropperImage, {
-                      aspectRatio: 3 / 4, // Portrait aspect ratio
-                      viewMode: 1,
-                  });
-              };
-              reader.readAsDataURL(file);
-          }
-      }
-  
-      function cropImage() {
-          if (cropper) {
-              cropper.getCroppedCanvas({
-                  width: 300, // desired width
-                  height: 400, // desired height
-              }).toBlob(function(blob) {
-                  const croppedImageSrc = URL.createObjectURL(blob);
-                  const imagePreview = currentInput.previousElementSibling;
-                  if (imagePreview && imagePreview.tagName === 'IMG') {
-                      imagePreview.src = croppedImageSrc;
-                  }
-                  // Replace the file input with the cropped image blob
-                  const dataTransfer = new DataTransfer();
-                  const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
-                  dataTransfer.items.add(file);
-                  currentInput.files = dataTransfer.files;
-                  // Store the cropped file in the Map
-                  croppedFiles.set(currentInput.name, file);
-                  closeModal();
-              }, 'image/jpeg');
-          }
-      }
-  
-      function closeModal() {
-          document.getElementById('cropperModal').style.display = 'none';
-          if (cropper) {
-              cropper.destroy();
-              cropper = null;
-          }
-      }
-  
-  </script>
-  
-<script>
+  let currentInput;
+  let croppedFiles = new Map();
+
+  function previewImage(event) {
+    const input = event.target;
+    const file = input.files[0];
+    currentInput = input;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const cropperImage = document.getElementById('cropperImage');
+        cropperImage.src = e.target.result;
+        document.getElementById('cropperModal').style.display = 'block';
+        if (cropper) {
+          cropper.destroy();
+        }
+        cropper = new Cropper(cropperImage, {
+          aspectRatio: 3 / 4,
+          viewMode: 1,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function cropImage() {
+    if (cropper) {
+      cropper.getCroppedCanvas({
+        width: 300,
+        height: 400,
+      }).toBlob(function(blob) {
+        const croppedImageSrc = URL.createObjectURL(blob);
+        const imagePreview = currentInput.previousElementSibling;
+        if (imagePreview && imagePreview.tagName === 'IMG') {
+          imagePreview.src = croppedImageSrc;
+        }
+        const dataTransfer = new DataTransfer();
+        const file = new File([blob], `croppedImage${Date.now()}.jpg`, { type: "image/jpeg" });
+        dataTransfer.items.add(file);
+        currentInput.files = dataTransfer.files;
+        croppedFiles.set(currentInput.name, file);
+        closeModal();
+      }, 'image/jpeg');
+    }
+  }
+
+  function closeModal() {
+    document.getElementById('cropperModal').style.display = 'none';
+    if (cropper) {
+      cropper.destroy();
+      cropper = null;
+    }
+  }
+
   function productValidation() {
     var isValid = true;
 
-    // Reset errors
     clearValidationErrors();
 
-    // Validate Product Name
     var productName = document.getElementById('productName').value.trim();
     if (productName === "") {
       document.getElementById('productNameError').innerText = 'Product Name is required';
       isValid = false;
-    }else if (!/^[A-Za-z]+$/.test(productName.trim())) {
-            document.getElementById('productNameError').innerText = 'Product name should only contain letters';
-            isValid = false;
-            } else {
-         // Clear any previous error messages if valid
-            document.getElementById('productNameError').innerText = '';
-            }
-
-    // Validate Category
-    var category = document.getElementById('inputState').value;
-    if (category === "") {
-      document.getElementById('categoryError').innerText = 'Category is required';
+    } else if (!/^[A-Za-z]+$/.test(productName.trim())) {
+      document.getElementById('productNameError').innerText = 'Product name should only contain letters';
       isValid = false;
     }
 
-    // Validate Size
+    var category = document.getElementById('inputState').value;
+    if (category === "") {
+      document.getElementById('categoryError').innerText = 'Please select a category';
+      isValid = false;
+    }
+
     var size = document.getElementById('size').value.trim();
     if (size === "") {
       document.getElementById('sizeError').innerText = 'Size is required';
       isValid = false;
     }
 
-    // Validate Price
     var price = document.getElementById('price').value.trim();
     if (price === "") {
       document.getElementById('priceError').innerText = 'Price is required';
       isValid = false;
-    } else if (isNaN(price)) {
-      document.getElementById('priceError').innerText = 'Only numbers are allowed';
-      isValid = false;
-    } else if (price <= 0) {
-      document.getElementById('priceError').innerText = 'Price should be positive';
+    } else if (isNaN(price) || price <= 0) {
+      document.getElementById('priceError').innerText = 'Price must be a valid number greater than 0';
       isValid = false;
     }
 
-    // Validate Stock
     var stock = document.getElementById('stock').value.trim();
     if (stock === "") {
       document.getElementById('stockError').innerText = 'Stock is required';
       isValid = false;
-    } else if (isNaN(stock)) {
-      document.getElementById('stockError').innerText = 'Only numbers are allowed';
-      isValid = false;
-    } else if (stock <= 0) {
-      document.getElementById('stockError').innerText = 'Stock should be positive';
+    } else if (isNaN(stock) || stock <= 0) {
+      document.getElementById('stockError').innerText = 'Stock must be a valid number greater than 0';
       isValid = false;
     }
 
-    // Validate Offer Type
     var offerType = document.getElementById('offerType').value;
-    if (offerType === "") {
-      document.getElementById('offerTypeError').innerText = 'Please select offer type';
-      isValid = false;
-    }
+    if (offerType !== "") {
+      var offerAmount = document.getElementById('offerAmount').value.trim();
+      if (offerAmount === "") {
+        document.getElementById('offerAmountError').innerText = 'Offer amount is required';
+        isValid = false;
+      } else if (isNaN(offerAmount) || offerAmount <= 0) {
+        document.getElementById('offerAmountError').innerText = 'Offer amount must be a valid number greater than 0';
+        isValid = false;
+      }
 
-    // Validate Offer Amount
-    var offerAmount = document.getElementById('offerAmount').value.trim();
-    if (offerAmount === "") {
-      document.getElementById('offerAmountError').innerText = 'Offer Amount is required';
-      isValid = false;
-    } else if (isNaN(offerAmount)) {
-      document.getElementById('offerAmountError').innerText = 'Only numbers are allowed';
-      isValid = false;
-    } else if (offerAmount <= 0) {
-      document.getElementById('offerAmountError').innerText = 'Offer Amount should be positive';
-      isValid = false;
-    } else if (offerAmount < 1 || offerAmount > 99) {
-      document.getElementById('offerAmountError').innerText = 'Offer Amount should be between 1 and 99';
-      isValid = false;
-    }
-
-    // Validate Offer End Date
-    var offerEndDate = document.getElementById('offerEndDate').value.trim();
-    if (offerEndDate === "") {
-      document.getElementById('offerEndDateError').innerText = 'Offer End Date is required';
-      isValid = false;
-    } else {
-      var today = new Date();
-      var selectedDate = new Date(offerEndDate);
-
-      // Compare dates
-      if (selectedDate < today) {
-        document.getElementById('offerEndDateError').innerText = 'Offer End Date should be today or later';
+      var offerEndDate = document.getElementById('offerEndDate').value;
+      if (offerEndDate === "") {
+        document.getElementById('offerEndDateError').innerText = 'Offer end date is required';
         isValid = false;
       }
     }
 
-    // Validate Description
     var description = document.getElementById('description').value.trim();
     if (description === "") {
       document.getElementById('descriptionError').innerText = 'Description is required';
       isValid = false;
     }
 
-    // Validate Images (at least three images are required)
-    // var images = document.getElementById('images').files;
-    // if (images.length  3) {
-    //   document.getElementById('imageError').innerText = 'Please upload at least three images';
+    // Check number of image previews
+    // var imagePreviews = document.querySelectorAll('.image-preview');
+    // if (imagePreviews.length < 3) {
+    //   document.getElementById('imageError').innerText = 'Please upload at least 3 images';
     //   isValid = false;
     // }
 
-    // Display or clear general product error
-    var productError = document.getElementById('productError');
     if (!isValid) {
-      productError.innerText = "Please correct the errors above.";
-      return false; // Prevent form submission
-    } else {
-      productError.innerText = "";
-      return true; // Allow form submission
+      document.getElementById('productError').innerText = 'Please fill in all required fields';
     }
+
+    return isValid;
   }
 
   function clearValidationErrors() {
-    var errorMessages = document.querySelectorAll('.error-message');
-    errorMessages.forEach(function (element) {
-      element.innerText = "";
-    });
+    var errorMessages = document.getElementsByClassName('error-message');
+    for (var i = 0; i < errorMessages.length; i++) {
+      errorMessages[i].innerText = '';
+    }
+    document.getElementById('productError').innerText = '';
   }
-</script>           
+
+  function displayImagePreview(input) {
+    const file = input.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const previewImage = input.nextElementSibling;
+        previewImage.src = e.target.result;
+        previewImage.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+</script>
+  
             </div>
 
 

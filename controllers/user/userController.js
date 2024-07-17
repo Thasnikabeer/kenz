@@ -34,12 +34,8 @@ const razorpayInstance = new Razorpay({
 
 const handleGoogleSuccess = async (req, res) => {
   try {
-    console.log("googolr id coming ");
     const googleUser = req.user
-    console.log("googolrUser is >>>>>>> ",googleUser);
     const email= googleUser.email
-    console.log("==============EMAIL IS ==============",email);
-    
     const userData = await User.findOne({ email: email });
     if (userData) {
       req.session.user_id = userData._id;
@@ -220,7 +216,7 @@ const userData = async (req, res) => {
       // Send OTP to email
       verifyMail(req.body.name, req.body.email, otp);
       res.render("otp", { userId: user.id });
-      // If referral code was used, credit both the user and the referrer
+  
       if (data.referralCodeUsed) {
         const referrer = await User.findOne({
           referralCode: data.referralCodeUsed,
@@ -256,7 +252,6 @@ const userData = async (req, res) => {
   }
 };
 
-// Verify OTP and render email or error
 const verify = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -300,7 +295,7 @@ const verify = async (req, res) => {
   }
 };
 
-//resend otp
+
 const resendOTP = async (req, res) => {
   try {
     console.log("Resend OTP ");
@@ -391,12 +386,10 @@ const verifylogin = async (req, res) => {
         message: "User account is blocked, choose another account",
       });
     }
-    // console.log("hellooo",userLogin._id);
     req.session.user_id = userLogin._id;
     res.redirect("/home");
   } catch (error) {
     console.log(error.message);
-    // Handle other error conditions or uncomment the line below to send a generic error response.
     // res.status(500).send('Internal Server Error');
   }
 };
@@ -473,7 +466,7 @@ const viewProductList = async (req, res) => {
         break;
       // Add cases for other sorting options if needed
       default:
-        // Default sorting criteria if none provided
+        
         sortCriteria = { productName: 1 };
     }
     // Fetch the total number of products that match the query
@@ -566,7 +559,6 @@ const viewProfile = async (req, res) => {
 const viewEditProfileImage = async (req, res) => {
   try {
     const user = await User.findById(req.session.user_id);
-
     res.render("editProfileImage", { user });
   } catch (error) {
     console.log(error.message);
@@ -576,14 +568,10 @@ const viewEditProfileImage = async (req, res) => {
 const updateProfileImage = async (req, res) => {
   try {
     const userId = req.session.user_id;
-
     if (req.file) {
       const imagePath = req.file.filename;
-
-      // Update the user's image path in the database
       await User.findByIdAndUpdate(userId, { image: imagePath });
     }
-
     res.redirect("/profile");
   } catch (error) {
     console.error(error.message);
@@ -1264,49 +1252,7 @@ function calculateDiscount(totalAmount, coupon, userTotalUsage) {
   }
 }
 
-// // Helper function to calculate the discount amount based on coupon type
-// function calculateDiscount(totalAmount, coupon, userTotalUsage) {
-//   // Check if the coupon is expired
-//   const currentDate = new Date();
-//   const currentDateWithoutTime = new Date(
-//     currentDate.toISOString().split("T")[0]
-//   );
-//   const expirationDateWithoutTime = new Date(
-//     coupon.expirationDate.toISOString().split("T")[0]
-//   );
 
-//   console.log("CURRENT DATE ", currentDateWithoutTime);
-//   console.log("EXPIRED DATE ", expirationDateWithoutTime);
-//   if (currentDateWithoutTime > expirationDateWithoutTime) {
-//     throw new Error("Coupon has expired.");
-//   }
-//   if (totalAmount < coupon.conditions.minOrderAmount) {
-//     throw new Error(
-//       "Total amount does not meet the minimum order amount condition."
-//     );
-//   }
-
-//   // Check if the user has reached the maximum usage limit for the coupon
-//   if (userTotalUsage >= coupon.usageLimits.perUser) {
-//     throw new Error("Coupon usage limit per user exceeded.");
-//   }
-
-//   // Check if the overall usage limit for the coupon has been reached
-//   if (coupon.usageLimits.totalUses <= 0) {
-//     throw new Error("Coupon has reached the overall usage limit.");
-//   }
-
-//   // If all validations pass, calculate and return the discount
-//   if (coupon.type === "percentage") {
-//     // If the discount type is percentage, apply the percentage discount
-//     return (coupon.value / 100) * totalAmount;
-//   } else if (coupon.type === "fixed") {
-//     // If the discount type is fixed, apply the fixed discount
-//     return coupon.value;
-//   } else {
-//     return 0; // Default to no discount
-//   }
-// }
 
 const razorpayPage = async (req, res) => {
   try {
@@ -1342,7 +1288,6 @@ const razorpayPage = async (req, res) => {
 // capturePayment function to handle capturing the payment status
 const capturePayment = async (req, res) => {
   try {
-    // console.log("clicked");
     const orderDetails = req.session.orderDetails;
     if (!orderDetails) {
       return res.status(400).send("Order details not found");
@@ -1774,11 +1719,8 @@ const addwhitelist = async (req, res) => {
       );
 
       if (existingProductItem) {
-        // Display a message and redirect only if the item already exists in the whitelist
-        // req.flash('info', 'Already added to the whitelist');
         return res.redirect("/product-list");
       } else {
-        // Add the product to the whitelist if it doesn't already exist
         user.wishlist.push({
           product: product._id,
         });
@@ -1786,11 +1728,9 @@ const addwhitelist = async (req, res) => {
     }
 
     await user.save();
-    // req.flash('success', 'Successfully added to the whitelist');
     res.redirect(`/product-list?productId=${product._id}`);
   } catch (error) {
     console.log(error.message);
-    // req.flash('error', 'Failed to add the product to the whitelist.');
     return res.status(500).send("Internal Server Error");
   }
 };
@@ -1801,27 +1741,21 @@ const deletewishlist = async (req, res) => {
     const userId = req.session.user_id;
 
     if (!userId) {
-      ///  req.flash('error', 'Please log in to manage your wishlist.');
       return res.redirect("/login");
     }
 
     const user = await User.findById(userId);
 
     if (user && user.wishlist) {
-      // Find the index of the product in the wishlist
       const indexToRemove = user.wishlist.findIndex(
         (item) => item.product && item.product.equals(productIdToDelete)
       );
 
       if (indexToRemove !== -1) {
-        // Remove the product from the wishlist array
         user.wishlist.splice(indexToRemove, 1);
 
-        // Save the changes
         await user.save();
-        //  req.flash('success', 'Product removed from wishlist successfully.');
       } else {
-        //req.flash('info', 'Product not found in the wishlist.');
       }
     }
 
@@ -1846,6 +1780,8 @@ const deletewishlist = async (req, res) => {
 //     console.log(error.message);
 //   }
 // };
+
+
 const wallet = async (req, res) => {
   try {
     const userId = req.session.user_id;

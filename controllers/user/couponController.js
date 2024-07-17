@@ -55,7 +55,7 @@ const applyCoupon = async (req, res) => {
           discountAmount = coupon.value;
       }
       console.log("coupon",discountAmount)
-      // Apply maximum discount limit of 500
+      // Apply maximum discount limit of 1000
       if (discountAmount > 1000) {
           discountAmount = 1000;
       }

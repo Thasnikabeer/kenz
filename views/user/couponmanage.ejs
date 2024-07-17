@@ -90,6 +90,9 @@
         </div><!-- End .header-right -->
     </div><!-- End .container -->
 </div><!-- End .header-middle -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.min.js"></script>
+
 </header><!-- End .header -->
 
 <main class="main">
@@ -114,28 +117,48 @@
         <a href="/checkout" class="btn btn-outline-primary-2 btn-order btn-block" id="checkoutButton">BACK TO CHECKOUT</a>
 	    </div>
        
-    <div class="card-body" style=" margin: 50px; border: 2px solid black; padding: 3rem;">     
+        <div class="card-body" style="margin: 50px; border: 2px solid black; padding: 3rem;">
+            <% for (var i = 0; i < coupon.length; i++) { %>
+                <% if (i % 3 === 0) { %>
+                    <div class="row mb-4">
+                <% } %>
         
-                <div class="address-details" style="border: 2px solid rgba(222, 203, 203, 0.367); padding: 3%;">
-                    <% for (var i = 0; i < coupon.length; i++) { %>
+                <div class="col-md-4">
+                    <div class="address-details" style="border: 2px solid rgba(222, 203, 203, 0.367); padding: 1rem;">
                         <h5 style="color: green;"><%= coupon[i].couponname %> Off</h5>
-                        <h6 style="color: red;">Get Rs<%= coupon[i].value %> Off</h6>
-                        <h6 style="color: rgba(12, 1, 1, 0.356);">Get extra <%= coupon[i].value %>  off minimum Purchase of Rs<%= coupon[i].conditions.minOrderAmount %></h6>
-                        <h5 style="color: rgba(12, 1, 1, 0.92);">code:  <%= coupon[i].code %> </h5> 
+                        <h6 style="color: red;">Get Rs <%= coupon[i].value %> Off</h6>
+                        <h6 style="color: rgba(12, 1, 1, 0.356);">Get extra <%= coupon[i].value %> off minimum Purchase of Rs <%= coupon[i].conditions.minOrderAmount %></h6>
+                        <h5 style="color: rgba(12, 1, 1, 0.92);">code: <%= coupon[i].code %></h5> 
                         <% if (coupon[i].expirationDate) { %>
-                          <h6>valid till <%= coupon[i].expirationDate.toLocaleDateString() %></h6>
+                            <h6>valid till <%= coupon[i].expirationDate.toLocaleDateString() %></h6>
                         <% } else { %>
-                          <h6>No expiration date specified</h6>
+                            <h6>No expiration date specified</h6>
                         <% } %>
-                      <% } %>
-                      
+                        <button class="copy-button"
+                        onclick="copyCoupon('<%= coupon[i].code %>')"
+                        style="background-color: black;
+                               color: white;
+                               padding: 4px 9px;
+                               border-radius: 4px;
+                               border: 2px solid #000;
+                               font-size: 14px;
+                               text-decoration: none;
+                               display: inline-block;
+                               cursor: pointer;">
+                        Copy Coupon
+                    </button>
+                    
+                    </div>
                 </div>
-                <br>
-           
-            <p></p>
-       
         
-    </div>
+                <% if ((i + 1) % 3 === 0 || i === coupon.length - 1) { %>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+        
+        
+        
 </div>
 </main><!-- End .main -->
 <footer class="footer footer-2">
@@ -298,6 +321,41 @@
 
 <!-- kenz/index-5.html  22 Nov 2019 09:56:18 GMT -->
 
+
+<script>
+    function copyCoupon(couponCode) {
+        // Create a temporary textarea element to copy the text
+        const tempTextarea = document.createElement('textarea');
+        tempTextarea.value = couponCode;
+        document.body.appendChild(tempTextarea);
+        
+        // Select the text inside the textarea
+        tempTextarea.select();
+        tempTextarea.setSelectionRange(0, 99999); /* For mobile devices */
+        
+        // Copy the selected text
+        document.execCommand('copy');
+        
+        // Remove the temporary textarea
+        document.body.removeChild(tempTextarea);
+        
+        // Display SweetAlert confirmation
+        Swal.fire({
+            icon: 'success',
+            title: 'Coupon Copied!',
+            text: `Coupon code '${couponCode}' has been copied to clipboard.`,
+            showConfirmButton: false,
+            timer: 2000, // Close the alert after 2 seconds
+            iconColor: '#4BB543', // Green color
+            customClass: {
+                popup: 'swal-popup-class', // Customizes the popup style
+                content: 'swal-content-class', // Customizes the content style
+                closeButton: 'swal-close-button-class' // Customizes the close button style
+            },
+            position: 'center' // Center align the alert
+        });
+    }
+</script>
 
 <script>
     function confirmDelete(url) {
